@@ -140,6 +140,7 @@ impl UGrid {
                     let agent = self.pool[index];
 
                     if (agent.id != omit_id) &&
+                        agent.in_grid() &&
                         agent.is_bump_xy(x as i16, y as i16) {
 
                         vec.push(index);
@@ -168,6 +169,7 @@ impl UGrid {
                     let agent = self.pool[index];
 
                     if agent.id != omit_id &&
+                        agent.in_grid() &&
                         agent.bump_front_xy(dir, x as i16, y as i16) {
 
                         vec.push(index);
@@ -179,14 +181,6 @@ impl UGrid {
         }
 
         vec
-    }
-
-
-    pub fn in_grid(&self, x: f32, y: f32) -> bool {
-        let (dx, dy) = pos2grid(x, y);
-
-        return dx >= 0.0 && dx < GRID_WIDTH &&
-                dy >= 0.0 && dy < GRID_HEIGHT;
     }
 
     pub fn find_in_pool(&mut self, id: u32) -> u16 {
@@ -346,6 +340,12 @@ impl UGrid {
     }
 }
 
+pub fn in_grid(x: f32, y: f32) -> bool {
+    let (dx, dy) = pos2grid(x, y);
+
+    return dx >= 0.0 && dx < GRID_WIDTH &&
+            dy >= 0.0 && dy < GRID_HEIGHT;
+}
 
 pub fn pos2grid(x:f32, y:f32) -> (f32, f32) {
     return (COL_START + x, ROW_START - y);

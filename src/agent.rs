@@ -56,6 +56,10 @@ impl Agent {
         self.id == INACTIVE
     }
 
+    pub fn in_grid(&self) -> bool {
+        in_grid(self.x as f32, self.y as f32)
+    }
+
     pub fn is_bump(&self, other:&Agent) -> bool {
 
         self.is_bump_xy(other.x, other.y)

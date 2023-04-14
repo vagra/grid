@@ -221,17 +221,17 @@ mod ugrid {
 
         grid.init_test_data();
 
-        assert!(grid.in_grid(-1000.0, 600.0));
-        assert!(!grid.in_grid(-1000.001, 600.001));
+        assert!(in_grid(-1000.0, 600.0));
+        assert!(!in_grid(-1000.001, 600.001));
 
-        assert!(grid.in_grid(999.999, 600.0));
-        assert!(!grid.in_grid(1000.0, 600.001));
+        assert!(in_grid(999.999, 600.0));
+        assert!(!in_grid(1000.0, 600.001));
 
-        assert!(grid.in_grid(999.999, -599.999));
-        assert!(!grid.in_grid(1000.0, -600.0));
+        assert!(in_grid(999.999, -599.999));
+        assert!(!in_grid(1000.0, -600.0));
 
-        assert!(grid.in_grid(-1000.0, -599.999));
-        assert!(!grid.in_grid(-1000.001, -600.0));
+        assert!(in_grid(-1000.0, -599.999));
+        assert!(!in_grid(-1000.001, -600.0));
     }
 
 
