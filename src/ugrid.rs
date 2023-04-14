@@ -119,6 +119,10 @@ impl UGrid {
             self.push_cell(index, row, col);
         }
 
+        if index == INVALID {
+            return;
+        }
+
         self.pool[index].x = x as i16;
         self.pool[index].y = y as i16;
 
