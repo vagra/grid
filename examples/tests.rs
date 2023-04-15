@@ -141,6 +141,8 @@ pub fn test_pos2cell() {
     println!("{:?}", pos2cell(2000.0, 300.0));
     println!("{:?}", pos2cell(200.0, 1600.0));
     println!("{:?}", pos2cell(200.0, -1600.0));
+
+    println!("{:?}", pos2cell(0.0, -171.0));
 }
 
 

@@ -204,7 +204,7 @@ impl UGrid {
         loop {
 
             if index == INVALID {
-                panic!("id:{} cell:({},{}) index:{}", id, row, col, index);
+                panic!("id:{} cell:({},{}) index:{}", id, col, row, index);
             }
 
             if self.pool[index].id == id {
