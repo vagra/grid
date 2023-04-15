@@ -7,6 +7,7 @@ fn main() {
     // test_move_cell();
     // test_pos2grid();
     test_pos2cell();
+    test_find_in_cell();
     // test_out_bounds_insert();
     // test_out_bounds_remove();
 
@@ -142,7 +143,26 @@ pub fn test_pos2cell() {
     println!("{:?}", pos2cell(200.0, 1600.0));
     println!("{:?}", pos2cell(200.0, -1600.0));
 
-    println!("{:?}", pos2cell(0.0, -171.0));
+    println!("{:?}", pos2cell(-528.41797, 0.15884238));
+    println!("{:?}", pos2cell(-528.0623, -0.19682908));
+    println!("{:?}", pos2cell(-527.70667, -0.55250055));
+}
+
+pub fn test_find_in_cell() {
+    let mut grid = UGrid::default();
+    grid.init_test_data();
+
+    grid.insert(122, -528.41797, 0.15884238);
+    grid.print_cells();
+    grid.print_pool();
+
+    grid.move_cell(122, -528.41797, 0.15884238, -528.0623, -0.19682908);
+    grid.print_cells();
+    grid.print_pool();
+
+    grid.move_cell(122, -528.0623, -0.19682908, -527.70667, -0.55250055);
+    grid.print_cells();
+    grid.print_pool();
 }
 
 

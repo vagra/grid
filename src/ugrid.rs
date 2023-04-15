@@ -99,12 +99,10 @@ impl UGrid {
 
         assert!(id != INACTIVE);
 
-        if (prev_x as i16 == x as i16) && (prev_y as i16 == y as i16) {   
-            return;
-        }
-
         let (prev_col, prev_row) = pos2cell(prev_x, prev_y);
         let (col, row) = pos2cell(x, y);
+
+        // println!("({},{}) -> ({},{})", prev_col, prev_row, col, row);
 
         let index: u16;
 
@@ -120,7 +118,7 @@ impl UGrid {
         }
 
         if index == INVALID {
-            return;
+            panic!("index:{} id:{} prev:({},{}) curr:({},{}) ", index, id, prev_col, prev_row, col, row);
         }
 
         self.pool[index].x = x as i16;
