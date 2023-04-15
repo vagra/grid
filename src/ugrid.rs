@@ -203,9 +203,7 @@ impl UGrid {
 
         loop {
 
-            if index == INVALID {
-                return INVALID;
-            }
+            assert!(index != INVALID);
 
             if self.pool[index].id == id {
                 return index;
@@ -241,10 +239,7 @@ impl UGrid {
 
         let mut prev = index;
         loop {
-
-            if index == INVALID {
-                return INVALID;
-            }
+            assert!(index != INVALID);
 
             if self.pool[index].id == id {
                 break;
@@ -267,16 +262,10 @@ impl UGrid {
 
     pub fn push_cell(&mut self, index: u16, row: u16, col: u16) {
 
-        if index == INVALID {
-            return;
-        }
+        assert!(index != INVALID);
 
         let head = self.cells[row][col].head;
         self.cells[row][col].head = index;
-
-        if head == INVALID {
-            return;
-        }
         
         self.pool[index].next = head;
     }
