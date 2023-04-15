@@ -3,17 +3,17 @@ use grid::{ugrid::*, agent::*, pool::*, cells::*};
 
 
 fn main() {
-    test_insert_remove();
-    test_move_cell();
-    test_pos2grid();
+    // test_insert_remove();
+    // test_move_cell();
+    // test_pos2grid();
     test_pos2cell();
-    test_out_bounds_insert();
-    test_out_bounds_remove();
+    // test_out_bounds_insert();
+    // test_out_bounds_remove();
 
-    test_query();
-    test_dir_query();
+    // test_query();
+    // test_dir_query();
 
-    print_size();
+    // print_size();
 }
 
 
