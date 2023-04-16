@@ -1,14 +1,11 @@
 use std::{ops::{Index, IndexMut}};
 use crate::{agent::*, pool::*, cells::*};
 
-
 pub const COLS: u16 = HALF_COLS * 2;
 pub const ROWS: u16 = HALF_ROWS * 2;
 
 pub const CELL_SIZE: f32 = 100.0;
 pub const CELL_RADIUS: f32 = 50.0;
-pub const AGENT_RADIUS: f32 = 10.0;
-pub const CHECK_RADIUS_I16: i16 = CHECK_RADIUS as i16;
 
 const HALF_COLS: u16 = 10;
 const HALF_ROWS: u16 = 6;
@@ -17,15 +14,16 @@ const ROW_START: f32 = CELL_SIZE * HALF_ROWS as f32;
 const GRID_WIDTH: f32 = COLS as f32 * CELL_SIZE;
 const GRID_HEIGHT: f32 = ROWS as f32 * CELL_SIZE;
 
-const CHECK_RADIUS: f32 = AGENT_RADIUS + AGENT_RADIUS;
 const INV_CELL_SIZE: f32 = 1.0 / CELL_SIZE;
-
 
 
 #[derive(Debug)]
 pub struct UGrid{
     pub cells: Rows,
     pub pool: Pool,
+    agent_radius: f32,
+    check_radius: f32,
+    check_radius_i16: i16,
 }
 
 
@@ -36,6 +34,9 @@ impl Default for UGrid {
         Self{
             cells: Rows::default(),
             pool: Pool::default(),
+            agent_radius: 0.0,
+            check_radius: 0.0,
+            check_radius_i16: 0,
         }
     }
 }
@@ -62,6 +63,21 @@ impl IndexMut<(u16, u16)> for UGrid {
 
 
 impl UGrid {
+    
+
+    pub fn new(radius: f32) -> Self {
+        
+        Self {
+            agent_radius: radius,
+            check_radius: radius * 2.0,
+            check_radius_i16: (radius * 2.0) as i16,
+            ..Default::default()
+        }
+    }
+
+    pub fn agent_radius(&self) -> f32 {
+        self.agent_radius
+    }
 
     pub fn insert(&mut self, id: u32, x:f32, y:f32) {
 
@@ -128,8 +144,8 @@ impl UGrid {
 
 
     pub fn query(&self, x: f32, y: f32, omit_id: u32) -> Vec<u16> {
-        let (min_col, min_row) = pos2cell(x - CHECK_RADIUS, y + CHECK_RADIUS);
-        let (max_col, max_row) = pos2cell(x + CHECK_RADIUS, y - CHECK_RADIUS);
+        let (min_col, min_row) = pos2cell(x - self.check_radius, y + self.check_radius);
+        let (max_col, max_row) = pos2cell(x + self.check_radius, y - self.check_radius);
 
         let mut vec: Vec<u16> = Vec::new();
         let mut index: u16;
@@ -143,7 +159,7 @@ impl UGrid {
 
                     if (agent.id != omit_id) &&
                         agent.in_grid() &&
-                        agent.is_bump_xy(x as i16, y as i16) {
+                        agent.is_bump_xy(x as i16, y as i16, self.check_radius_i16) {
 
                         vec.push(index);
                     }
@@ -157,8 +173,8 @@ impl UGrid {
     }
 
     pub fn dir_query(&self, dir: u8, x: f32, y: f32, omit_id: u32) -> Vec<u16> {
-        let (min_col, min_row) = pos2cell(x - CHECK_RADIUS, y + CHECK_RADIUS);
-        let (max_col, max_row) = pos2cell(x + CHECK_RADIUS, y - CHECK_RADIUS);
+        let (min_col, min_row) = pos2cell(x - self.check_radius, y + self.check_radius);
+        let (max_col, max_row) = pos2cell(x + self.check_radius, y - self.check_radius);
 
         let mut vec: Vec<u16> = Vec::new();
         let mut index: u16;
@@ -172,7 +188,7 @@ impl UGrid {
 
                     if agent.id != omit_id &&
                         agent.in_grid() &&
-                        agent.bump_front_xy(dir, x as i16, y as i16) {
+                        agent.bump_front_xy(dir, x as i16, y as i16, self.check_radius_i16) {
 
                         vec.push(index);
                     }

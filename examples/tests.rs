@@ -19,7 +19,7 @@ fn main() {
 
 
 pub fn test_insert_remove() {
-    let mut grid = UGrid::default();
+    let mut grid = UGrid::new(10.0);
 
     grid.init_test_data();
 
@@ -41,7 +41,7 @@ pub fn test_insert_remove() {
 
 pub fn test_move_cell() {
 
-    let mut grid = UGrid::default();
+    let mut grid = UGrid::new(10.0);
 
     grid.init_test_data();
 
@@ -69,7 +69,7 @@ pub fn test_move_cell() {
 
 pub fn test_query() {
 
-    let mut grid = UGrid::default();
+    let mut grid = UGrid::new(10.0);
     grid.init_test_data();
 
     grid.insert(201, 25.5, 45.3);
@@ -80,7 +80,7 @@ pub fn test_query() {
 
 pub fn test_dir_query() {
 
-    let mut grid = UGrid::default();
+    let mut grid = UGrid::new(10.0);
     grid.init_test_data();
 
     grid.insert(201, 25.5, 45.3);
@@ -149,7 +149,7 @@ pub fn test_pos2cell() {
 }
 
 pub fn test_find_in_cell() {
-    let mut grid = UGrid::default();
+    let mut grid = UGrid::new(10.0);
     grid.init_test_data();
 
     grid.insert(122, -528.41797, 0.15884238);
@@ -167,7 +167,7 @@ pub fn test_find_in_cell() {
 
 
 pub fn test_out_bounds_insert() {
-    let mut grid = UGrid::default();
+    let mut grid = UGrid::new(10.0);
     grid.init_test_data();
 
     grid.print_cells();
@@ -190,7 +190,7 @@ pub fn test_out_bounds_insert() {
 
 
 pub fn test_out_bounds_remove() {
-    let mut grid = UGrid::default();
+    let mut grid = UGrid::new(10.0);
     grid.init_test_data();
 
     grid.print_cells();
@@ -213,7 +213,7 @@ pub fn test_out_bounds_remove() {
 
 
 pub fn print_size() {
-    let mut grid = UGrid::default();
+    let mut grid = UGrid::new(10.0);
 
     grid.init_test_data();
 

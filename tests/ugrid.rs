@@ -4,7 +4,7 @@ mod ugrid {
 
     #[test]
     fn default_work() {
-        let grid = UGrid::default();
+        let grid = UGrid::new(10.0);
 
         assert_eq!(grid.pool.size(), 0);
         assert_eq!(grid.cells.len(), ROWS);
@@ -13,7 +13,7 @@ mod ugrid {
 
     #[test]
     fn insert_work() {
-        let mut grid = UGrid::default();
+        let mut grid = UGrid::new(10.0);
 
         grid.init_test_data();
 
@@ -45,7 +45,7 @@ mod ugrid {
 
     #[test]
     fn index_work() {
-        let mut grid = UGrid::default();
+        let mut grid = UGrid::new(10.0);
 
         grid.insert(101, 12.3, 98.4);
         grid.insert(102, 23.3, 76.4);
@@ -66,7 +66,7 @@ mod ugrid {
     #[test]
     fn remove_work() {
 
-        let mut grid = UGrid::default();
+        let mut grid = UGrid::new(10.0);
 
         grid.init_test_data();
 
@@ -96,7 +96,7 @@ mod ugrid {
 
     #[test]
     fn move_cell_work() {
-        let mut grid = UGrid::default();
+        let mut grid = UGrid::new(10.0);
 
         grid.init_test_data();
 
@@ -163,7 +163,7 @@ mod ugrid {
 
     #[test]
     fn query_work() {
-        let mut grid = UGrid::default();
+        let mut grid = UGrid::new(10.0);
 
         grid.init_test_data();
 
@@ -177,7 +177,7 @@ mod ugrid {
 
     #[test]
     fn dir_query_work() {
-        let mut grid = UGrid::default();
+        let mut grid = UGrid::new(10.0);
 
         grid.init_test_data();
 
@@ -217,7 +217,7 @@ mod ugrid {
     #[test]
     fn in_grid_work() {
 
-        let mut grid = UGrid::default();
+        let mut grid = UGrid::new(10.0);
 
         grid.init_test_data();
 
@@ -238,7 +238,7 @@ mod ugrid {
     #[test]
     fn in_cell_work() {
 
-        let mut grid = UGrid::default();
+        let mut grid = UGrid::new(10.0);
 
         grid.init_test_data();
 
@@ -268,7 +268,7 @@ mod ugrid {
 
     #[test]
     fn out_bounds_insert_work() {
-        let mut grid = UGrid::default();
+        let mut grid = UGrid::new(10.0);
         grid.init_test_data();
 
         grid.insert(201, -2000.0, 1600.0);
@@ -304,7 +304,7 @@ mod ugrid {
 
     #[test]
     fn out_bounds_remove_work() {
-        let mut grid = UGrid::default();
+        let mut grid = UGrid::new(10.0);
         grid.init_test_data();
 
         grid.insert(205, -2000.0, 300.0);

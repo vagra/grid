@@ -60,33 +60,33 @@ impl Agent {
         in_grid(self.x as f32, self.y as f32)
     }
 
-    pub fn is_bump(&self, other:&Agent) -> bool {
+    pub fn is_bump(&self, other:&Agent, check_radius:i16) -> bool {
 
-        self.is_bump_xy(other.x, other.y)
+        self.is_bump_xy(other.x, other.y, check_radius)
     }
 
-    pub fn is_bump_xy(&self, x:i16, y:i16) -> bool {
+    pub fn is_bump_xy(&self, x:i16, y:i16, check_radius:i16) -> bool {
 
-        (self.x - x as i16).abs() <= CHECK_RADIUS_I16 && 
-        (self.y - y as i16).abs() <= CHECK_RADIUS_I16
+        (self.x - x as i16).abs() <= check_radius && 
+        (self.y - y as i16).abs() <= check_radius
     }
 
-    pub fn is_bump_dxy(&self, dx:i16, dy:i16) -> bool {
+    pub fn is_bump_dxy(&self, dx:i16, dy:i16, check_radius:i16) -> bool {
 
-        dx.abs() <= CHECK_RADIUS_I16 && 
-        dy.abs() <= CHECK_RADIUS_I16
+        dx.abs() <= check_radius && 
+        dy.abs() <= check_radius
     }
 
-    pub fn bump_front(&self, other:&Agent, dir:u8) -> bool {
+    pub fn bump_front(&self, other:&Agent, dir:u8, check_radius:i16) -> bool {
 
-        self.bump_front_xy(dir, other.x, other.y)
+        self.bump_front_xy(dir, other.x, other.y, check_radius)
     }
 
-    pub fn bump_front_xy(&self, dir:u8, x:i16, y:i16) -> bool {
+    pub fn bump_front_xy(&self, dir:u8, x:i16, y:i16, check_radius:i16) -> bool {
         let dx = self.x - x;
         let dy = self.y - y;
         
-        self.is_bump_dxy(dx, dy) &&
+        self.is_bump_dxy(dx, dy, check_radius) &&
         Self::at_front_dxy(dir, dx, dy)
     }
 
