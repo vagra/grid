@@ -1,3 +1,3 @@
 # todo
 
-- [*] support unified but configurable agent radius.
+- [x] support unified but configurable agent radius.
