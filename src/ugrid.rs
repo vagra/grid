@@ -36,28 +36,28 @@ impl Default for UGrid {
     fn default() -> Self {
         
         Self{
-            cells: Rows::default(),
+            cells: Rows::new(12, 20),
             pool: Pool::default(),
             
-            cols: 0,
-            rows: 0,
-            cell_size: 0.0,
-            cell_radius: 0.0,
-            half_cols: 0,
-            half_rows: 0,
-            col_max: 0,
-            row_max: 0,
+            cols: 20,
+            rows: 12,
+            cell_size: 100.0,
+            cell_radius: 50.0,
+            half_cols: 10,
+            half_rows: 6,
+            col_max: 19,
+            row_max: 11,
 
-            half_grid_width: 0.0,
-            half_grid_height: 0.0,
-            grid_width: 0.0,
-            grid_height: 0.0,
+            half_grid_width: 1000.0,
+            half_grid_height: 600.0,
+            grid_width: 2000.0,
+            grid_height: 1200.0,
 
-            inv_cell_size: 0.0,
+            inv_cell_size: 0.01,
 
-            agent_radius: 0.0,
-            agent_size: 0.0,
-            agent_size_i16: 0,
+            agent_radius: 10.0,
+            agent_size: 20.0,
+            agent_size_i16: 20,
         }
     }
 }
