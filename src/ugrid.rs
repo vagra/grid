@@ -356,14 +356,24 @@ impl UGrid {
 pub fn in_grid(x: f32, y: f32) -> bool {
     let (dx, dy) = pos2grid(x, y);
 
-    return dx >= 0.0 && dx < GRID_WIDTH &&
-            dy >= 0.0 && dy < GRID_HEIGHT;
+    dx >= 0.0 && dx < GRID_WIDTH &&
+    dy >= 0.0 && dy < GRID_HEIGHT
 }
 
 pub fn pos2grid(x:f32, y:f32) -> (f32, f32) {
-    return (COL_START + x, ROW_START - y);
+    (COL_START + x, ROW_START - y)
 }
 
+pub fn grid2pos(x:f32, y:f32) -> (f32, f32) {
+    (x - COL_START, ROW_START - y)
+}
+
+pub fn cell2pos(row: u16, col: u16) -> (f32, f32) {
+    let dx = (col as f32) / INV_CELL_SIZE;
+    let dy = (row as f32) / INV_CELL_SIZE;
+    
+    (dx - COL_START, ROW_START - dy)
+}
 
 pub fn pos2cell(x:f32, y:f32) -> (u16, u16) {
 
