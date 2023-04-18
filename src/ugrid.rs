@@ -11,7 +11,7 @@ pub struct UGrid{
 
     pub cols: u16,
     pub rows: u16,
-    cell_size: f32,
+    pub cell_size: f32,
     cell_radius: f32,
     half_cols: u16,
     half_rows: u16,
@@ -26,7 +26,7 @@ pub struct UGrid{
     inv_cell_size: f32,
 
     agent_radius: f32,
-    agent_size: f32,
+    pub agent_size: f32,
     agent_size_i16: i16,
 }
 
