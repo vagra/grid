@@ -1,12 +1,8 @@
 use std::{ops::{Index, IndexMut}};
-use rand::Rng;
 use crate::{pool::*, ugrid::*};
 
 
 pub const INACTIVE: u32 = u32::MAX;
-
-const X_RANGE: i16 = 1000;
-const Y_RANGE: i16 = 600;
 
 
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -56,8 +52,8 @@ impl Agent {
         self.id == INACTIVE
     }
 
-    pub fn in_grid(&self) -> bool {
-        in_grid(self.x as f32, self.y as f32)
+    pub fn in_grid(&self, grid:&UGrid) -> bool {
+        grid.in_grid(self.x as f32, self.y as f32)
     }
 
     pub fn is_bump(&self, other:&Agent, check_radius:i16) -> bool {
@@ -115,24 +111,6 @@ impl Agent {
             7 => dx <= 0 && dy <= 0,
             _ => dy <= -dx.abs(),
         }
-    }
-
-    
-    pub fn random() -> Self {
-
-        Self {
-            id: rand::thread_rng().gen_range(0..INACTIVE), 
-            x: rand::thread_rng().gen_range(-X_RANGE..X_RANGE),
-            y: rand::thread_rng().gen_range(-Y_RANGE..Y_RANGE),
-
-            ..Default::default()
-        }
-    }
-
-    pub fn randxy(&mut self) {
-        self.id = rand::thread_rng().gen_range(0..INACTIVE);
-        self.x = rand::thread_rng().gen_range(-X_RANGE..X_RANGE);
-        self.y = rand::thread_rng().gen_range(-Y_RANGE..Y_RANGE);
     }
 
     pub fn print(&self) {

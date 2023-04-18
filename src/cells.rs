@@ -1,5 +1,5 @@
 use std::{ops::{Index, IndexMut}};
-use crate::{pool::*, ugrid::*};
+use crate::pool::*;
 
 
 #[derive(Debug, Clone, Copy)]
@@ -16,16 +16,26 @@ impl Default for Cell {
     }
 }
 
+impl Cell {
 
-#[derive(Debug, Clone, Copy)]
-pub struct Cols ([Cell; COLS as usize]);
+    pub fn new(head:u16) -> Self {
+
+        Self {
+            head: head,
+        }
+    }
+}
+
+
+#[derive(Debug, Clone)]
+pub struct Cols(Vec<Cell>);
 
 
 impl Default for Cols {
 
     fn default() -> Self {
         
-        Self([Cell::default(); COLS as usize])
+        Self(Vec::default())
     }
 }
 
@@ -49,6 +59,19 @@ impl IndexMut<u16> for Cols {
 
 impl Cols {
 
+    pub fn new(cols:u16) -> Self {
+
+        let mut vec:Vec<Cell> = Vec::new();
+
+        for _ in 0..cols {
+            let cell = Cell::default();
+
+            vec.push(cell);
+        }
+
+        Self(vec)
+    }
+
     pub fn len(&self) -> u16 {
         
         self.0.len() as u16
@@ -57,14 +80,14 @@ impl Cols {
 
 
 #[derive(Debug)]
-pub struct Rows([Cols; ROWS as usize]);
+pub struct Rows(Vec<Cols>);
 
 
 impl Default for Rows {
 
     fn default() -> Self {
         
-        Self([Cols::default(); ROWS as usize])
+        Self(Vec::default())
     }
 }
 
@@ -86,6 +109,19 @@ impl IndexMut<u16> for Rows {
 }
 
 impl Rows {
+
+    pub fn new(rows: u16, cols: u16) -> Self {
+
+        let mut vec: Vec<Cols> = Vec::new();
+
+        for _ in 0..rows {
+            let row = Cols::new(cols);
+
+            vec.push(row);
+        }
+
+        Self(vec)
+    }
 
     pub fn len(&self) -> u16 {
         

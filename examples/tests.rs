@@ -21,7 +21,7 @@ fn main() {
 
 
 pub fn test_insert_remove() {
-    let mut grid = UGrid::new(10.0);
+    let mut grid = UGrid::new(10.0, 50.0, 10, 6);
 
     grid.init_test_data();
 
@@ -43,7 +43,7 @@ pub fn test_insert_remove() {
 
 pub fn test_move_cell() {
 
-    let mut grid = UGrid::new(10.0);
+    let mut grid = UGrid::new(10.0, 50.0, 10, 6);
 
     grid.init_test_data();
 
@@ -71,7 +71,7 @@ pub fn test_move_cell() {
 
 pub fn test_query() {
 
-    let mut grid = UGrid::new(10.0);
+    let mut grid = UGrid::new(10.0, 50.0, 10, 6);
     grid.init_test_data();
 
     grid.insert(201, 25.5, 45.3);
@@ -82,7 +82,7 @@ pub fn test_query() {
 
 pub fn test_dir_query() {
 
-    let mut grid = UGrid::new(10.0);
+    let mut grid = UGrid::new(10.0, 50.0, 10, 6);
     grid.init_test_data();
 
     grid.insert(201, 25.5, 45.3);
@@ -117,58 +117,66 @@ pub fn test_dir_query() {
 
 
 pub fn test_pos2grid() {
-    print!("{:?}\t", pos2grid(-999.9999, 599.9999));
-    print!("{:?}\t", pos2grid(-1000.0, 600.0));
-    println!("{:?}", pos2grid(-1000.0001, 600.0001));
+    let grid = UGrid::new(10.0, 50.0, 10, 6);
     
-    print!("{:?}\t", pos2grid(999.9999, 599.9999));
-    print!("{:?}\t", pos2grid(1000.0, 600.0));
-    println!("{:?}", pos2grid(1000.0001, 600.0001));
+    print!("{:?}\t", grid.pos2grid(-999.9999, 599.9999));
+    print!("{:?}\t", grid.pos2grid(-1000.0, 600.0));
+    println!("{:?}", grid.pos2grid(-1000.0001, 600.0001));
     
-    print!("{:?}\t\t", pos2grid(999.9999, -599.9999));
-    print!("{:?}", pos2grid(1000.0, -600.0));
-    println!("{:?}", pos2grid(1000.0001, -600.0001));
+    print!("{:?}\t", grid.pos2grid(999.9999, 599.9999));
+    print!("{:?}\t", grid.pos2grid(1000.0, 600.0));
+    println!("{:?}", grid.pos2grid(1000.0001, 600.0001));
     
-    print!("{:?}\t", pos2grid(-999.9999, -599.9999));
-    print!("{:?}\t", pos2grid(-1000.0, -600.0));
-    println!("{:?}", pos2grid(-1000.0001, -600.0001));
+    print!("{:?}\t\t", grid.pos2grid(999.9999, -599.9999));
+    print!("{:?}", grid.pos2grid(1000.0, -600.0));
+    println!("{:?}", grid.pos2grid(1000.0001, -600.0001));
+    
+    print!("{:?}\t", grid.pos2grid(-999.9999, -599.9999));
+    print!("{:?}\t", grid.pos2grid(-1000.0, -600.0));
+    println!("{:?}", grid.pos2grid(-1000.0001, -600.0001));
 }
 
 pub fn test_pos2cell() {
-    println!("{:?}", pos2cell(-2000.0, 1600.0));
-    println!("{:?}", pos2cell(2000.0, 1600.0));
-    println!("{:?}", pos2cell(2000.0, -1600.0));
-    println!("{:?}", pos2cell(-2000.0, -1600.0));
+    let grid = UGrid::new(10.0, 50.0, 10, 6);
 
-    println!("{:?}", pos2cell(-2000.0, 300.0));
-    println!("{:?}", pos2cell(2000.0, 300.0));
-    println!("{:?}", pos2cell(200.0, 1600.0));
-    println!("{:?}", pos2cell(200.0, -1600.0));
+    println!("{:?}", grid.pos2cell(-2000.0, 1600.0));
+    println!("{:?}", grid.pos2cell(2000.0, 1600.0));
+    println!("{:?}", grid.pos2cell(2000.0, -1600.0));
+    println!("{:?}", grid.pos2cell(-2000.0, -1600.0));
 
-    println!("{:?}", pos2cell(-528.41797, 0.15884238));
-    println!("{:?}", pos2cell(-528.0623, -0.19682908));
-    println!("{:?}", pos2cell(-527.70667, -0.55250055));
+    println!("{:?}", grid.pos2cell(-2000.0, 300.0));
+    println!("{:?}", grid.pos2cell(2000.0, 300.0));
+    println!("{:?}", grid.pos2cell(200.0, 1600.0));
+    println!("{:?}", grid.pos2cell(200.0, -1600.0));
+
+    println!("{:?}", grid.pos2cell(-528.41797, 0.15884238));
+    println!("{:?}", grid.pos2cell(-528.0623, -0.19682908));
+    println!("{:?}", grid.pos2cell(-527.70667, -0.55250055));
 }
 
 pub fn test_grid2pos() {
-    println!("{:?}\t", grid2pos(0.0, 0.0));
-    println!("{:?}\t", grid2pos(2000.0, 0.0));
-    println!("{:?}\t", grid2pos(2000.0, 1200.0));
-    println!("{:?}\t", grid2pos(0.0, 1200.0));
+    let grid = UGrid::new(10.0, 50.0, 10, 6);
+
+    println!("{:?}\t", grid.grid2pos(0.0, 0.0));
+    println!("{:?}\t", grid.grid2pos(2000.0, 0.0));
+    println!("{:?}\t", grid.grid2pos(2000.0, 1200.0));
+    println!("{:?}\t", grid.grid2pos(0.0, 1200.0));
 
     println!();
 }
 
 pub fn test_cell2pos() {
-    println!("{:?}", cell2pos(0, 0));
-    println!("{:?}", cell2pos(19, 0));
-    println!("{:?}", cell2pos(19, 11));
-    println!("{:?}", cell2pos(0, 11));
-    println!("{:?}", cell2pos(10, 6));
+    let grid = UGrid::new(10.0, 50.0, 10, 6);
+
+    println!("{:?}", grid.cell2pos(0, 0));
+    println!("{:?}", grid.cell2pos(19, 0));
+    println!("{:?}", grid.cell2pos(19, 11));
+    println!("{:?}", grid.cell2pos(0, 11));
+    println!("{:?}", grid.cell2pos(10, 6));
 }
 
 pub fn test_find_in_cell() {
-    let mut grid = UGrid::new(10.0);
+    let mut grid = UGrid::new(10.0, 50.0, 10, 6);
     grid.init_test_data();
 
     grid.insert(122, -528.41797, 0.15884238);
@@ -186,7 +194,7 @@ pub fn test_find_in_cell() {
 
 
 pub fn test_out_bounds_insert() {
-    let mut grid = UGrid::new(10.0);
+    let mut grid = UGrid::new(10.0, 50.0, 10, 6);
     grid.init_test_data();
 
     grid.print_cells();
@@ -209,7 +217,7 @@ pub fn test_out_bounds_insert() {
 
 
 pub fn test_out_bounds_remove() {
-    let mut grid = UGrid::new(10.0);
+    let mut grid = UGrid::new(10.0, 50.0, 10, 6);
     grid.init_test_data();
 
     grid.print_cells();
@@ -232,7 +240,7 @@ pub fn test_out_bounds_remove() {
 
 
 pub fn print_size() {
-    let mut grid = UGrid::new(10.0);
+    let mut grid = UGrid::new(10.0, 50.0, 10, 6);
 
     grid.init_test_data();
 

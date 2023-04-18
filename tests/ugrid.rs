@@ -4,16 +4,16 @@ mod ugrid {
 
     #[test]
     fn default_work() {
-        let grid = UGrid::new(10.0);
+        let grid = UGrid::new(10.0, 50.0, 10, 6);
 
         assert_eq!(grid.pool.size(), 0);
-        assert_eq!(grid.cells.len(), ROWS);
-        assert_eq!(grid.cells[0].len(), COLS);
+        assert_eq!(grid.cells.len(), grid.rows);
+        assert_eq!(grid.cells[0].len(), grid.cols);
     }
 
     #[test]
     fn insert_work() {
-        let mut grid = UGrid::new(10.0);
+        let mut grid = UGrid::new(10.0, 50.0, 10, 6);
 
         grid.init_test_data();
 
@@ -45,7 +45,7 @@ mod ugrid {
 
     #[test]
     fn index_work() {
-        let mut grid = UGrid::new(10.0);
+        let mut grid = UGrid::new(10.0, 50.0, 10, 6);
 
         grid.insert(101, 12.3, 98.4);
         grid.insert(102, 23.3, 76.4);
@@ -66,7 +66,7 @@ mod ugrid {
     #[test]
     fn remove_work() {
 
-        let mut grid = UGrid::new(10.0);
+        let mut grid = UGrid::new(10.0, 50.0, 10, 6);
 
         grid.init_test_data();
 
@@ -96,7 +96,7 @@ mod ugrid {
 
     #[test]
     fn move_cell_work() {
-        let mut grid = UGrid::new(10.0);
+        let mut grid = UGrid::new(10.0, 50.0, 10, 6);
 
         grid.init_test_data();
 
@@ -163,7 +163,7 @@ mod ugrid {
 
     #[test]
     fn query_work() {
-        let mut grid = UGrid::new(10.0);
+        let mut grid = UGrid::new(10.0, 50.0, 10, 6);
 
         grid.init_test_data();
 
@@ -177,7 +177,7 @@ mod ugrid {
 
     #[test]
     fn dir_query_work() {
-        let mut grid = UGrid::new(10.0);
+        let mut grid = UGrid::new(10.0, 50.0, 10, 6);
 
         grid.init_test_data();
 
@@ -217,28 +217,28 @@ mod ugrid {
     #[test]
     fn in_grid_work() {
 
-        let mut grid = UGrid::new(10.0);
+        let mut grid = UGrid::new(10.0, 50.0, 10, 6);
 
         grid.init_test_data();
 
-        assert!(in_grid(-1000.0, 600.0));
-        assert!(!in_grid(-1000.001, 600.001));
+        assert!(grid.in_grid(-1000.0, 600.0));
+        assert!(!grid.in_grid(-1000.001, 600.001));
 
-        assert!(in_grid(999.999, 600.0));
-        assert!(!in_grid(1000.0, 600.001));
+        assert!(grid.in_grid(999.999, 600.0));
+        assert!(!grid.in_grid(1000.0, 600.001));
 
-        assert!(in_grid(999.999, -599.999));
-        assert!(!in_grid(1000.0, -600.0));
+        assert!(grid.in_grid(999.999, -599.999));
+        assert!(!grid.in_grid(1000.0, -600.0));
 
-        assert!(in_grid(-1000.0, -599.999));
-        assert!(!in_grid(-1000.001, -600.0));
+        assert!(grid.in_grid(-1000.0, -599.999));
+        assert!(!grid.in_grid(-1000.001, -600.0));
     }
 
 
     #[test]
     fn in_cell_work() {
 
-        let mut grid = UGrid::new(10.0);
+        let mut grid = UGrid::new(10.0, 50.0, 10, 6);
 
         grid.init_test_data();
 
@@ -255,20 +255,23 @@ mod ugrid {
 
     #[test]
     fn pos2cell_work() {
-        assert_eq!((0, 0), pos2cell(-2000.0, 1600.0));
-        assert_eq!((19, 0), pos2cell(2000.0, 1600.0));
-        assert_eq!((19, 11), pos2cell(2000.0, -1600.0));
-        assert_eq!((0, 11), pos2cell(-2000.0, -1600.0));
 
-        assert_eq!((0, 3), pos2cell(-2000.0, 300.0));
-        assert_eq!((19, 3), pos2cell(2000.0, 300.0));
-        assert_eq!((12, 0), pos2cell(200.0, 1600.0));
-        assert_eq!((12, 11), pos2cell(200.0, -1600.0));
+        let grid = UGrid::new(10.0, 50.0, 10, 6);
+        
+        assert_eq!((0, 0), grid.pos2cell(-2000.0, 1600.0));
+        assert_eq!((19, 0), grid.pos2cell(2000.0, 1600.0));
+        assert_eq!((19, 11), grid.pos2cell(2000.0, -1600.0));
+        assert_eq!((0, 11), grid.pos2cell(-2000.0, -1600.0));
+
+        assert_eq!((0, 3), grid.pos2cell(-2000.0, 300.0));
+        assert_eq!((19, 3), grid.pos2cell(2000.0, 300.0));
+        assert_eq!((12, 0), grid.pos2cell(200.0, 1600.0));
+        assert_eq!((12, 11), grid.pos2cell(200.0, -1600.0));
     }
 
     #[test]
     fn out_bounds_insert_work() {
-        let mut grid = UGrid::new(10.0);
+        let mut grid = UGrid::new(10.0, 50.0, 10, 6);
         grid.init_test_data();
 
         grid.insert(201, -2000.0, 1600.0);
@@ -304,7 +307,7 @@ mod ugrid {
 
     #[test]
     fn out_bounds_remove_work() {
-        let mut grid = UGrid::new(10.0);
+        let mut grid = UGrid::new(10.0, 50.0, 10, 6);
         grid.init_test_data();
 
         grid.insert(205, -2000.0, 300.0);

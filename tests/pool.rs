@@ -274,8 +274,8 @@ mod pool {
 
 
     fn insert_some(pool: &mut Pool, n: u16) {
-        for _ in 0..n {
-            pool.insert(Agent::random());
+        for i in 0..n {
+            pool.insert(Agent::new(i as u32, i as i16 * 10, i as i16 * 20));
         }
     }
 
