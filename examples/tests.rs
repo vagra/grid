@@ -6,8 +6,10 @@ fn main() {
     // test_insert_remove();
     // test_move_cell();
     // test_pos2grid();
-    test_pos2cell();
-    test_find_in_cell();
+    // test_pos2cell();
+    test_grid2pos();
+    test_cell2pos();
+    // test_find_in_cell();
     // test_out_bounds_insert();
     // test_out_bounds_remove();
 
@@ -146,6 +148,23 @@ pub fn test_pos2cell() {
     println!("{:?}", pos2cell(-528.41797, 0.15884238));
     println!("{:?}", pos2cell(-528.0623, -0.19682908));
     println!("{:?}", pos2cell(-527.70667, -0.55250055));
+}
+
+pub fn test_grid2pos() {
+    println!("{:?}\t", grid2pos(0.0, 0.0));
+    println!("{:?}\t", grid2pos(2000.0, 0.0));
+    println!("{:?}\t", grid2pos(2000.0, 1200.0));
+    println!("{:?}\t", grid2pos(0.0, 1200.0));
+
+    println!();
+}
+
+pub fn test_cell2pos() {
+    println!("{:?}", cell2pos(0, 0));
+    println!("{:?}", cell2pos(19, 0));
+    println!("{:?}", cell2pos(19, 11));
+    println!("{:?}", cell2pos(0, 11));
+    println!("{:?}", cell2pos(10, 6));
 }
 
 pub fn test_find_in_cell() {

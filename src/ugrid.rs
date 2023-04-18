@@ -368,11 +368,11 @@ pub fn grid2pos(x:f32, y:f32) -> (f32, f32) {
     (x - COL_START, ROW_START - y)
 }
 
-pub fn cell2pos(row: u16, col: u16) -> (f32, f32) {
+pub fn cell2pos(col: u16, row: u16) -> (f32, f32) {
     let dx = (col as f32) / INV_CELL_SIZE;
     let dy = (row as f32) / INV_CELL_SIZE;
     
-    (dx - COL_START, ROW_START - dy)
+    grid2pos(dx, dy)
 }
 
 pub fn pos2cell(x:f32, y:f32) -> (u16, u16) {
