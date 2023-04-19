@@ -4,7 +4,7 @@ mod ugrid {
 
     #[test]
     fn default_work() {
-        let grid = UGrid::new(10.0, 50.0, 10, 6);
+        let grid = UGrid::default();
 
         assert_eq!(grid.pool.size, 0);
         assert_eq!(grid.cells.len(), grid.rows);
@@ -13,7 +13,7 @@ mod ugrid {
 
     #[test]
     fn insert_work() {
-        let mut grid = UGrid::new(10.0, 50.0, 10, 6);
+        let mut grid = UGrid::default();
 
         grid.init_test_data();
 
@@ -45,11 +45,11 @@ mod ugrid {
 
     #[test]
     fn index_work() {
-        let mut grid = UGrid::new(10.0, 50.0, 10, 6);
+        let mut grid = UGrid::default();
 
-        grid.insert(101, 12.3, 98.4);
-        grid.insert(102, 23.3, 76.4);
-        grid.insert(103, 34.3, 65.4);
+        grid.insert(101, 12, 98);
+        grid.insert(102, 23, 76);
+        grid.insert(103, 34, 65);
 
         assert_eq!(grid[(5, 10)],
             Agent{id:103, x:34, y:65, next:1, ..Default::default()}
@@ -66,12 +66,12 @@ mod ugrid {
     #[test]
     fn remove_work() {
 
-        let mut grid = UGrid::new(10.0, 50.0, 10, 6);
+        let mut grid = UGrid::default();
 
         grid.init_test_data();
 
-        grid.remove(107, 35.5, 35.3);
-        grid.remove(109, 21.5, 23.3);
+        grid.remove(107, 35, 35);
+        grid.remove(109, 21, 23);
 
         assert_eq!(grid.cells[3][8].head, 2);
         assert_eq!(grid.cells[3][14].head, 5);
@@ -96,12 +96,12 @@ mod ugrid {
 
     #[test]
     fn move_cell_work() {
-        let mut grid = UGrid::new(10.0, 50.0, 10, 6);
+        let mut grid = UGrid::default();
 
         grid.init_test_data();
 
-        grid.move_cell(107, 35.5, 35.3, 143.3, -165.4);
-        grid.move_cell(106, 24.5, 62.3, 112.3, -123.4);
+        grid.move_cell(107, 35, 35, 143, -165);
+        grid.move_cell(106, 24, 62, 112, -123);
         
         assert_eq!(grid.cells[5][10].head, 9);
         assert_eq!(grid.cells[7][11].head, 6);
@@ -129,7 +129,7 @@ mod ugrid {
             Agent{id:104, x:123, y:-123, ..Default::default()}
         );
 
-        grid.move_cell(106, 112.3, -123.4, 24.5, 62.3);
+        grid.move_cell(106, 112, -123, 24, 62);
 
         assert_eq!(grid.cells[5][10].head, 6);
         assert_eq!(grid.cells[7][11].head, 7);
@@ -163,12 +163,12 @@ mod ugrid {
 
     #[test]
     fn query_work() {
-        let mut grid = UGrid::new(10.0, 50.0, 10, 6);
+        let mut grid = UGrid::default();
 
         grid.init_test_data();
 
-        grid.insert(201, 38.5, 39.3);
-        let vec = grid.query(38.5, 39.3, 201);
+        grid.insert(201, 38, 39);
+        let vec = grid.query(38, 39, 201);
 
         assert_eq!(vec.len(), 4);
         assert_eq!(vec, [9u16, 8u16, 7u16, 0u16]);
@@ -177,68 +177,72 @@ mod ugrid {
 
     #[test]
     fn dir_query_work() {
-        let mut grid = UGrid::new(10.0, 50.0, 10, 6);
+        let mut grid = UGrid::default();
 
         grid.init_test_data();
 
-        grid.insert(201, 25.5, 45.3);
+        grid.insert(201, 25, 45);
         let mut vec:Vec<u16>;
 
-        vec = grid.dir_query(0, 25.5, 45.3, 201);
+        vec = grid.dir_query(0, 25, 45, 201);
         assert_eq!(vec.len(), 1);
         assert_eq!(vec, [7u16]);
 
-        vec = grid.dir_query(1, 25.5, 45.3, 201);
+        vec = grid.dir_query(1, 25, 45, 201);
         assert_eq!(vec.len(), 2);
         assert_eq!(vec, [8u16, 7u16]);
 
-        vec = grid.dir_query(2, 25.5, 45.3, 201);
+        vec = grid.dir_query(2, 25, 45, 201);
         assert_eq!(vec.len(), 2);
         assert_eq!(vec, [8u16, 7u16]);
 
-        vec = grid.dir_query(3, 25.5, 45.3, 201);
+        vec = grid.dir_query(3, 25, 45, 201);
         assert_eq!(vec.len(), 0);
 
-        vec = grid.dir_query(4, 25.5, 45.3, 201);
+        vec = grid.dir_query(4, 25, 45, 201);
         assert_eq!(vec.len(), 1);
         assert_eq!(vec, [6u16]);
 
-        vec = grid.dir_query(5, 25.5, 45.3, 201);
+        vec = grid.dir_query(5, 25, 45, 201);
         assert_eq!(vec.len(), 1);
         assert_eq!(vec, [6u16]);
 
-        vec = grid.dir_query(6, 25.5, 45.3, 201);
+        vec = grid.dir_query(6, 25, 45, 201);
         assert_eq!(vec.len(), 0);
 
-        vec = grid.dir_query(7, 25.5, 45.3, 201);
+        vec = grid.dir_query(7, 25, 45, 201);
         assert_eq!(vec.len(), 0);
     }
 
     #[test]
     fn in_grid_work() {
 
-        let mut grid = UGrid::new(10.0, 50.0, 10, 6);
+        let mut grid = UGrid::default();
 
         grid.init_test_data();
 
-        assert!(grid.in_grid(-1000.0, 600.0));
-        assert!(!grid.in_grid(-1000.001, 600.001));
+        assert!(grid.in_grid(-1000, 600));
+        assert!(!grid.in_grid(-1001, 600));
+        assert!(!grid.in_grid(-1000, 601));
 
-        assert!(grid.in_grid(999.999, 600.0));
-        assert!(!grid.in_grid(1000.0, 600.001));
+        assert!(grid.in_grid(999, 600));
+        assert!(!grid.in_grid(1000, 600));
+        assert!(!grid.in_grid(999, 601));
 
-        assert!(grid.in_grid(999.999, -599.999));
-        assert!(!grid.in_grid(1000.0, -600.0));
+        assert!(grid.in_grid(999, -599));
+        assert!(!grid.in_grid(1000, -599));
+        assert!(!grid.in_grid(999, -600));
 
-        assert!(grid.in_grid(-1000.0, -599.999));
-        assert!(!grid.in_grid(-1000.001, -600.0));
+        assert!(grid.in_grid(-1000, -599));
+        assert!(!grid.in_grid(-1001, -599));
+        assert!(!grid.in_grid(-1000, -600));
     }
 
 
     #[test]
     fn in_cell_work() {
 
-        let mut grid = UGrid::new(10.0, 50.0, 10, 6);
+        let mut grid = UGrid::default();
 
         grid.init_test_data();
 
@@ -256,33 +260,33 @@ mod ugrid {
     #[test]
     fn pos2cell_work() {
 
-        let grid = UGrid::new(10.0, 50.0, 10, 6);
+        let grid = UGrid::default();
         
-        assert_eq!((0, 0), grid.pos2cell(-2000.0, 1600.0));
-        assert_eq!((19, 0), grid.pos2cell(2000.0, 1600.0));
-        assert_eq!((19, 11), grid.pos2cell(2000.0, -1600.0));
-        assert_eq!((0, 11), grid.pos2cell(-2000.0, -1600.0));
+        assert_eq!((0, 0), grid.pos2cell(-2000, 1600));
+        assert_eq!((19, 0), grid.pos2cell(2000, 1600));
+        assert_eq!((19, 11), grid.pos2cell(2000, -1600));
+        assert_eq!((0, 11), grid.pos2cell(-2000, -1600));
 
-        assert_eq!((0, 3), grid.pos2cell(-2000.0, 300.0));
-        assert_eq!((19, 3), grid.pos2cell(2000.0, 300.0));
-        assert_eq!((12, 0), grid.pos2cell(200.0, 1600.0));
-        assert_eq!((12, 11), grid.pos2cell(200.0, -1600.0));
+        assert_eq!((0, 3), grid.pos2cell(-2000, 300));
+        assert_eq!((19, 3), grid.pos2cell(2000, 300));
+        assert_eq!((12, 0), grid.pos2cell(200, 1600));
+        assert_eq!((12, 11), grid.pos2cell(200, -1600));
     }
 
     #[test]
     fn out_bounds_insert_work() {
-        let mut grid = UGrid::new(10.0, 50.0, 10, 6);
+        let mut grid = UGrid::default();
         grid.init_test_data();
 
-        grid.insert(201, -2000.0, 1600.0);
-        grid.insert(202, 2000.0, 1600.0);
-        grid.insert(203, 2000.0, -1600.0);
-        grid.insert(204, -2000.0, -1600.0);
+        grid.insert(201, -2000, 1600);
+        grid.insert(202, 2000, 1600);
+        grid.insert(203, 2000, -1600);
+        grid.insert(204, -2000, -1600);
 
-        grid.insert(205, -2000.0, 300.0);
-        grid.insert(206, 2000.0, 300.0);
-        grid.insert(207, 200.0, 1600.0);
-        grid.insert(208, 200.0, -1600.0);
+        grid.insert(205, -2000, 300);
+        grid.insert(206, 2000, 300);
+        grid.insert(207, 200, 1600);
+        grid.insert(208, 200, -1600);
 
         
         assert_eq!(grid.pool[10], 
@@ -307,16 +311,16 @@ mod ugrid {
 
     #[test]
     fn out_bounds_remove_work() {
-        let mut grid = UGrid::new(10.0, 50.0, 10, 6);
+        let mut grid = UGrid::default();
         grid.init_test_data();
 
-        grid.insert(205, -2000.0, 300.0);
-        grid.insert(206, 2000.0, 300.0);
-        grid.insert(207, 200.0, 1600.0);
-        grid.insert(208, 200.0, -1600.0);
+        grid.insert(205, -2000, 300);
+        grid.insert(206, 2000, 300);
+        grid.insert(207, 200, 1600);
+        grid.insert(208, 200, -1600);
 
-        grid.remove(205, -2000.0, 300.0);
-        grid.remove(208, 200.0, -1600.0);
+        grid.remove(205, -2000, 300);
+        grid.remove(208, 200, -1600);
 
         assert_eq!(grid.pool[10], 
             Agent{id:  INACTIVE, x:-2000, y:  300,  ..Default::default()});

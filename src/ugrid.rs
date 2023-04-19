@@ -1,33 +1,26 @@
-#![allow(dead_code)]
-
 use std::{ops::{Index, IndexMut}};
 use crate::{agent::*, pool::*, cells::*};
 
 
 #[derive(Debug)]
 pub struct UGrid{
-    pub cells: Rows,
-    pub pool: Pool,
-
     pub cols: u16,
     pub rows: u16,
-    pub cell_size: f32,
-    cell_radius: f32,
-    half_cols: u16,
-    half_rows: u16,
-    col_max: i16,
-    row_max: i16,
-
-    half_grid_width: f32,
-    half_grid_height: f32,
-    grid_width: f32,
-    grid_height: f32,
+    pub agent_size: i16,
+    pub cell_size: u16,
 
     inv_cell_size: f32,
 
-    agent_radius: f32,
-    pub agent_size: f32,
-    agent_size_i16: i16,
+    max_col: u16,
+    max_row: u16,
+
+    half_grid_width: i16,
+    half_grid_height: i16,
+    grid_width: i16,
+    grid_height: i16,
+
+    pub cells: Rows,
+    pub pool: Pool,
 }
 
 
@@ -36,28 +29,23 @@ impl Default for UGrid {
     fn default() -> Self {
         
         Self{
-            cells: Rows::new(12, 20),
-            pool: Pool::default(),
-            
             cols: 20,
             rows: 12,
-            cell_size: 100.0,
-            cell_radius: 50.0,
-            half_cols: 10,
-            half_rows: 6,
-            col_max: 19,
-            row_max: 11,
-
-            half_grid_width: 1000.0,
-            half_grid_height: 600.0,
-            grid_width: 2000.0,
-            grid_height: 1200.0,
+            agent_size: 20,
+            cell_size: 100,
 
             inv_cell_size: 0.01,
 
-            agent_radius: 10.0,
-            agent_size: 20.0,
-            agent_size_i16: 20,
+            max_col: 19,
+            max_row: 11,
+
+            half_grid_width: 1000,
+            half_grid_height: 600,
+            grid_width: 2000,
+            grid_height: 1200,
+
+            cells: Rows::new(12, 20),
+            pool: Pool::default(),
         }
     }
 }
@@ -85,50 +73,38 @@ impl IndexMut<(u16, u16)> for UGrid {
 impl UGrid {
 
     pub fn new(
-            agent_radius:f32, cell_radius:f32,
+            agent_radius:u16, cell_radius:u16,
             half_cols:u16, half_rows:u16,
         ) -> Self {
         
         Self {
-            cell_radius: cell_radius,
-            cell_size: cell_radius * 2.0,
-
-            half_cols: half_cols,
-            half_rows: half_rows,
             cols: half_cols * 2,
             rows: half_rows * 2,
-            col_max: (half_cols * 2 - 1) as i16,
-            row_max: (half_rows * 2 - 1) as i16,
+            agent_size: (agent_radius * 2) as i16,
+            cell_size: cell_radius * 2,
 
-            half_grid_width: half_cols as f32 * cell_radius * 2.0,
-            half_grid_height: half_rows as f32 * cell_radius * 2.0,
-            grid_width: half_cols as f32 * cell_radius * 4.0,
-            grid_height: half_rows as f32 * cell_radius * 4.0,
+            inv_cell_size: 0.5 / cell_radius as f32,
 
-            agent_radius: agent_radius,
-            agent_size: agent_radius * 2.0,
-            agent_size_i16: (agent_radius * 2.0) as i16,
+            max_col: half_cols * 2 - 1,
+            max_row: half_rows * 2 - 1,
 
-            inv_cell_size: 0.5 / cell_radius,
+            half_grid_width: (half_cols * cell_radius * 2) as i16,
+            half_grid_height: (half_rows * cell_radius * 2) as i16,
+            grid_width: (half_cols * cell_radius * 4) as i16,
+            grid_height: (half_rows * cell_radius * 4) as i16,
             
             cells: Rows::new(half_rows * 2, half_cols * 2),
             pool: Pool::default(),
         }
     }
 
-
-    pub fn agent_radius(&self) -> f32 {
-        self.agent_radius
-    }
-
-
-    pub fn insert(&mut self, id: u32, x:f32, y:f32) {
+    pub fn insert(&mut self, id: u32, x:i16, y:i16) {
 
         assert!(id != INACTIVE);
 
         let (col, row) = self.pos2cell(x, y);
 
-        let mut agent = Agent::new(id, x as i16, y as i16);
+        let mut agent = Agent::new(id, x, y);
 
         if self.cells[row][col].head != INVALID {
 
@@ -142,7 +118,7 @@ impl UGrid {
     }
 
 
-    pub fn remove(&mut self, id: u32, x:f32, y:f32) {
+    pub fn remove(&mut self, id: u32, x:i16, y:i16) {
 
         assert!(id != INACTIVE);
 
@@ -154,7 +130,7 @@ impl UGrid {
     }
 
 
-    pub fn move_cell(&mut self, id: u32, prev_x: f32, prev_y: f32, x: f32, y: f32) {
+    pub fn move_cell(&mut self, id: u32, prev_x: i16, prev_y: i16, x: i16, y: i16) {
 
         assert!(id != INACTIVE);
 
@@ -180,13 +156,12 @@ impl UGrid {
             panic!("index:{} id:{} prev:({},{}) curr:({},{}) ", index, id, prev_col, prev_row, col, row);
         }
 
-        self.pool[index].x = x as i16;
-        self.pool[index].y = y as i16;
-
+        self.pool[index].x = x;
+        self.pool[index].y = y;
     }
 
 
-    pub fn query(&self, x: f32, y: f32, omit_id: u32) -> Vec<u16> {
+    pub fn query(&self, x: i16, y: i16, omit_id: u32) -> Vec<u16> {
         let (min_col, min_row) = self.pos2cell(x - self.agent_size, y + self.agent_size);
         let (max_col, max_row) = self.pos2cell(x + self.agent_size, y - self.agent_size);
 
@@ -202,7 +177,7 @@ impl UGrid {
 
                     if (agent.id != omit_id) &&
                         agent.in_grid(self) &&
-                        agent.is_bump_xy(x as i16, y as i16, self.agent_size_i16) {
+                        agent.is_bump_xy(x, y, self.agent_size) {
 
                         vec.push(index);
                     }
@@ -215,7 +190,7 @@ impl UGrid {
         vec
     }
 
-    pub fn dir_query(&self, dir: u8, x: f32, y: f32, omit_id: u32) -> Vec<u16> {
+    pub fn dir_query(&self, dir: u8, x: i16, y: i16, omit_id: u32) -> Vec<u16> {
         let (min_col, min_row) = self.pos2cell(x - self.agent_size, y + self.agent_size);
         let (max_col, max_row) = self.pos2cell(x + self.agent_size, y - self.agent_size);
 
@@ -231,7 +206,7 @@ impl UGrid {
 
                     if agent.id != omit_id &&
                         agent.in_grid(self) &&
-                        agent.bump_front_xy(dir, x as i16, y as i16, self.agent_size_i16) {
+                        agent.bump_front_xy(dir, x, y, self.agent_size) {
 
                         vec.push(index);
                     }
@@ -333,37 +308,39 @@ impl UGrid {
         self.pool[index].next = head;
     }
         
-    pub fn in_grid(&self, x: f32, y: f32) -> bool {
+    pub fn in_grid(&self, x: i16, y: i16) -> bool {
         let (dx, dy) = self.pos2grid(x, y);
 
-        dx >= 0.0 && dx < self.grid_width &&
-        dy >= 0.0 && dy < self.grid_height
+        dx >= 0 && dx < self.grid_width &&
+        dy >= 0 && dy < self.grid_height
     }
 
-    pub fn pos2grid(&self, x:f32, y:f32) -> (f32, f32) {
-        (self.half_grid_width + x, self.half_grid_height - y)
+    pub fn pos2grid(&self, x:i16, y:i16) -> (i16, i16) {
+        (self.half_grid_width + x,
+            self.half_grid_height - y)
     }
 
-    pub fn grid2pos(&self, x:f32, y:f32) -> (f32, f32) {
-        (x - self.half_grid_width, self.half_grid_height - y)
+    pub fn grid2pos(&self, x:i16, y:i16) -> (i16, i16) {
+        (x - self.half_grid_width,
+            self.half_grid_height - y)
     }
 
-    pub fn cell2pos(&self, col: u16, row: u16) -> (f32, f32) {
-        let dx = (col as f32) / self.inv_cell_size;
-        let dy = (row as f32) / self.inv_cell_size;
+    pub fn cell2pos(&self, col: u16, row: u16) -> (i16, i16) {
+        let dx = (col * self.cell_size) as i16;
+        let dy = (row * self.cell_size) as i16;
         
         self.grid2pos(dx, dy)
     }
 
-    pub fn pos2cell(&self, x:f32, y:f32) -> (u16, u16) {
+    pub fn pos2cell(&self, x:i16, y:i16) -> (u16, u16) {
 
         let (dx, dy) = self.pos2grid(x, y);
 
-        let col = dx * self.inv_cell_size;
-        let row = dy * self.inv_cell_size;
+        let col = ((dx as f32) * self.inv_cell_size) as u16;
+        let row = ((dy as f32) * self.inv_cell_size) as u16;
 
-        ((col as i16).clamp(0, self.col_max) as u16,
-         (row as i16).clamp(0, self.row_max) as u16)
+        (col.clamp(0, self.max_col),
+        row.clamp(0, self.max_row))
     }
 
     pub fn print_agents(&self, row: u16, col: u16) {
@@ -412,16 +389,16 @@ impl UGrid {
     }
 
     pub fn init_test_data(&mut self) {
-        self.insert(100, 54.3, 29.4);
-        self.insert(101, 12.3, 23.4);
-        self.insert(102, -123.3, 223.4);
-        self.insert(103, -323.3, -123.4);
-        self.insert(104, 123.3, -123.4);
-        self.insert(105, 423.3, 223.4);
+        self.insert(100, 54, 29);
+        self.insert(101, 12, 23);
+        self.insert(102, -123, 223);
+        self.insert(103, -323, -123);
+        self.insert(104, 123, -123);
+        self.insert(105, 423, 223);
 
-        self.insert(106, 24.5, 62.3);
-        self.insert(107, 35.5, 35.3);
-        self.insert(108, 42.5, 43.3);
-        self.insert(109, 21.5, 23.3);
+        self.insert(106, 24, 62);
+        self.insert(107, 35, 35);
+        self.insert(108, 42, 43);
+        self.insert(109, 21, 23);
     }
 }

@@ -53,7 +53,7 @@ impl Agent {
     }
 
     pub fn in_grid(&self, grid:&UGrid) -> bool {
-        grid.in_grid(self.x as f32, self.y as f32)
+        grid.in_grid(self.x, self.y)
     }
 
     pub fn is_bump(&self, other:&Agent, check_radius:i16) -> bool {
@@ -63,8 +63,8 @@ impl Agent {
 
     pub fn is_bump_xy(&self, x:i16, y:i16, check_radius:i16) -> bool {
 
-        (self.x - x as i16).abs() <= check_radius && 
-        (self.y - y as i16).abs() <= check_radius
+        (self.x - x).abs() <= check_radius && 
+        (self.y - y).abs() <= check_radius
     }
 
     pub fn is_bump_dxy(&self, dx:i16, dy:i16, check_radius:i16) -> bool {
