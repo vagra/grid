@@ -1,5 +1,10 @@
 use std::{ops::{Index, IndexMut}};
-use crate::{agent::*, pool::*, cells::*};
+
+pub mod cells;
+pub mod pool;
+pub mod agent;
+
+use crate::{*, ugrid::{agent::*, pool::*, cells::*}};
 
 
 #[derive(Debug)]

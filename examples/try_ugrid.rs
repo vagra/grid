@@ -1,5 +1,5 @@
 use std::mem;
-use grid::{ugrid::*, agent::*, pool::*, cells::*};
+use grid::{*, ugrid::*, ugrid::{agent::*, pool::*, cells::*}};
 
 
 fn main() {
@@ -245,7 +245,7 @@ pub fn print_size() {
     grid.init_test_data();
 
     println!("size of Agent: {}", mem::size_of::<Agent>());
-    println!("size of AgentList: {}", mem::size_of::<AgentList>());
+    println!("size of Agents: {}", mem::size_of::<Agents>());
     println!("size of Rows: {}", mem::size_of::<Rows>());
     println!("size of Cols: {}", mem::size_of::<Cols>());
     println!("size of Pool: {}", mem::size_of::<Pool>());

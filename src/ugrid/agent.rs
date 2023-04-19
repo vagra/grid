@@ -1,8 +1,6 @@
 use std::{ops::{Index, IndexMut}};
-use crate::{pool::*, ugrid::*};
-
-
-pub const INACTIVE: u32 = u32::MAX;
+use crate::*;
+use super::*;
 
 
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -124,17 +122,17 @@ impl Agent {
 
 
 #[derive(Debug)]
-pub struct AgentList(pub Vec<Agent>);
+pub struct Agents(pub Vec<Agent>);
 
 
-impl Default for AgentList {
+impl Default for Agents {
     fn default() -> Self {
         
         Self(Vec::new())
     }
 }
 
-impl Index<u16> for AgentList {
+impl Index<u16> for Agents {
     type Output = Agent;
 
     fn index(&self, index: u16) -> &Self::Output {
@@ -142,7 +140,7 @@ impl Index<u16> for AgentList {
     }
 }
 
-impl IndexMut<u16> for AgentList {
+impl IndexMut<u16> for Agents {
 
     fn index_mut(&mut self, index: u16) -> &mut Self::Output {
 
@@ -150,7 +148,7 @@ impl IndexMut<u16> for AgentList {
     }
 }
 
-impl Drop for AgentList {
+impl Drop for Agents {
 
     fn drop(&mut self) {
         self.0.clear();
@@ -158,7 +156,7 @@ impl Drop for AgentList {
 }
 
 
-impl AgentList {
+impl Agents {
 
     pub fn find(&self, id:u32) -> u16 {
         for (i, agent) in self.0.iter().enumerate() {

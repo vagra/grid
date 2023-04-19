@@ -1,14 +1,11 @@
 use std::ops::{Index, IndexMut};
-use crate::agent::*;
-
-
-pub const INVALID: u16 = u16::MAX;
-pub const POOL_SIZE: u16 = INVALID - 1;
+use crate::*;
+use super::agent::*;
 
 
 #[derive(Debug)]
 pub struct Pool{ 
-    pub data: AgentList,
+    pub data: Agents,
     pub size: u16,
     pub first_free: u16,
 }
@@ -18,7 +15,7 @@ impl Default for Pool {
     fn default() -> Self {
         
         Self {
-            data: AgentList::default(),
+            data: Agents::default(),
             size: 0,
             first_free: INVALID,
         }
