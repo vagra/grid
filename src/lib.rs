@@ -1,3 +1,5 @@
+pub mod cells;
+
 pub mod ugrid;
 pub mod dgrid;
 

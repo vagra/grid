@@ -1,10 +1,9 @@
 use std::{ops::{Index, IndexMut}};
 
-pub mod cells;
 pub mod pool;
 pub mod agent;
 
-use crate::{*, ugrid::{agent::*, pool::*, cells::*}};
+use crate::{*, cells::*, ugrid::{agent::*, pool::*}};
 
 
 #[derive(Debug)]
@@ -19,12 +18,12 @@ pub struct UGrid{
     max_col: u16,
     max_row: u16,
 
-    half_grid_width: i16,
-    half_grid_height: i16,
-    grid_width: i16,
-    grid_height: i16,
+    half_width: i16,
+    half_height: i16,
+    width: i16,
+    height: i16,
 
-    pub cells: Rows,
+    pub heads: Rows,
     pub pool: Pool,
 }
 
@@ -44,12 +43,12 @@ impl Default for UGrid {
             max_col: 19,
             max_row: 11,
 
-            half_grid_width: 1000,
-            half_grid_height: 600,
-            grid_width: 2000,
-            grid_height: 1200,
+            half_width: 1000,
+            half_height: 600,
+            width: 2000,
+            height: 1200,
 
-            cells: Rows::new(12, 20),
+            heads: Rows::new(12, 20),
             pool: Pool::default(),
         }
     }
@@ -60,7 +59,7 @@ impl Index<(u16, u16)> for UGrid {
     
     fn index(&self, index: (u16, u16)) -> &Self::Output {
         let (i, j) = index;
-        let head = self.cells[i][j].head;
+        let head = self.heads[i][j].head;
         &self.pool[head]
     }
 }
@@ -69,7 +68,7 @@ impl IndexMut<(u16, u16)> for UGrid {
 
     fn index_mut(&mut self, index: (u16, u16)) -> &mut Self::Output {
         let (i, j) = index;
-        let head = self.cells[i][j].head;
+        let head = self.heads[i][j].head;
         &mut self.pool[head]
     }
 }
@@ -93,12 +92,12 @@ impl UGrid {
             max_col: half_cols * 2 - 1,
             max_row: half_rows * 2 - 1,
 
-            half_grid_width: (half_cols * cell_radius * 2) as i16,
-            half_grid_height: (half_rows * cell_radius * 2) as i16,
-            grid_width: (half_cols * cell_radius * 4) as i16,
-            grid_height: (half_rows * cell_radius * 4) as i16,
+            half_width: (half_cols * cell_radius * 2) as i16,
+            half_height: (half_rows * cell_radius * 2) as i16,
+            width: (half_cols * cell_radius * 4) as i16,
+            height: (half_rows * cell_radius * 4) as i16,
             
-            cells: Rows::new(half_rows * 2, half_cols * 2),
+            heads: Rows::new(half_rows * 2, half_cols * 2),
             pool: Pool::default(),
         }
     }
@@ -111,14 +110,14 @@ impl UGrid {
 
         let mut agent = Agent::new(id, x, y);
 
-        if self.cells[row][col].head != INVALID {
+        if self.heads[row][col].head != INVALID {
 
-            agent.next = self.cells[row][col].head;
+            agent.next = self.heads[row][col].head;
         }
 
         let index = self.pool.insert(agent);
 
-        self.cells[row][col].head = index;
+        self.heads[row][col].head = index;
 
     }
 
@@ -175,7 +174,7 @@ impl UGrid {
         for row in min_row..=max_row {
             for col in min_col..=max_col {
 
-                index = self.cells[row][col].head;
+                index = self.heads[row][col].head;
 
                 while index != INVALID {
                     let agent = self.pool[index];
@@ -204,7 +203,7 @@ impl UGrid {
         for row in min_row..=max_row {
             for col in min_col..=max_col {
 
-                index = self.cells[row][col].head;
+                index = self.heads[row][col].head;
 
                 while index != INVALID {
                     let agent = self.pool[index];
@@ -236,7 +235,7 @@ impl UGrid {
         assert!(row != INVALID);
         assert!(col != INVALID);
 
-        let mut index = self.cells[row][col].head;
+        let mut index = self.heads[row][col].head;
 
         loop {
 
@@ -255,7 +254,7 @@ impl UGrid {
 
     pub fn in_cell(&mut self, id: u32, row: u16, col: u16) -> bool {
 
-        let mut index = self.cells[row][col].head;
+        let mut index = self.heads[row][col].head;
 
         loop {
 
@@ -274,7 +273,7 @@ impl UGrid {
 
     pub fn pop_cell(&mut self, id: u32, row: u16, col: u16) -> u16 {
 
-        let mut index = self.cells[row][col].head;
+        let mut index = self.heads[row][col].head;
 
         let mut prev = index;
         loop {
@@ -290,8 +289,8 @@ impl UGrid {
             index = self.pool[index].next;
         }
 
-        if index == self.cells[row][col].head {
-            self.cells[row][col].head = self.pool[index].next;
+        if index == self.heads[row][col].head {
+            self.heads[row][col].head = self.pool[index].next;
         }
         else {
             self.pool[prev].next = self.pool[index].next;
@@ -307,8 +306,8 @@ impl UGrid {
             panic!("cell:({},{}) index:{}", row, col, index);
         }
 
-        let head = self.cells[row][col].head;
-        self.cells[row][col].head = index;
+        let head = self.heads[row][col].head;
+        self.heads[row][col].head = index;
         
         self.pool[index].next = head;
     }
@@ -316,18 +315,18 @@ impl UGrid {
     pub fn in_grid(&self, x: i16, y: i16) -> bool {
         let (dx, dy) = self.pos2grid(x, y);
 
-        dx >= 0 && dx < self.grid_width &&
-        dy >= 0 && dy < self.grid_height
+        dx >= 0 && dx < self.width &&
+        dy >= 0 && dy < self.height
     }
 
     pub fn pos2grid(&self, x:i16, y:i16) -> (i16, i16) {
-        (self.half_grid_width + x,
-            self.half_grid_height - y)
+        (self.half_width + x,
+            self.half_height - y)
     }
 
     pub fn grid2pos(&self, x:i16, y:i16) -> (i16, i16) {
-        (x - self.half_grid_width,
-            self.half_grid_height - y)
+        (x - self.half_width,
+            self.half_height - y)
     }
 
     pub fn cell2pos(&self, col: u16, row: u16) -> (i16, i16) {
@@ -350,7 +349,7 @@ impl UGrid {
 
     pub fn print_agents(&self, row: u16, col: u16) {
 
-        let mut index = self.cells[row][col].head;
+        let mut index = self.heads[row][col].head;
 
         while index != INVALID {
             let agent = self.pool[index];
@@ -369,7 +368,7 @@ impl UGrid {
 
         for i in 0..self.rows {
             for j in 0..self.cols {
-                print!("{:5} ", self.cells[i][j].head)
+                print!("{:5} ", self.heads[i][j].head)
             }
             println!()
         }

@@ -1,5 +1,5 @@
 use std::mem;
-use grid::{*, ugrid::*, ugrid::{agent::*, pool::*, cells::*}};
+use grid::{*, cells::*, ugrid::*, ugrid::{agent::*, pool::*}};
 
 
 fn main() {
@@ -26,17 +26,17 @@ pub fn test_insert_remove() {
     grid.init_test_data();
 
     grid.print_cells();
-    println!("{}", grid.cells[5][10].head);
+    println!("{}", grid.heads[5][10].head);
     grid.print_agents(5, 10);
     
     grid.remove(107, 35, 35);
     grid.print_cells();
-    println!("{}", grid.cells[5][10].head);
+    println!("{}", grid.heads[5][10].head);
     grid.print_agents(5, 10);
 
     grid.remove(109, 21, 23);
     grid.print_cells();
-    println!("{}", grid.cells[5][10].head);
+    println!("{}", grid.heads[5][10].head);
     grid.print_agents(5, 10);
 }
 
@@ -48,22 +48,22 @@ pub fn test_move_cell() {
     grid.init_test_data();
 
     grid.print_cells();
-    println!("{}", grid.cells[5][10].head);
+    println!("{}", grid.heads[5][10].head);
     grid.print_agents(5, 10);
 
     grid.move_cell(107, 35, 35, 143, -165);
     grid.move_cell(106, 24, 62, 112, -123);
     grid.print_cells();
-    println!("{}", grid.cells[5][10].head);
+    println!("{}", grid.heads[5][10].head);
     grid.print_agents(5, 10);
-    println!("{}", grid.cells[7][11].head);
+    println!("{}", grid.heads[7][11].head);
     grid.print_agents(7, 11);
 
     grid.move_cell(106, 112, -123, 24, 62);
     grid.print_cells();
-    println!("{}", grid.cells[5][10].head);
+    println!("{}", grid.heads[5][10].head);
     grid.print_agents(5, 10);
-    println!("{}", grid.cells[7][11].head);
+    println!("{}", grid.heads[7][11].head);
     grid.print_agents(7, 11);
 
 }

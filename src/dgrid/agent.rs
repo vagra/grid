@@ -16,6 +16,7 @@ pub struct Agent {
 }
 
 impl Default for Agent {
+    
     fn default() -> Self {
 
         Self {

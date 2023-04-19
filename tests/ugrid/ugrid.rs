@@ -5,8 +5,8 @@ fn default_work() {
     let grid = UGrid::default();
 
     assert_eq!(grid.pool.size, 0);
-    assert_eq!(grid.cells.len(), grid.rows);
-    assert_eq!(grid.cells[0].len(), grid.cols);
+    assert_eq!(grid.heads.len(), grid.rows);
+    assert_eq!(grid.heads[0].len(), grid.cols);
 }
 
 #[test]
@@ -15,11 +15,11 @@ fn insert_work() {
 
     grid.init_test_data();
 
-    assert_eq!(grid.cells[3][8].head, 2);
-    assert_eq!(grid.cells[3][14].head, 5);
-    assert_eq!(grid.cells[5][10].head, 9);
-    assert_eq!(grid.cells[7][6].head, 3);
-    assert_eq!(grid.cells[7][11].head, 4);
+    assert_eq!(grid.heads[3][8].head, 2);
+    assert_eq!(grid.heads[3][14].head, 5);
+    assert_eq!(grid.heads[5][10].head, 9);
+    assert_eq!(grid.heads[7][6].head, 3);
+    assert_eq!(grid.heads[7][11].head, 4);
 
     assert_eq!(grid.pool[9],
         Agent{id:109, x:21, y:23, next:8, ..Default::default()}
@@ -71,11 +71,11 @@ fn remove_work() {
     grid.remove(107, 35, 35);
     grid.remove(109, 21, 23);
 
-    assert_eq!(grid.cells[3][8].head, 2);
-    assert_eq!(grid.cells[3][14].head, 5);
-    assert_eq!(grid.cells[5][10].head, 8);
-    assert_eq!(grid.cells[7][6].head, 3);
-    assert_eq!(grid.cells[7][11].head, 4);
+    assert_eq!(grid.heads[3][8].head, 2);
+    assert_eq!(grid.heads[3][14].head, 5);
+    assert_eq!(grid.heads[5][10].head, 8);
+    assert_eq!(grid.heads[7][6].head, 3);
+    assert_eq!(grid.heads[7][11].head, 4);
 
     assert_eq!(grid.pool[8],
         Agent {id:108, x:42, y:43, next:6, ..Default::default()}
@@ -101,8 +101,8 @@ fn move_cell_work() {
     grid.move_cell(107, 35, 35, 143, -165);
     grid.move_cell(106, 24, 62, 112, -123);
     
-    assert_eq!(grid.cells[5][10].head, 9);
-    assert_eq!(grid.cells[7][11].head, 6);
+    assert_eq!(grid.heads[5][10].head, 9);
+    assert_eq!(grid.heads[7][11].head, 6);
 
     assert_eq!(grid.pool[9],
         Agent{id:109, x:21, y:23, next:8, ..Default::default()}
@@ -129,8 +129,8 @@ fn move_cell_work() {
 
     grid.move_cell(106, 112, -123, 24, 62);
 
-    assert_eq!(grid.cells[5][10].head, 6);
-    assert_eq!(grid.cells[7][11].head, 7);
+    assert_eq!(grid.heads[5][10].head, 6);
+    assert_eq!(grid.heads[7][11].head, 7);
 
     assert_eq!(grid.pool[6],
         Agent{id:106, x:24, y:62, next:9, ..Default::default()}
