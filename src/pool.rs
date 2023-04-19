@@ -70,9 +70,9 @@ impl Pool {
 
             index
         } else {
-            self.data.push(agent);
+            self.data.0.push(agent);
 
-            self.data.len() - 1
+            self.data.0.len() as u16 - 1
         }
     }
 
@@ -82,7 +82,7 @@ impl Pool {
             return;
         }
 
-        if self.data.is_empty() {
+        if self.data.0.is_empty() {
             return;
         }
 
@@ -101,24 +101,19 @@ impl Pool {
 
     pub fn clear(&mut self) {
 
-        if self.data.is_empty() {
+        if self.data.0.is_empty() {
             assert_eq!(self.first_free, INVALID);
             return;
         }
 
-        self.data.clear();
+        self.data.0.clear();
         self.first_free = INVALID;
         self.size = 0;
     }
 
     pub fn capacity(&self) -> u16 {
 
-        self.data.len()
-    }
-
-    pub fn size(&self) -> u16 {
-
-        self.size
+        self.data.0.len() as u16
     }
 
     pub fn find(&self, id:u32) -> u16 {

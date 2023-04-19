@@ -124,7 +124,7 @@ impl Agent {
 
 
 #[derive(Debug)]
-pub struct AgentList(Vec<Agent>);
+pub struct AgentList(pub Vec<Agent>);
 
 
 impl Default for AgentList {
@@ -153,36 +153,12 @@ impl IndexMut<u16> for AgentList {
 impl Drop for AgentList {
 
     fn drop(&mut self) {
-        self.clear();
+        self.0.clear();
     }
 }
 
 
 impl AgentList {
-
-    pub fn push(&mut self, agent:Agent) {
-
-        self.0.push(agent);
-    }
-
-    pub fn pop(&mut self) -> Option<Agent> {
-        self.0.pop()
-    }
-
-    pub fn clear(&mut self) {
-
-        self.0.clear();
-    }
-
-    pub fn len(&self) -> u16 {
-
-        self.0.len() as u16
-    }
-
-    pub fn is_empty(&self) -> bool {
-
-        self.0.is_empty()
-    }
 
     pub fn find(&self, id:u32) -> u16 {
         for (i, agent) in self.0.iter().enumerate() {

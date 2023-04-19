@@ -6,7 +6,7 @@ mod ugrid {
     fn default_work() {
         let grid = UGrid::new(10.0, 50.0, 10, 6);
 
-        assert_eq!(grid.pool.size(), 0);
+        assert_eq!(grid.pool.size, 0);
         assert_eq!(grid.cells.len(), grid.rows);
         assert_eq!(grid.cells[0].len(), grid.cols);
     }
