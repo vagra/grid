@@ -1,3 +1,4 @@
+use crate::cells::*;
 use super::lcell::*;
 
 
@@ -5,7 +6,7 @@ use super::lcell::*;
 #[derive(Debug)]
 pub struct Loose {
 
-    pub cells: LCells,
+    pub cells: Rows<LCell>,
 
     pub cols: u16,
     pub rows: u16,

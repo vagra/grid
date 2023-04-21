@@ -1,9 +1,12 @@
 use std::{ops::{Index, IndexMut}};
 
-pub mod pool;
+pub mod ucell;
 pub mod agent;
 
-use crate::{*, cells::*, ugrid::{agent::*, pool::*}};
+use crate::{
+    *, cells::*, pool::*,
+    ugrid::{agent::*, ucell::*}
+};
 
 
 #[derive(Debug)]
@@ -23,8 +26,8 @@ pub struct UGrid{
     width: i16,
     height: i16,
 
-    pub heads: Rows,
-    pub pool: Pool,
+    pub heads: Rows<UCell>,
+    pub pool: Pool<Agent>,
 }
 
 

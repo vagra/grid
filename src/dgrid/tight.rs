@@ -1,6 +1,4 @@
-use crate::*;
-use super::{*, tpool::*, cells::*};
-
+use super::{*, titem::*, tcell::*};
 
 
 #[derive(Debug)]
@@ -10,6 +8,6 @@ pub struct Tight {
 
     inv_cell_size: f32,
 
-    pub cells: TPool,
-    pub heads: Rows,
+    pub heads: Rows<TCell>,
+    pub cells: Pool<TItem>,
 }

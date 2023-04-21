@@ -1,30 +1,29 @@
 use std::ops::{Index, IndexMut};
-use crate::*;
-use super::agent::*;
+use crate::{*, items::*};
 
 
 #[derive(Debug)]
-pub struct Pool{ 
-    pub data: Agents,
+pub struct Pool<T: ItemSpec+ItemComm>{ 
+    pub data: Items<T>,
     pub size: u16,
     pub first_free: u16,
 }
 
 
-impl Default for Pool {
+impl<T:ItemSpec+ItemComm + Default> Default for Pool<T> {
     fn default() -> Self {
         
         Self {
-            data: Agents::default(),
+            data: Items::default(),
             size: 0,
             first_free: INVALID,
         }
     }
 }
 
-impl Index<u16> for Pool {
+impl<T:ItemSpec+ItemComm> Index<u16> for Pool<T> {
 
-    type Output = Agent;
+    type Output = T;
 
     fn index(&self, index: u16) -> &Self::Output {
 
@@ -32,7 +31,7 @@ impl Index<u16> for Pool {
     }
 }
 
-impl IndexMut<u16> for Pool {
+impl<T:ItemSpec+ItemComm> IndexMut<u16> for Pool<T> {
 
     fn index_mut(&mut self, index: u16) -> &mut Self::Output {
 
@@ -41,7 +40,7 @@ impl IndexMut<u16> for Pool {
 
 }
 
-impl Drop for Pool {
+impl<T:ItemSpec+ItemComm> Drop for Pool<T> {
 
     fn drop(&mut self) {
         self.clear();
@@ -49,9 +48,9 @@ impl Drop for Pool {
 }
 
 
-impl Pool {
+impl<T:ItemSpec+ItemComm> Pool<T> {
 
-    pub fn insert(&mut self, agent: Agent) -> u16 {
+    pub fn insert(&mut self, item: T) -> u16 {
 
         if self.size >= INVALID {
             panic!("pool size overflow. max: {}", POOL_SIZE);
@@ -61,13 +60,13 @@ impl Pool {
 
         if self.first_free != INVALID {
             let index = self.first_free;
-            self.first_free = self.data[index].next_free;
+            self.first_free = self.data[index].next_free();
 
-            self.data[index] = agent;
+            self.data[index] = item;
 
             index
         } else {
-            self.data.0.push(agent);
+            self.data.0.push(item);
 
             self.data.0.len() as u16 - 1
         }
@@ -90,7 +89,7 @@ impl Pool {
         assert!(self.size > 0);
 
         self.data[index].disable();
-        self.data[index].next_free = self.first_free;
+        self.data[index].set_next_free(self.first_free);
 
         self.first_free = index;
         self.size -= 1;
@@ -113,7 +112,10 @@ impl Pool {
         self.data.0.len() as u16
     }
 
-    pub fn find(&self, id:u32) -> u16 {
+    pub fn find<ID>(&self, id: ID) -> u16
+    where
+        T::ID: PartialEq<ID>
+    {
         self.data.find(id)
     }
 

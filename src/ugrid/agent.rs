@@ -1,9 +1,9 @@
-use std::{ops::{Index, IndexMut}};
+use grid_derive::ItemComm;
 use crate::*;
 use super::*;
 
 
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, ItemComm)]
 pub struct Agent {
     pub id: u32,
     pub x: i16,
@@ -26,6 +26,34 @@ impl Default for Agent {
     }
 }
 
+impl ItemSpec for Agent {
+    type ID = u32;
+
+    fn id(&self) -> Self::ID {
+        self.id
+    }
+
+    fn set_id(&mut self, id:Self::ID) {
+        self.id = id;
+    }
+
+    fn is_free(&self) -> bool {
+
+        self.id == INACTIVE
+    }
+
+    fn disable(&mut self) {
+
+        self.id = INACTIVE;
+    }
+
+    fn print(&self) {
+        println!("{{id:{:3}, x:{:3}, y:{:3}, next:{:5}, next_free:{:5}}}", 
+            self.id, self.x, self.y, self.next, self.next_free
+        );
+    }
+}
+
 
 impl Agent {
 
@@ -38,16 +66,6 @@ impl Agent {
             
             ..Default::default()
         }
-    }
-
-    pub fn disable(&mut self) {
-
-        self.id = INACTIVE;
-    }
-
-    pub fn is_free(&self) -> bool {
-
-        self.id == INACTIVE
     }
 
     pub fn in_grid(&self, grid:&UGrid) -> bool {
@@ -111,69 +129,4 @@ impl Agent {
         }
     }
 
-    pub fn print(&self) {
-        println!("{{id:{:3}, x:{:3}, y:{:3}, next:{:5}, next_free:{:5}}}", 
-            self.id, self.x, self.y, self.next, self.next_free
-        );
-    }
-
-}
-
-
-
-#[derive(Debug)]
-pub struct Agents(pub Vec<Agent>);
-
-
-impl Default for Agents {
-    fn default() -> Self {
-        
-        Self(Vec::new())
-    }
-}
-
-impl Index<u16> for Agents {
-    type Output = Agent;
-
-    fn index(&self, index: u16) -> &Self::Output {
-        &self.0[index as usize]
-    }
-}
-
-impl IndexMut<u16> for Agents {
-
-    fn index_mut(&mut self, index: u16) -> &mut Self::Output {
-
-        &mut self.0[index as usize]
-    }
-}
-
-impl Drop for Agents {
-
-    fn drop(&mut self) {
-        self.0.clear();
-    }
-}
-
-
-impl Agents {
-
-    pub fn find(&self, id:u32) -> u16 {
-        for (i, agent) in self.0.iter().enumerate() {
-            if agent.id == id {
-                return i as u16;
-            }
-        }
-
-        INVALID
-    }
-
-    pub fn print(&self) {
-        for (i, agent) in self.0.iter().enumerate() {
-            print!("{:3}: ", i);
-            agent.print();
-        }
-
-        println!();
-    }
 }

@@ -2,11 +2,11 @@ use crate::*;
 
 
 #[derive(Debug, Clone, Copy)]
-pub struct TCell {
+pub struct UCell {
     pub head: u16,
 }
 
-impl Default for TCell {
+impl Default for UCell {
     fn default() -> Self {
 
         Self {
@@ -15,7 +15,7 @@ impl Default for TCell {
     }
 }
 
-impl TCell {
+impl UCell {
 
     pub fn new(head:u16) -> Self {
 

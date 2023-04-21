@@ -1,5 +1,8 @@
 use std::mem;
-use grid::{*, cells::*, ugrid::*, ugrid::{agent::*, pool::*}};
+use grid::{
+    *, cells::*, pool::*, items::*,
+    ugrid::{*, agent::*}
+};
 
 
 fn main() {
@@ -21,6 +24,9 @@ fn main() {
 
 
 pub fn test_insert_remove() {
+    println!("\n------------------------------------------------");
+    println!("test_insert_remove");
+
     let mut grid = UGrid::default();
 
     grid.init_test_data();
@@ -42,6 +48,8 @@ pub fn test_insert_remove() {
 
 
 pub fn test_move_cell() {
+    println!("\n------------------------------------------------");
+    println!("test_move_cell");
 
     let mut grid = UGrid::default();
 
@@ -70,6 +78,8 @@ pub fn test_move_cell() {
 
 
 pub fn test_query() {
+    println!("\n------------------------------------------------");
+    println!("test_query");
 
     let mut grid = UGrid::default();
     grid.init_test_data();
@@ -81,6 +91,8 @@ pub fn test_query() {
 
 
 pub fn test_dir_query() {
+    println!("\n------------------------------------------------");
+    println!("test_dir_query");
 
     let mut grid = UGrid::default();
     grid.init_test_data();
@@ -117,6 +129,9 @@ pub fn test_dir_query() {
 
 
 pub fn test_pos2grid() {
+    println!("\n------------------------------------------------");
+    println!("test_pos2grid");
+
     let grid = UGrid::default();
     
     print!("{:?}\t", grid.pos2grid(-999, 599));
@@ -137,6 +152,9 @@ pub fn test_pos2grid() {
 }
 
 pub fn test_pos2cell() {
+    println!("\n------------------------------------------------");
+    println!("test_pos2cell");
+
     let grid = UGrid::default();
 
     println!("{:?}", grid.pos2cell(-2000, 1600));
@@ -155,17 +173,21 @@ pub fn test_pos2cell() {
 }
 
 pub fn test_grid2pos() {
+    println!("\n------------------------------------------------");
+    println!("test_grid2pos");
+
     let grid = UGrid::default();
 
     println!("{:?}\t", grid.grid2pos(0, 0));
     println!("{:?}\t", grid.grid2pos(2000, 0));
     println!("{:?}\t", grid.grid2pos(2000, 1200));
     println!("{:?}\t", grid.grid2pos(0, 1200));
-
-    println!();
 }
 
 pub fn test_cell2pos() {
+    println!("\n------------------------------------------------");
+    println!("test_cell2pos");
+
     let grid = UGrid::default();
 
     println!("{:?}", grid.cell2pos(0, 0));
@@ -176,6 +198,9 @@ pub fn test_cell2pos() {
 }
 
 pub fn test_find_in_cell() {
+    println!("\n------------------------------------------------");
+    println!("test_find_in_cell");
+
     let mut grid = UGrid::default();
     grid.init_test_data();
 
@@ -194,6 +219,9 @@ pub fn test_find_in_cell() {
 
 
 pub fn test_out_bounds_insert() {
+    println!("\n------------------------------------------------");
+    println!("test_out_bounds_insert");
+
     let mut grid = UGrid::default();
     grid.init_test_data();
 
@@ -217,6 +245,9 @@ pub fn test_out_bounds_insert() {
 
 
 pub fn test_out_bounds_remove() {
+    println!("\n------------------------------------------------");
+    println!("test_out_bounds_remove");
+
     let mut grid = UGrid::default();
     grid.init_test_data();
 
@@ -240,15 +271,18 @@ pub fn test_out_bounds_remove() {
 
 
 pub fn print_size() {
+    println!("\n------------------------------------------------");
+    println!("print_size");
+
     let mut grid = UGrid::default();
 
     grid.init_test_data();
 
     println!("size of Agent: {}", mem::size_of::<Agent>());
-    println!("size of Agents: {}", mem::size_of::<Agents>());
-    println!("size of Rows: {}", mem::size_of::<Rows>());
-    println!("size of Cols: {}", mem::size_of::<Cols>());
-    println!("size of Pool: {}", mem::size_of::<Pool>());
+    println!("size of Items<Agent>: {}", mem::size_of::<Items<Agent>>());
+    println!("size of Rows<Agent>: {}", mem::size_of::<Rows<Agent>>());
+    println!("size of Cols<Agent>: {}", mem::size_of::<Cols<Agent>>());
+    println!("size of Pool<Agent>: {}", mem::size_of::<Pool<Agent>>());
     println!("size of Grid: {}", mem::size_of::<UGrid>());
 
     println!("size of pool: {}", mem::size_of::<Agent>() * POOL_SIZE as usize);

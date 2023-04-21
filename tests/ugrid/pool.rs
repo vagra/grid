@@ -1,9 +1,9 @@
-use grid::{*, ugrid::{agent::*, pool::*}};
+use grid::{*, pool::*, ugrid::{agent::*}};
 
 
 #[test]
 fn basics() {
-    let mut pool = Pool::default();
+    let mut pool:Pool<Agent> = Pool::default();
 
     pool.insert(Agent::new(1, 10, 10));
     pool.insert(Agent::new(2, 20, 20));
@@ -24,7 +24,7 @@ fn basics() {
 
 #[test]
 fn erase_insert() {
-    let mut pool = Pool::default();
+    let mut pool:Pool<Agent> = Pool::default();
 
     pool.insert(Agent::new(100, 10, 10));
     pool.insert(Agent::new(101, 20, 20));
@@ -107,7 +107,7 @@ fn erase_insert() {
 
 #[test]
 fn clear() {
-    let mut pool = Pool::default();
+    let mut pool:Pool<Agent> = Pool::default();
 
     pool.insert(Agent::new(100, 10, 10));
     pool.insert(Agent::new(101, 20, 20));
@@ -132,7 +132,7 @@ fn clear() {
 #[test]
 fn index() {
 
-    let mut pool = Pool::default();
+    let mut pool:Pool<Agent> = Pool::default();
 
     pool.insert(Agent::new(100, 10, 10));
     pool.insert(Agent::new(101, 20, 20));
@@ -155,14 +155,14 @@ fn index() {
 
 #[test]
 fn after_construction_has_no_first_free() {
-    let pool = Pool::default();
+    let pool:Pool<Agent> = Pool::default();
     assert_eq!(pool.first_free, INVALID);
     assert_eq!(pool.capacity(), 0);
 }
 
 #[test]
 fn after_insertion_has_no_first_free() {
-    let mut pool = Pool::default();
+    let mut pool:Pool<Agent> = Pool::default();
     assert_eq!(pool.insert(Agent::new(1, 10, 10)), 0);
     assert_eq!(pool.first_free, INVALID);
     assert_eq!(pool.capacity(), 1);
@@ -170,7 +170,7 @@ fn after_insertion_has_no_first_free() {
 
 #[test]
 fn after_deletion_has_first_free() {
-    let mut pool = Pool::default();
+    let mut pool:Pool<Agent> = Pool::default();
     pool.insert(Agent::new(1, 10, 10));
     pool.erase(0);
     assert_eq!(pool.first_free, 0);
@@ -179,7 +179,7 @@ fn after_deletion_has_first_free() {
 
 #[test]
 fn insert_after_delete_has_no_first_free() {
-    let mut pool = Pool::default();
+    let mut pool:Pool<Agent> = Pool::default();
     pool.insert(Agent::new(1, 10, 10));
     pool.erase(0);
     pool.insert(Agent::new(2, 20, 20));
@@ -189,7 +189,7 @@ fn insert_after_delete_has_no_first_free() {
 
 #[test]
 fn first_free_points_to_last_erased_index() {
-    let mut pool = Pool::default();
+    let mut pool:Pool<Agent> = Pool::default();
     insert_some(&mut pool, 2);
     pool.erase(0);
     pool.erase(1);
@@ -199,7 +199,7 @@ fn first_free_points_to_last_erased_index() {
 
 #[test]
 fn erase_in_ascending_order() {
-    let mut pool = Pool::default();
+    let mut pool:Pool<Agent> = Pool::default();
     insert_some(&mut pool, 4);
     pool.erase(0);
     pool.erase(1);
@@ -211,7 +211,7 @@ fn erase_in_ascending_order() {
 
 #[test]
 fn erase_in_descending_order() {
-    let mut pool = Pool::default();
+    let mut pool:Pool<Agent> = Pool::default();
     insert_some(&mut pool, 4);
     pool.erase(3);
     pool.erase(2);
@@ -223,7 +223,7 @@ fn erase_in_descending_order() {
 
 #[test]
 fn erase_in_mixed_order() {
-    let mut pool = Pool::default();
+    let mut pool:Pool<Agent> = Pool::default();
     insert_some(&mut pool, 4);
     pool.erase(0);
     pool.erase(3);
@@ -236,7 +236,7 @@ fn erase_in_mixed_order() {
 
 #[test]
 fn clear_works() {
-    let mut pool = Pool::default();
+    let mut pool:Pool<Agent> = Pool::default();
     insert_some(&mut pool, 4);
     pool.erase(1);
     pool.clear();
@@ -249,7 +249,7 @@ fn clear_works() {
 
 #[test]
 fn index_works() {
-    let mut pool = Pool::default();
+    let mut pool:Pool<Agent> = Pool::default();
     pool.insert(Agent::new(1, 10, 10));
     pool.insert(Agent::new(2, 20, 20));
 
@@ -259,7 +259,7 @@ fn index_works() {
 
 #[test]
 fn index_mut_works() {
-    let mut pool = Pool::default();
+    let mut pool:Pool<Agent> = Pool::default();
     pool.insert(Agent::new(1, 10, 10));
     pool.insert(Agent::new(2, 20, 20));
 
@@ -271,7 +271,7 @@ fn index_mut_works() {
 }
 
 
-fn insert_some(pool: &mut Pool, n: u16) {
+fn insert_some(pool: &mut Pool<Agent>, n: u16) {
     for i in 0..n {
         pool.insert(Agent::new(i as u32, i as i16 * 10, i as i16 * 20));
     }

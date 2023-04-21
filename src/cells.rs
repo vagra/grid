@@ -1,37 +1,11 @@
 use std::{ops::{Index, IndexMut}};
-use crate::*;
-
-
-#[derive(Debug, Clone, Copy)]
-pub struct Cell {
-    pub head: u16,
-}
-
-impl Default for Cell {
-    fn default() -> Self {
-
-        Self {
-            head: INVALID,
-        }
-    }
-}
-
-impl Cell {
-
-    pub fn new(head:u16) -> Self {
-
-        Self {
-            head: head,
-        }
-    }
-}
 
 
 #[derive(Debug, Clone)]
-pub struct Cols(Vec<Cell>);
+pub struct Cols<T>(Vec<T>);
 
 
-impl Default for Cols {
+impl<T:Default> Default for Cols<T> {
 
     fn default() -> Self {
         
@@ -39,8 +13,8 @@ impl Default for Cols {
     }
 }
 
-impl Index<u16> for Cols {
-    type Output = Cell;
+impl<T> Index<u16> for Cols<T> {
+    type Output = T;
 
     fn index(&self, index: u16) -> &Self::Output {
         
@@ -48,7 +22,7 @@ impl Index<u16> for Cols {
     }
 }
 
-impl IndexMut<u16> for Cols {
+impl<T> IndexMut<u16> for Cols<T> {
 
     fn index_mut(&mut self, index: u16) -> &mut Self::Output {
 
@@ -57,16 +31,15 @@ impl IndexMut<u16> for Cols {
 }
 
 
-impl Cols {
+impl<T:Default> Cols<T> {
 
     pub fn new(cols:u16) -> Self {
 
-        let mut vec:Vec<Cell> = Vec::new();
+        let mut vec:Vec<T> = Vec::new();
 
         for _ in 0..cols {
-            let cell = Cell::default();
 
-            vec.push(cell);
+            vec.push(T::default());
         }
 
         Self(vec)
@@ -80,10 +53,10 @@ impl Cols {
 
 
 #[derive(Debug)]
-pub struct Rows(Vec<Cols>);
+pub struct Rows<T>(Vec<Cols<T>>);
 
 
-impl Default for Rows {
+impl<T:Default> Default for Rows<T> {
 
     fn default() -> Self {
         
@@ -91,8 +64,8 @@ impl Default for Rows {
     }
 }
 
-impl Index<u16> for Rows {
-    type Output = Cols;
+impl<T> Index<u16> for Rows<T> {
+    type Output = Cols<T>;
 
     fn index(&self, index: u16) -> &Self::Output {
         
@@ -100,7 +73,7 @@ impl Index<u16> for Rows {
     }
 }
 
-impl IndexMut<u16> for Rows {
+impl<T> IndexMut<u16> for Rows<T> {
 
     fn index_mut(&mut self, index: u16) -> &mut Self::Output {
 
@@ -108,16 +81,15 @@ impl IndexMut<u16> for Rows {
     }
 }
 
-impl Rows {
+impl<T:Default> Rows<T> {
 
     pub fn new(rows: u16, cols: u16) -> Self {
 
-        let mut vec: Vec<Cols> = Vec::new();
+        let mut vec: Vec<Cols<T>> = Vec::new();
 
         for _ in 0..rows {
-            let row = Cols::new(cols);
 
-            vec.push(row);
+            vec.push(Cols::new(cols));
         }
 
         Self(vec)
