@@ -52,6 +52,10 @@ pub fn derive_grid(input: TokenStream) -> TokenStream {
             fn pos2grid(&self, x:i16, y:i16) -> (i16, i16) {
                 (self.half_width + x, self.half_height - y)
             }
+
+            fn grid2pos(&self, x:i16, y:i16) -> (i16, i16) {
+                (x - self.half_width, self.half_height - y)
+            }
         }
     };
 

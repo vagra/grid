@@ -35,6 +35,7 @@ pub trait ItemComm {
 }
 
 pub trait GridComm {
-    fn pos2grid(&self, x:i16, y:i16) -> (i16, i16);
     fn in_grid(&self, x: i16, y: i16) -> bool;
+    fn pos2grid(&self, x:i16, y:i16) -> (i16, i16);
+    fn grid2pos(&self, x:i16, y:i16) -> (i16, i16);
 }

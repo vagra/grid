@@ -29,10 +29,10 @@ impl Default for Loose {
     fn default() -> Self {
         
         Self {
-            cols: 80,
+            cols: 64,
             rows: 36,
             cell_size: 30,
-            col_max: 79,
+            col_max: 63,
             row_max: 35,
 
             inv_cell_size: 1.0 / 30.0,
@@ -42,7 +42,7 @@ impl Default for Loose {
             width: 1920,
             height: 1080,
 
-            cells: Cells::new(36, 80),
+            cells: Cells::new(36, 64),
             pool: Pool::default(),
         }
     }
