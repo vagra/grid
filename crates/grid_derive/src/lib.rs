@@ -46,7 +46,7 @@ pub fn derive_grid(input: TokenStream) -> TokenStream {
 
             fn in_grid(&self, x: i16, y: i16) -> bool {
                 x >= -self.half_width && x < self.half_width &&
-                y >= -self.half_height && y < self.half_height
+                y > -self.half_height && y <= self.half_height
             }
             
             fn pos2grid(&self, x:i16, y:i16) -> (i16, i16) {
