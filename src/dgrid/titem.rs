@@ -47,8 +47,8 @@ impl ItemSpec for TItem {
     }
 
     fn print(&self) {
-        println!("{{lcell:{:5}, next:{:5}, next_free:{:5}}}", 
-            self.lcol, self.next, self.next_free
+        println!("{{lcell:({:3},{:3}), next:{:5}, next_free:{:5}}}", 
+            self.lcol, self.lrow, self.next, self.next_free
         );
     }
 }

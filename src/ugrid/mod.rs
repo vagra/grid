@@ -339,7 +339,7 @@ impl UGrid {
             index = agent.next;
 
             if !agent.is_free() {
-                print!("{:4}: ", prev);
+                print!("{:5}: ", prev);
                 agent.print();
             }
         }

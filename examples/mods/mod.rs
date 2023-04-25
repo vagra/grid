@@ -1,62 +1,50 @@
-use grid::{dgrid::{*, loose::*, tight::*}, GridComm};
-use super::*;
+use bevy::{prelude::*, reflect::TypeUuid};
+use grid::dgrid::DGrid;
+use crate::*;
+
+pub mod clcell;
+pub mod clrect;
+pub mod ctcell;
+
+const LCELL_COLOR: Color = Color::rgba(0.0, 0.6, 0.0, 0.6);
+const LCELL_BORDER: Color = Color::rgba(0.0, 1.0, 0.0, 0.6);
+const LRECT_COLOR: Color = Color::rgba(0.6, 0.6, 0.0, 0.6);
+const LRECT_BORDER: Color = Color::rgba(1.0, 1.0, 0.0, 0.6);
+const TCELL_COLOR: Color = Color::rgba(0.6, 0.0, 0.0, 0.6);
+const TCELL_BORDER: Color = Color::rgba(1.0, 0.0, 0.0, 0.6);
+const LLINE_WIDTH: f32 = 0.5;
+const TLINE_WIDTH: f32 = 1.0;
 
 
-#[derive(Component)]
-pub struct LRect;
 
+#[derive(Resource, Deref, DerefMut, TypeUuid)]
+#[uuid = "e05ab7bd-6801-4105-b98d-97dfb9da1d7f"]
+pub struct Grid(pub DGrid);
 
-#[derive(Bundle)]
-pub struct LRectBundle {
-    pub rect: LRect,
-
-    #[bundle]
-    pub bundle: ShapeBundle,
-}
-
-impl LRectBundle {
-
-    pub fn new(x:i16, y:i16, size:u16) -> Self {
-
-        let shape = Rectangle {
-            extents: Vec2::new(size as f32, size as f32),
-            origin: RectangleOrigin::TopLeft,
-        };
-
-        Self {
-
-            rect: LRect,
-
-            bundle: ShapeBundle { 
-                path: GeometryBuilder::build_as(&shape),
-                transform: Transform::from_translation(
-                    Vec3{x: x as f32, y: y as f32, z:0.0}
-                ),
-                ..default()
-            }
-            
-        }
+impl Default for Grid {
+    fn default() -> Self {
+        
+        Self(DGrid::default())
     }
 }
 
 
-pub fn crate_lrects(
-    grid: &DGrid,
+pub fn create_grid(
     mut commands: Commands
 ) {
-    for lrow in 0..grid.loose.rows {
-        for lcol in 0..grid.loose.cols {
-            let lcell = &grid.loose.cells[lrow][lcol];
 
-            let gx = lcol * grid.loose.cell_size;
-            let gy = lrow * grid.loose.cell_size;
+    print!("create grid...");
 
-            let (x, y) = grid.grid2pos(gx as i16, gy as i16);
+    let mut grid = Grid::default();
 
-            commands.spawn(LRectBundle::new(x, y, grid.loose.cell_size))
-                .insert(Fill::color(Color::CYAN))
-                .insert(Stroke::new(Color::BLACK, 1.0));
-        }
-    }
+    grid.0.insert(101, 12, 34, 10, 10);
+    grid.0.insert(102, 23, 56, 10, 10);
+    grid.0.insert(103, 78, 12, 10, 10);
+    grid.0.insert(104, 89, 65, 10, 10);
 
+    commands.insert_resource(grid);
+
+    commands.insert_resource(NextState(Some(GameState::DrawTCell)));
+
+    println!("\tdone.");
 }

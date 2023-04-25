@@ -125,4 +125,63 @@ impl DGrid {
         self.tight.print_cells();
         self.loose.print_cells();
     }
+
+
+    pub fn print_valid_cells(&self) {
+
+        for trow in 0..self.tight.rows {
+            for tcol in 0..self.tight.cols {
+
+                let tcell = self.tight.cells[trow][tcol];
+
+                if tcell.lhead == INVALID {
+                    continue;
+                }
+
+                let mut lindex = tcell.lhead;
+
+                println!("tcell:({:3},{:3}) -> lhead:{:5}", tcol, trow, lindex);
+
+                while lindex != INVALID {
+
+                    let titem = self.tight.pool[lindex];
+
+                    let lprev = lindex;
+                    lindex = titem.next;
+
+                    if !titem.is_free() {
+                        print!("{:5}: ", lprev);
+                        titem.print();
+
+                        let lcell = self.loose.cells[titem.lrow][titem.lcol];
+
+                        if lcell.head == INVALID {
+                            continue;
+                        }
+
+                        let mut index = lcell.head;
+
+                        println!("\tlcell:({:3},{:3}) -> head:{:5}",
+                            titem.lcol, titem.lrow, index);
+                        
+                        while index != INVALID {
+                            let agent = self.loose.pool[index];
+
+                            let prev = index;
+                            index = agent.next;
+
+                            if !agent.is_free() {
+                                print!("\t{:5}: ", prev);
+                                agent.print();
+                            }
+
+                        }
+
+
+                    }
+
+                }
+            }
+        }
+    }
 }

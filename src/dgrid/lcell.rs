@@ -3,7 +3,7 @@ use crate::*;
 use super::rect::*;
 
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy)]
 pub struct LCell {
     pub head: u16,
     pub rect: LRect,
