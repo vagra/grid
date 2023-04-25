@@ -8,6 +8,8 @@ pub struct Agent {
     pub id: u32,
     pub x: i16,
     pub y: i16,
+    pub hw: i16,
+    pub hh: i16,
 
     pub next: u16,
     pub next_free: u16,
@@ -21,6 +23,8 @@ impl Default for Agent {
             id: INACTIVE,
             x: 0,
             y: 0,
+            hw: 0,
+            hh: 0,
             next: INVALID,
             next_free: INVALID,
         }
@@ -59,18 +63,18 @@ impl ItemSpec for Agent {
 
 impl Agent {
 
-    pub fn new(id: u32, x: i16, y: i16) -> Self {
+    pub fn new(id:u32, x:i16, y:i16, hw:i16, hh:i16) -> Self {
 
         Self {
-            id: id,
-            x: x,
-            y: y,
+            id,
+            x,
+            y,
+            hw,
+            hh,
             
             ..Default::default()
         }
     }
-
-    
 
     pub fn in_grid(&self, grid:&DGrid) -> bool {
         grid.in_grid(self.x, self.y)

@@ -4,7 +4,8 @@ use crate::*;
 
 #[derive(Debug, Clone, Copy, PartialEq, ItemComm)]
 pub struct TItem {
-    pub lcell: u16,
+    pub lcol: u16,
+    pub lrow: u16,
 
     pub next: u16,
     pub next_free: u16,
@@ -15,7 +16,8 @@ impl Default for TItem {
     fn default() -> Self {
 
         Self {
-            lcell: INVALID,
+            lcol: INVALID,
+            lrow: INVALID,
             next: INVALID,
             next_free: INVALID,
         }
@@ -27,26 +29,26 @@ impl ItemSpec for TItem {
     type ID = u16;
 
     fn id(&self) -> Self::ID {
-        self.lcell
+        self.lcol
     }
 
     fn set_id(&mut self, id:Self::ID) {
-        self.lcell = id
+        self.lcol = id
     }
 
     fn is_free(&self) -> bool {
 
-        self.lcell == INVALID
+        self.lcol == INVALID
     }
 
     fn disable(&mut self) {
 
-        self.lcell = INVALID;
+        self.lcol = INVALID;
     }
 
     fn print(&self) {
         println!("{{lcell:{:5}, next:{:5}, next_free:{:5}}}", 
-            self.lcell, self.next, self.next_free
+            self.lcol, self.next, self.next_free
         );
     }
 }
@@ -55,10 +57,11 @@ impl ItemSpec for TItem {
 
 impl TItem {
 
-    pub fn new(lcell: u16) -> Self {
+    pub fn new(lcol: u16, lrow: u16) -> Self {
 
         Self {
-             lcell,
+             lcol,
+             lrow,
             ..Default::default()
         }
     }

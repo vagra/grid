@@ -20,7 +20,7 @@ impl UCell {
     pub fn new(head:u16) -> Self {
 
         Self {
-            head: head,
+            head,
         }
     }
 }

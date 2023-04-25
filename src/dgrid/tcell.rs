@@ -3,24 +3,25 @@ use crate::*;
 
 #[derive(Debug, Clone, Copy)]
 pub struct TCell {
-    pub head: u16,
+    pub lhead: u16,
 }
 
 impl Default for TCell {
     fn default() -> Self {
 
         Self {
-            head: INVALID,
+            lhead: INVALID,
         }
     }
 }
 
 impl TCell {
 
-    pub fn new(head:u16) -> Self {
+    pub fn new(lhead:u16) -> Self {
 
         Self {
-            head: head,
+            lhead,
         }
     }
+
 }

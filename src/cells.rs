@@ -53,10 +53,10 @@ impl<T:Default> Cols<T> {
 
 
 #[derive(Debug)]
-pub struct Rows<T>(Vec<Cols<T>>);
+pub struct Cells<T>(Vec<Cols<T>>);
 
 
-impl<T:Default> Default for Rows<T> {
+impl<T:Default> Default for Cells<T> {
 
     fn default() -> Self {
         
@@ -64,7 +64,7 @@ impl<T:Default> Default for Rows<T> {
     }
 }
 
-impl<T> Index<u16> for Rows<T> {
+impl<T> Index<u16> for Cells<T> {
     type Output = Cols<T>;
 
     fn index(&self, index: u16) -> &Self::Output {
@@ -73,7 +73,7 @@ impl<T> Index<u16> for Rows<T> {
     }
 }
 
-impl<T> IndexMut<u16> for Rows<T> {
+impl<T> IndexMut<u16> for Cells<T> {
 
     fn index_mut(&mut self, index: u16) -> &mut Self::Output {
 
@@ -81,7 +81,7 @@ impl<T> IndexMut<u16> for Rows<T> {
     }
 }
 
-impl<T:Default> Rows<T> {
+impl<T:Default> Cells<T> {
 
     pub fn new(rows: u16, cols: u16) -> Self {
 

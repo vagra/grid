@@ -10,8 +10,6 @@ fn main() {
     test_move_cell();
     test_pos2grid();
     test_pos2cell();
-    test_grid2pos();
-    test_cell2pos();
     test_find_in_cell();
     test_out_bounds_insert();
     test_out_bounds_remove();
@@ -32,17 +30,17 @@ pub fn test_insert_remove() {
     grid.init_test_data();
 
     grid.print_cells();
-    println!("{}", grid.heads[5][10].head);
+    println!("{}", grid.cells[5][10].head);
     grid.print_agents(5, 10);
     
     grid.remove(107, 35, 35);
     grid.print_cells();
-    println!("{}", grid.heads[5][10].head);
+    println!("{}", grid.cells[5][10].head);
     grid.print_agents(5, 10);
 
     grid.remove(109, 21, 23);
     grid.print_cells();
-    println!("{}", grid.heads[5][10].head);
+    println!("{}", grid.cells[5][10].head);
     grid.print_agents(5, 10);
 }
 
@@ -56,22 +54,22 @@ pub fn test_move_cell() {
     grid.init_test_data();
 
     grid.print_cells();
-    println!("{}", grid.heads[5][10].head);
+    println!("{}", grid.cells[5][10].head);
     grid.print_agents(5, 10);
 
     grid.move_cell(107, 35, 35, 143, -165);
     grid.move_cell(106, 24, 62, 112, -123);
     grid.print_cells();
-    println!("{}", grid.heads[5][10].head);
+    println!("{}", grid.cells[5][10].head);
     grid.print_agents(5, 10);
-    println!("{}", grid.heads[7][11].head);
+    println!("{}", grid.cells[7][11].head);
     grid.print_agents(7, 11);
 
     grid.move_cell(106, 112, -123, 24, 62);
     grid.print_cells();
-    println!("{}", grid.heads[5][10].head);
+    println!("{}", grid.cells[5][10].head);
     grid.print_agents(5, 10);
-    println!("{}", grid.heads[7][11].head);
+    println!("{}", grid.cells[7][11].head);
     grid.print_agents(7, 11);
 
 }
@@ -172,31 +170,6 @@ pub fn test_pos2cell() {
     println!("{:?}", grid.pos2cell(-527, -0));
 }
 
-pub fn test_grid2pos() {
-    println!("\n------------------------------------------------");
-    println!("test_grid2pos");
-
-    let grid = UGrid::default();
-
-    println!("{:?}\t", grid.grid2pos(0, 0));
-    println!("{:?}\t", grid.grid2pos(2000, 0));
-    println!("{:?}\t", grid.grid2pos(2000, 1200));
-    println!("{:?}\t", grid.grid2pos(0, 1200));
-}
-
-pub fn test_cell2pos() {
-    println!("\n------------------------------------------------");
-    println!("test_cell2pos");
-
-    let grid = UGrid::default();
-
-    println!("{:?}", grid.cell2pos(0, 0));
-    println!("{:?}", grid.cell2pos(19, 0));
-    println!("{:?}", grid.cell2pos(19, 11));
-    println!("{:?}", grid.cell2pos(0, 11));
-    println!("{:?}", grid.cell2pos(10, 6));
-}
-
 pub fn test_find_in_cell() {
     println!("\n------------------------------------------------");
     println!("test_find_in_cell");
@@ -280,7 +253,7 @@ pub fn print_size() {
 
     println!("size of Agent: {}", mem::size_of::<Agent>());
     println!("size of Items<Agent>: {}", mem::size_of::<Items<Agent>>());
-    println!("size of Rows<Agent>: {}", mem::size_of::<Rows<Agent>>());
+    println!("size of Cells<Agent>: {}", mem::size_of::<Cells<Agent>>());
     println!("size of Cols<Agent>: {}", mem::size_of::<Cols<Agent>>());
     println!("size of Pool<Agent>: {}", mem::size_of::<Pool<Agent>>());
     println!("size of Grid: {}", mem::size_of::<UGrid>());

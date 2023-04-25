@@ -1,4 +1,4 @@
-use std::{ops::{Index, IndexMut}};
+use std::ops::{Index, IndexMut};
 
 pub mod ucell;
 pub mod agent;
@@ -8,8 +8,10 @@ use crate::{
     ugrid::{agent::*, ucell::*}
 };
 
+use grid_derive::GridComm;
 
-#[derive(Debug)]
+
+#[derive(Debug, GridComm)]
 pub struct UGrid{
     pub cols: u16,
     pub rows: u16,
@@ -23,10 +25,10 @@ pub struct UGrid{
 
     half_width: i16,
     half_height: i16,
-    width: i16,
-    height: i16,
+    pub width: i16,
+    pub height: i16,
 
-    pub heads: Rows<UCell>,
+    pub cells: Cells<UCell>,
     pub pool: Pool<Agent>,
 }
 
@@ -51,7 +53,7 @@ impl Default for UGrid {
             width: 2000,
             height: 1200,
 
-            heads: Rows::new(12, 20),
+            cells: Cells::new(12, 20),
             pool: Pool::default(),
         }
     }
@@ -62,7 +64,7 @@ impl Index<(u16, u16)> for UGrid {
     
     fn index(&self, index: (u16, u16)) -> &Self::Output {
         let (i, j) = index;
-        let head = self.heads[i][j].head;
+        let head = self.cells[i][j].head;
         &self.pool[head]
     }
 }
@@ -71,7 +73,7 @@ impl IndexMut<(u16, u16)> for UGrid {
 
     fn index_mut(&mut self, index: (u16, u16)) -> &mut Self::Output {
         let (i, j) = index;
-        let head = self.heads[i][j].head;
+        let head = self.cells[i][j].head;
         &mut self.pool[head]
     }
 }
@@ -90,17 +92,17 @@ impl UGrid {
             agent_size: (agent_radius * 2) as i16,
             cell_size: cell_radius * 2,
 
-            inv_cell_size: 0.5 / cell_radius as f32,
+            inv_cell_size: 1.0 / (cell_radius * 2) as f32,
 
             max_col: half_cols * 2 - 1,
             max_row: half_rows * 2 - 1,
 
             half_width: (half_cols * cell_radius * 2) as i16,
             half_height: (half_rows * cell_radius * 2) as i16,
-            width: (half_cols * cell_radius * 4) as i16,
-            height: (half_rows * cell_radius * 4) as i16,
+            width: (half_cols * cell_radius * 2 * 2) as i16,
+            height: (half_rows * cell_radius * 2 * 2) as i16,
             
-            heads: Rows::new(half_rows * 2, half_cols * 2),
+            cells: Cells::new(half_rows * 2, half_cols * 2),
             pool: Pool::default(),
         }
     }
@@ -113,14 +115,14 @@ impl UGrid {
 
         let mut agent = Agent::new(id, x, y);
 
-        if self.heads[row][col].head != INVALID {
+        if self.cells[row][col].head != INVALID {
 
-            agent.next = self.heads[row][col].head;
+            agent.next = self.cells[row][col].head;
         }
 
         let index = self.pool.insert(agent);
 
-        self.heads[row][col].head = index;
+        self.cells[row][col].head = index;
 
     }
 
@@ -177,7 +179,7 @@ impl UGrid {
         for row in min_row..=max_row {
             for col in min_col..=max_col {
 
-                index = self.heads[row][col].head;
+                index = self.cells[row][col].head;
 
                 while index != INVALID {
                     let agent = self.pool[index];
@@ -206,7 +208,7 @@ impl UGrid {
         for row in min_row..=max_row {
             for col in min_col..=max_col {
 
-                index = self.heads[row][col].head;
+                index = self.cells[row][col].head;
 
                 while index != INVALID {
                     let agent = self.pool[index];
@@ -238,7 +240,7 @@ impl UGrid {
         assert!(row != INVALID);
         assert!(col != INVALID);
 
-        let mut index = self.heads[row][col].head;
+        let mut index = self.cells[row][col].head;
 
         loop {
 
@@ -257,7 +259,7 @@ impl UGrid {
 
     pub fn in_cell(&mut self, id: u32, row: u16, col: u16) -> bool {
 
-        let mut index = self.heads[row][col].head;
+        let mut index = self.cells[row][col].head;
 
         loop {
 
@@ -276,7 +278,7 @@ impl UGrid {
 
     pub fn pop_cell(&mut self, id: u32, row: u16, col: u16) -> u16 {
 
-        let mut index = self.heads[row][col].head;
+        let mut index = self.cells[row][col].head;
 
         let mut prev = index;
         loop {
@@ -292,8 +294,8 @@ impl UGrid {
             index = self.pool[index].next;
         }
 
-        if index == self.heads[row][col].head {
-            self.heads[row][col].head = self.pool[index].next;
+        if index == self.cells[row][col].head {
+            self.cells[row][col].head = self.pool[index].next;
         }
         else {
             self.pool[prev].next = self.pool[index].next;
@@ -309,34 +311,10 @@ impl UGrid {
             panic!("cell:({},{}) index:{}", row, col, index);
         }
 
-        let head = self.heads[row][col].head;
-        self.heads[row][col].head = index;
+        let head = self.cells[row][col].head;
+        self.cells[row][col].head = index;
         
         self.pool[index].next = head;
-    }
-        
-    pub fn in_grid(&self, x: i16, y: i16) -> bool {
-        let (dx, dy) = self.pos2grid(x, y);
-
-        dx >= 0 && dx < self.width &&
-        dy >= 0 && dy < self.height
-    }
-
-    pub fn pos2grid(&self, x:i16, y:i16) -> (i16, i16) {
-        (self.half_width + x,
-            self.half_height - y)
-    }
-
-    pub fn grid2pos(&self, x:i16, y:i16) -> (i16, i16) {
-        (x - self.half_width,
-            self.half_height - y)
-    }
-
-    pub fn cell2pos(&self, col: u16, row: u16) -> (i16, i16) {
-        let dx = (col * self.cell_size) as i16;
-        let dy = (row * self.cell_size) as i16;
-        
-        self.grid2pos(dx, dy)
     }
 
     pub fn pos2cell(&self, x:i16, y:i16) -> (u16, u16) {
@@ -352,7 +330,7 @@ impl UGrid {
 
     pub fn print_agents(&self, row: u16, col: u16) {
 
-        let mut index = self.heads[row][col].head;
+        let mut index = self.cells[row][col].head;
 
         while index != INVALID {
             let agent = self.pool[index];
@@ -371,7 +349,7 @@ impl UGrid {
 
         for i in 0..self.rows {
             for j in 0..self.cols {
-                print!("{:5} ", self.heads[i][j].head)
+                print!("{:5} ", self.cells[i][j].head)
             }
             println!()
         }

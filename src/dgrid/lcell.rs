@@ -1,16 +1,12 @@
-use std::{ops::{Index, IndexMut}};
+use std::cmp::{min, max};
 use crate::*;
-
+use super::rect::*;
 
 
 #[derive(Debug, Clone)]
 pub struct LCell {
     pub head: u16,
-
-    pub l: i16,
-    pub t: i16,
-    pub r: i16,
-    pub b: i16,
+    pub rect: LRect,
 }
 
 
@@ -20,10 +16,26 @@ impl Default for LCell {
         
         Self {
             head: INVALID,
-            l: 0,
-            t: 0,
-            r: 0,
-            b: 0,
+            rect: LRect::default(),
         }
+    }
+}
+
+impl LCell {
+
+    pub fn new(head:u16) -> Self {
+
+        Self {
+            head,
+            ..Default::default()
+        }
+    }
+
+    pub fn expand(&mut self, x:i16, y:i16, hw:i16, hh:i16) {
+
+        self.rect.l = min(self.rect.l, x - hw);
+        self.rect.r = max(self.rect.r, x + hw);
+        self.rect.b = min(self.rect.b, y - hh);
+        self.rect.t = max(self.rect.t, y + hh);
     }
 }

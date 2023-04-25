@@ -10,7 +10,8 @@ pub struct Pool<T: ItemSpec+ItemComm>{
 }
 
 
-impl<T:ItemSpec+ItemComm + Default> Default for Pool<T> {
+impl<T:ItemSpec+ItemComm + Default>
+Default for Pool<T> {
     fn default() -> Self {
         
         Self {
@@ -21,7 +22,8 @@ impl<T:ItemSpec+ItemComm + Default> Default for Pool<T> {
     }
 }
 
-impl<T:ItemSpec+ItemComm> Index<u16> for Pool<T> {
+impl<T:ItemSpec+ItemComm>
+Index<u16> for Pool<T> {
 
     type Output = T;
 
@@ -31,7 +33,8 @@ impl<T:ItemSpec+ItemComm> Index<u16> for Pool<T> {
     }
 }
 
-impl<T:ItemSpec+ItemComm> IndexMut<u16> for Pool<T> {
+impl<T:ItemSpec+ItemComm>
+IndexMut<u16> for Pool<T> {
 
     fn index_mut(&mut self, index: u16) -> &mut Self::Output {
 
@@ -40,7 +43,8 @@ impl<T:ItemSpec+ItemComm> IndexMut<u16> for Pool<T> {
 
 }
 
-impl<T:ItemSpec+ItemComm> Drop for Pool<T> {
+impl<T:ItemSpec+ItemComm>
+Drop for Pool<T> {
 
     fn drop(&mut self) {
         self.clear();
@@ -48,7 +52,8 @@ impl<T:ItemSpec+ItemComm> Drop for Pool<T> {
 }
 
 
-impl<T:ItemSpec+ItemComm> Pool<T> {
+impl<T:ItemSpec+ItemComm>
+Pool<T> {
 
     pub fn insert(&mut self, item: T) -> u16 {
 

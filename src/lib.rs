@@ -8,9 +8,11 @@ pub mod dgrid;
 pub const INACTIVE: u32 = u32::MAX;
 pub const INVALID: u16 = u16::MAX;
 pub const POOL_SIZE: u16 = INVALID - 1;
+pub const I16MIN: i16 = i16::MIN;
+pub const I16MAX: i16 = i16::MAX;
+pub const U16MAX: u16 = u16::MAX;
 
 
-pub trait Item: ItemSpec + ItemComm {}
 
 
 pub trait ItemSpec {
@@ -30,4 +32,9 @@ pub trait ItemComm {
     fn set_next(&mut self, index:u16);
     fn next_free(&self) -> u16;
     fn set_next_free(&mut self, index:u16);
+}
+
+pub trait GridComm {
+    fn pos2grid(&self, x:i16, y:i16) -> (i16, i16);
+    fn in_grid(&self, x: i16, y: i16) -> bool;
 }
