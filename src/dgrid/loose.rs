@@ -1,3 +1,5 @@
+use std::ops::{Index, IndexMut};
+
 use grid_derive::GridComm;
 use crate::{*, cells::*, pool::*};
 use super::{lcell::*, agent::*};
@@ -45,6 +47,26 @@ impl Default for Loose {
             cells: Cells::new(36, 64),
             pool: Pool::default(),
         }
+    }
+}
+
+
+impl Index<(u16, u16)> for Loose {
+    type Output = Agent;
+    
+    fn index(&self, index: (u16, u16)) -> &Self::Output {
+        let (i, j) = index;
+        let head = self.cells[i][j].head;
+        &self.pool[head]
+    }
+}
+
+impl IndexMut<(u16, u16)> for Loose {
+
+    fn index_mut(&mut self, index: (u16, u16)) -> &mut Self::Output {
+        let (i, j) = index;
+        let head = self.cells[i][j].head;
+        &mut self.pool[head]
     }
 }
 
@@ -178,13 +200,23 @@ impl Loose {
         }
     }
 
-    pub fn print_agents(&self, lrow:u16, lcol:u16) {
+    pub fn print_agents(&self) {
+
+        for row in 0..self.rows {
+            for col in 0..self.cols {
+
+                self.print_cell_agents(row, col);
+            }
+        }
+    }
+
+    pub fn print_cell_agents(&self, lrow:u16, lcol:u16) {
 
         let mut index = self.cells[lrow][lcol].head;
         
         while index != INVALID {
 
-            println!("\tlcell:({:3},{:3}) -> head:{:5}", lcol, lrow, index);
+            println!("\tlcell:({:2},{:2}) -> head:{:2}", lrow, lcol, index);
 
             let agent = self.pool[index];
 
@@ -202,5 +234,18 @@ impl Loose {
     pub fn print_pool(&self) {
         print!("grid.loose.");
         self.pool.print();
+    }
+
+    pub fn init_test_data(&mut self) {
+
+        self.insert(101, 23, 24, 10, 10);
+        self.insert(102, 12, 10, 10, 10);
+        self.insert(103, 6, 23, 10, 10);
+        self.insert(104, 40, 97, 10, 10);
+        self.insert(105, -123, -432, 10, 10);
+        self.insert(106, -234, 324, 10, 10);
+        self.insert(107, 450, 123, 10, 10);
+        self.insert(108, 480, 170, 10, 10);
+        self.insert(109, 15, 27, 10, 10);
     }
 }

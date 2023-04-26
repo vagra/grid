@@ -216,13 +216,22 @@ impl Tight {
         }
     }
 
-    pub fn print_agents(&self, grid: &DGrid, trow:u16, tcol:u16) {
+    pub fn print_agents(&self, grid:&DGrid) {
+        for row in 0..self.rows {
+            for col in 0..self.cols {
+
+                self.print_cell_agents(grid, row, col);
+            }
+        }  
+    }
+
+    pub fn print_cell_agents(&self, grid:&DGrid, trow:u16, tcol:u16) {
 
         let mut lindex = self.cells[trow][tcol].lhead;
 
         while lindex != INVALID {
 
-            println!("tcell:({:3},{:3}) -> lhead:{:5}", tcol, trow, lindex);
+            println!("tcell:({:2},{:2}) -> lhead:{:2}", trow, tcol, lindex);
 
             let titem = self.pool[lindex];
 
@@ -233,7 +242,7 @@ impl Tight {
                 print!("{:5}: ", lprev);
                 titem.print();
 
-                grid.loose.print_agents(titem.lrow, titem.lcol);
+                grid.loose.print_cell_agents(titem.lrow, titem.lcol);
             }
 
         }

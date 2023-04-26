@@ -128,12 +128,6 @@ impl DGrid {
 
 
     pub fn print_agents(&self) {
-
-        for trow in 0..self.tight.rows {
-            for tcol in 0..self.tight.cols {
-
-                self.tight.print_agents(self, trow, tcol);
-            }
-        }
+        self.tight.print_agents(self);
     }
 }

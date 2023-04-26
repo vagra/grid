@@ -345,7 +345,7 @@ impl UGrid {
 
         while index != INVALID {
 
-            println!("cell:({:2},{:2}) -> head:{:2}", col, row, index);
+            println!("cell:({:2},{:2}) -> head:{:2}", row, col, index);
 
             let agent = self.pool[index];
 
