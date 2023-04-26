@@ -200,18 +200,47 @@ impl Tight {
         println!("grid.tight: width:{} height:{}",
             self.width, self.height
         );
-        println!("grid.tight.tcells: cols:{} rows:{} cell_size:{}",
+        println!("grid.tight.cells: cols:{} rows:{} cell_size:{}",
             self.cols, self.rows, self.cell_size);
 
         for i in 0..self.rows {
             for j in 0..self.cols {
-                print!("{:5} ", self.cells[i][j].lhead)
+                if self.cells[i][j].lhead == INVALID {
+                    print!("[ ]") 
+                }
+                else {
+                    print!("{:2} ", self.cells[i][j].lhead)
+                }
             }
             println!()
         }
     }
 
+    pub fn print_agents(&self, grid: &DGrid, trow:u16, tcol:u16) {
+
+        let mut lindex = self.cells[trow][tcol].lhead;
+
+        while lindex != INVALID {
+
+            println!("tcell:({:3},{:3}) -> lhead:{:5}", tcol, trow, lindex);
+
+            let titem = self.pool[lindex];
+
+            let lprev = lindex;
+            lindex = titem.next;
+
+            if !titem.is_free() {
+                print!("{:5}: ", lprev);
+                titem.print();
+
+                grid.loose.print_agents(titem.lrow, titem.lcol);
+            }
+
+        }
+    } 
+
     pub fn print_pool(&self) {
+        print!("grid.tight.");
         self.pool.print();
     }
 }

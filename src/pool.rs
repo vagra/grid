@@ -126,6 +126,9 @@ Pool<T> {
 
     pub fn print(&self) {
 
+        println!("pool: size:{}, first_free:{}, capacity:{}, data:",
+            self.size, self.first_free, self.capacity());
+
         self.data.print();
     }
 }

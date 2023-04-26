@@ -162,18 +162,45 @@ impl Loose {
         println!("grid.loose: width:{} height:{}",
             self.width, self.height
         );
-        println!("grid.loose.lcells: cols:{} rows:{} cell_size:{}",
+        println!("grid.loose.cells: cols:{} rows:{} cell_size:{}",
             self.cols, self.rows, self.cell_size);
 
         for i in 0..self.rows {
             for j in 0..self.cols {
-                print!("{:5} ", self.cells[i][j].head)
+                if self.cells[i][j].head == INVALID {
+                    print!("[]")    
+                }
+                else {
+                    print!("{:2}", self.cells[i][j].head)
+                }
             }
             println!()
         }
     }
 
+    pub fn print_agents(&self, lrow:u16, lcol:u16) {
+
+        let mut index = self.cells[lrow][lcol].head;
+        
+        while index != INVALID {
+
+            println!("\tlcell:({:3},{:3}) -> head:{:5}", lcol, lrow, index);
+
+            let agent = self.pool[index];
+
+            let prev = index;
+            index = agent.next;
+
+            if !agent.is_free() {
+                print!("\t{:5}: ", prev);
+                agent.print();
+            }
+
+        }
+    }
+
     pub fn print_pool(&self) {
+        print!("grid.loose.");
         self.pool.print();
     }
 }

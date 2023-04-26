@@ -37,10 +37,15 @@ pub fn create_grid(
 
     let mut grid = Grid::default();
 
-    grid.0.insert(101, 12, 34, 10, 10);
-    grid.0.insert(102, 23, 56, 10, 10);
-    grid.0.insert(103, 78, 12, 10, 10);
-    grid.0.insert(104, 89, 65, 10, 10);
+    grid.0.insert(101, 23, 54, 10, 10);
+    grid.0.insert(102, 56, 10, 10, 10);
+    grid.0.insert(103, 87, 23, 10, 10);
+    grid.0.insert(104, 40, 97, 10, 10);
+    grid.0.insert(105, -123, -432, 10, 10);
+    grid.0.insert(106, -234, 324, 10, 10);
+    grid.0.insert(107, 450, 123, 10, 10);
+    grid.0.insert(108, 480, 170, 10, 10);
+    grid.0.insert(109, 65, 87, 10, 10);
 
     commands.insert_resource(grid);
 

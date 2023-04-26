@@ -328,11 +328,25 @@ impl UGrid {
         row.clamp(0, self.max_row))
     }
 
-    pub fn print_agents(&self, row: u16, col: u16) {
+    pub fn print_agents(&self) {
+
+        for row in 0..self.rows {
+            for col in 0..self.cols {
+
+                self.print_cell_agents(row, col);
+            }
+        }
+
+    }
+
+    pub fn print_cell_agents(&self, row: u16, col: u16) {
 
         let mut index = self.cells[row][col].head;
 
         while index != INVALID {
+
+            println!("cell:({:2},{:2}) -> head:{:2}", col, row, index);
+
             let agent = self.pool[index];
 
             let prev = index;
@@ -347,15 +361,27 @@ impl UGrid {
 
     pub fn print_cells(&self) {
 
+        println!("grid: width:{} height:{}",
+            self.width, self.height
+        );
+        println!("grid.cells: cols:{} rows:{} cell_size:{}",
+            self.cols, self.rows, self.cell_size);
+
         for i in 0..self.rows {
             for j in 0..self.cols {
-                print!("{:5} ", self.cells[i][j].head)
+                if self.cells[i][j].head == INVALID {
+                    print!("[ ]")
+                }
+                else {
+                    print!("{:2} ", self.cells[i][j].head)
+                }
             }
             println!()
         }
     }
 
     pub fn print_pool(&self) {
+        print!("grid.");
         self.pool.print();
     }
 

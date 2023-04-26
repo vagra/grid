@@ -21,31 +21,24 @@ fn main() {
 }
 
 
-pub fn test_insert_remove() {
+fn test_insert_remove() {
     println!("\n------------------------------------------------");
     println!("test_insert_remove");
 
     let mut grid = UGrid::default();
 
     grid.init_test_data();
-
-    grid.print_cells();
-    println!("{}", grid.cells[5][10].head);
-    grid.print_agents(5, 10);
     
     grid.remove(107, 35, 35);
-    grid.print_cells();
-    println!("{}", grid.cells[5][10].head);
-    grid.print_agents(5, 10);
-
     grid.remove(109, 21, 23);
+    
     grid.print_cells();
-    println!("{}", grid.cells[5][10].head);
-    grid.print_agents(5, 10);
+    grid.print_pool();
+    grid.print_agents();
 }
 
 
-pub fn test_move_cell() {
+fn test_move_cell() {
     println!("\n------------------------------------------------");
     println!("test_move_cell");
 
@@ -54,28 +47,20 @@ pub fn test_move_cell() {
     grid.init_test_data();
 
     grid.print_cells();
-    println!("{}", grid.cells[5][10].head);
-    grid.print_agents(5, 10);
+    grid.print_pool();
+    grid.print_agents();
 
     grid.move_cell(107, 35, 35, 143, -165);
     grid.move_cell(106, 24, 62, 112, -123);
-    grid.print_cells();
-    println!("{}", grid.cells[5][10].head);
-    grid.print_agents(5, 10);
-    println!("{}", grid.cells[7][11].head);
-    grid.print_agents(7, 11);
-
     grid.move_cell(106, 112, -123, 24, 62);
+    
     grid.print_cells();
-    println!("{}", grid.cells[5][10].head);
-    grid.print_agents(5, 10);
-    println!("{}", grid.cells[7][11].head);
-    grid.print_agents(7, 11);
-
+    grid.print_pool();
+    grid.print_agents();
 }
 
 
-pub fn test_query() {
+fn test_query() {
     println!("\n------------------------------------------------");
     println!("test_query");
 
@@ -88,7 +73,7 @@ pub fn test_query() {
 }
 
 
-pub fn test_dir_query() {
+fn test_dir_query() {
     println!("\n------------------------------------------------");
     println!("test_dir_query");
 
@@ -126,7 +111,7 @@ pub fn test_dir_query() {
 }
 
 
-pub fn test_pos2grid() {
+fn test_pos2grid() {
     println!("\n------------------------------------------------");
     println!("test_pos2grid");
 
@@ -149,7 +134,7 @@ pub fn test_pos2grid() {
     println!("{:?}", grid.pos2grid(-1000, -600));
 }
 
-pub fn test_pos2cell() {
+fn test_pos2cell() {
     println!("\n------------------------------------------------");
     println!("test_pos2cell");
 
@@ -170,7 +155,7 @@ pub fn test_pos2cell() {
     println!("{:?}", grid.pos2cell(-527, -0));
 }
 
-pub fn test_find_in_cell() {
+fn test_find_in_cell() {
     println!("\n------------------------------------------------");
     println!("test_find_in_cell");
 
@@ -191,7 +176,7 @@ pub fn test_find_in_cell() {
 }
 
 
-pub fn test_out_bounds_insert() {
+fn test_out_bounds_insert() {
     println!("\n------------------------------------------------");
     println!("test_out_bounds_insert");
 
@@ -217,7 +202,7 @@ pub fn test_out_bounds_insert() {
 }
 
 
-pub fn test_out_bounds_remove() {
+fn test_out_bounds_remove() {
     println!("\n------------------------------------------------");
     println!("test_out_bounds_remove");
 
@@ -243,7 +228,7 @@ pub fn test_out_bounds_remove() {
 
 
 
-pub fn print_size() {
+fn print_size() {
     println!("\n------------------------------------------------");
     println!("print_size");
 

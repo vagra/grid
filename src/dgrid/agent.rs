@@ -138,8 +138,9 @@ impl Agent {
     }
 
     pub fn print(&self) {
-        println!("{{id:{:3}, ({:3},{:3}), next:{:5}, next_free:{:5}}}", 
-            self.id, self.x, self.y, self.next, self.next_free
+        println!(
+            "Agent{{ id:{:3}, x:{:3}, y:{:3}, hw:{:3}, hh:{:3}, next:{:5}, next_free:{:5} }}", 
+            self.id, self.x, self.y, self.hw, self.hh, self.next, self.next_free
         );
     }
 

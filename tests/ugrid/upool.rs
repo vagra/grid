@@ -1,29 +1,8 @@
-use grid::{*, pool::*, ugrid::{agent::*}};
+use grid::{*, pool::*, ugrid::agent::*};
 
 
 #[test]
-fn basics() {
-    let mut pool:Pool<Agent> = Pool::default();
-
-    pool.insert(Agent::new(1, 10, 10));
-    pool.insert(Agent::new(2, 20, 20));
-    pool.insert(Agent::new(3, 30, 30));
-
-    assert_eq!(pool.data[2], 
-        Agent{id: 3, x:30, y:30, ..Default::default()});
-    assert_eq!(pool.data[1],
-        Agent{id: 2, x:20, y:20, ..Default::default()});
-    assert_eq!(pool.data[0],
-        Agent{id: 1, x:10, y:10, ..Default::default()});
-    
-    assert_eq!(pool.size, 3);
-    assert_eq!(pool.capacity(), 3);
-    assert_eq!(pool.first_free, INVALID);
-}
-
-
-#[test]
-fn erase_insert() {
+fn insert_erase_works() {
     let mut pool:Pool<Agent> = Pool::default();
 
     pool.insert(Agent::new(100, 10, 10));
@@ -106,50 +85,39 @@ fn erase_insert() {
 
 
 #[test]
-fn clear() {
+fn clear_works() {
     let mut pool:Pool<Agent> = Pool::default();
-
-    pool.insert(Agent::new(100, 10, 10));
-    pool.insert(Agent::new(101, 20, 20));
-    pool.insert(Agent::new(102, 30, 30));
-
-    assert_eq!(pool.first_free, INVALID);
-    assert_eq!(pool.size, 3);
-    assert_eq!(pool.capacity(), 3);
-
+    insert_some(&mut pool, 4);
+    pool.erase(1);
+    pool.clear();
     pool.clear();
     assert_eq!(pool.first_free, INVALID);
-    assert_eq!(pool.size, 0);
-    assert_eq!(pool.capacity(), 0);
-
-    pool.clear();
-    assert_eq!(pool.first_free, INVALID);
-    assert_eq!(pool.size, 0);
     assert_eq!(pool.capacity(), 0);
 }
 
 
+
 #[test]
-fn index() {
-
+fn index_works() {
     let mut pool:Pool<Agent> = Pool::default();
+    pool.insert(Agent::new(1, 10, 10));
+    pool.insert(Agent::new(2, 20, 20));
 
-    pool.insert(Agent::new(100, 10, 10));
-    pool.insert(Agent::new(101, 20, 20));
-    pool.insert(Agent::new(102, 30, 30));
-    pool.insert(Agent::new(103, 40, 40));
-    pool.insert(Agent::new(104, 50, 50));
+    let element = pool[0];
+    assert_eq!(element, Agent::new(1, 10, 10));
+}
 
-    assert_eq!(pool[3],
-        Agent{id: 103, x: 40, y:40, ..Default::default()}
-    );
+#[test]
+fn index_mut_works() {
+    let mut pool:Pool<Agent> = Pool::default();
+    pool.insert(Agent::new(1, 10, 10));
+    pool.insert(Agent::new(2, 20, 20));
 
-    pool[2].x = 35;
-    pool[2].y = 45;
-    assert_eq!(pool[2],
-        Agent{id: 102, x: 35, y:45, ..Default::default()}
-    );
+    let mut element = &mut pool[0];
+    *element = Agent::new(3, 30, 30);
 
+    element = &mut pool[0];
+    assert_eq!(*element, Agent::new(3, 30, 30));
 }
 
 
@@ -234,45 +202,10 @@ fn erase_in_mixed_order() {
 }
 
 
-#[test]
-fn clear_works() {
-    let mut pool:Pool<Agent> = Pool::default();
-    insert_some(&mut pool, 4);
-    pool.erase(1);
-    pool.clear();
-    pool.clear();
-    assert_eq!(pool.first_free, INVALID);
-    assert_eq!(pool.capacity(), 0);
-}
-
-
-
-#[test]
-fn index_works() {
-    let mut pool:Pool<Agent> = Pool::default();
-    pool.insert(Agent::new(1, 10, 10));
-    pool.insert(Agent::new(2, 20, 20));
-
-    let element = pool[0];
-    assert_eq!(element, Agent::new(1, 10, 10));
-}
-
-#[test]
-fn index_mut_works() {
-    let mut pool:Pool<Agent> = Pool::default();
-    pool.insert(Agent::new(1, 10, 10));
-    pool.insert(Agent::new(2, 20, 20));
-
-    let mut element = &mut pool[0];
-    *element = Agent::new(3, 30, 30);
-
-    element = &mut pool[0];
-    assert_eq!(*element, Agent::new(3, 30, 30));
-}
-
-
 fn insert_some(pool: &mut Pool<Agent>, n: u16) {
     for i in 0..n {
-        pool.insert(Agent::new(i as u32, i as i16 * 10, i as i16 * 20));
+        pool.insert(Agent::new(
+            (100 + i) as u32, i as i16 * 10, i as i16 * 20)
+        );
     }
 }

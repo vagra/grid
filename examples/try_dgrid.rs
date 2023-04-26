@@ -11,7 +11,7 @@ fn main() {
 }
 
 
-pub fn test_tight_loose_print() {
+fn test_tight_loose_print() {
     println!("\n------------------------------------------------");
     println!("test_tight_loose_print");
 
@@ -25,7 +25,7 @@ pub fn test_tight_loose_print() {
 }
 
 
-pub fn test_new() {
+fn test_new() {
     println!("\n------------------------------------------------");
     println!("test_new");
 
@@ -34,17 +34,26 @@ pub fn test_new() {
     grid.print_cells();
 }
 
-pub fn test_insert() {
+fn test_insert() {
 
     println!("\n------------------------------------------------");
     println!("test_insert");
 
     let mut grid = DGrid::default();
 
-    grid.insert(101, 12, 34, 10, 10);
-    grid.insert(102, 23, 56, 10, 10);
-    grid.insert(103, 78, 12, 10, 10);
-    grid.insert(104, 89, 65, 10, 10);
+    grid.insert(101, 23, 24, 10, 10);
+    grid.insert(102, 12, 10, 10, 10);
+    grid.insert(103, 6, 23, 10, 10);
+    grid.insert(104, 40, 97, 10, 10);
+    grid.insert(105, -123, -432, 10, 10);
+    grid.insert(106, -234, 324, 10, 10);
+    grid.insert(107, 450, 123, 10, 10);
+    grid.insert(108, 480, 170, 10, 10);
+    grid.insert(109, 15, 27, 10, 10);
 
-    grid.print_valid_cells();
+    grid.loose.print_cells();
+    grid.loose.print_pool();
+    grid.tight.print_cells();
+    grid.tight.print_pool();
+    grid.print_agents();
 }
