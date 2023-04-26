@@ -56,7 +56,6 @@ pub fn create_lcells(
             let gy = lrow * grid.0.loose.cell_size;
 
             let (x, y) = grid.0.grid2pos(gx as i16, gy as i16);
-            // print!("({},{})({},{})  ", gx, gy, x, y);
 
             if lcell.head == INVALID {
                 commands.spawn(LCellBundle::new(x, y, grid.0.loose.cell_size))

@@ -4,7 +4,7 @@ use bevy_prototype_lyon::prelude::*;
 
 mod mods;
 
-use mods::{*, clcell::*, clrect::*, ctcell::*};
+use mods::{*, clcell::*, clrect::*, ctcell::*, cagent::*};
 
 
 const BG_COLOR: Color = Color::rgb(0.31, 0.47, 0.51);
@@ -17,6 +17,7 @@ enum GameState {
     DrawTCell,
     DrawLCell,
     DrawLRect,
+    DrawAgent,
     Playing,
 }
 
@@ -45,6 +46,10 @@ fn main() {
         .add_system(
             (create_lrects).after(create_lcells)
             .run_if(in_state(GameState::DrawLRect))
+        )
+        .add_system(
+            (create_agents).after(create_lrects)
+            .run_if(in_state(GameState::DrawAgent))
         )
         .run();
 }

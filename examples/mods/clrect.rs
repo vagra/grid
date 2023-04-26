@@ -55,8 +55,6 @@ pub fn create_lrects(
         for lcol in 0..grid.0.loose.cols {
             let lcell = &grid.0.loose.cells[lrow][lcol];
 
-            // print!("({},{})({},{})  ", gx, gy, x, y);
-
             if lcell.head != INVALID {
                 commands.spawn(LRectBundle::new(
                     lcell.rect.l, lcell.rect.t,
@@ -66,11 +64,9 @@ pub fn create_lrects(
                 .insert(Stroke::new(LRECT_BORDER, LLINE_WIDTH));
             }
         }
-
-        // println!();
     }
 
-    commands.insert_resource(NextState(Some(GameState::Playing)));
+    commands.insert_resource(NextState(Some(GameState::DrawAgent)));
 
     println!("\tdone.");
 }
