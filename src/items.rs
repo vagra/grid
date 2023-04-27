@@ -63,7 +63,5 @@ Items<T> {
             print!("{:3}: ", i);
             item.print();
         }
-
-        println!();
     }
 }

@@ -10,6 +10,7 @@ pub struct Tight {
     pub cell_size: u16,
     col_max: u16,
     row_max: u16,
+    factor: u16,
 
     inv_cell_size: f32,
 
@@ -33,6 +34,7 @@ impl Default for Tight {
             cell_size: 120,
             col_max: 15,
             row_max: 8,
+            factor: 4,
 
             inv_cell_size: 1.0 / 120.0,
 
@@ -70,7 +72,7 @@ impl IndexMut<(u16, u16)> for Tight {
 
 impl Tight {
 
-    pub fn new(cols:u16, rows:u16, cell_radius:u16) -> Self {
+    pub fn new(cols:u16, rows:u16, cell_radius:u16, factor:u16) -> Self {
         
         Self {
             cols,
@@ -78,6 +80,7 @@ impl Tight {
             cell_size: cell_radius * 2,
             col_max: cols - 1,
             row_max: rows - 1,
+            factor,
 
             inv_cell_size: 0.5 / cell_radius as f32,
 
@@ -92,6 +95,11 @@ impl Tight {
     }
 
     pub fn insert(&mut self, lcol:u16, lrow:u16, tcol:u16, trow:u16) {
+
+        println!(
+            "tight.insert: ({}, {}) -> ({}, {})",
+            lcol, lrow, tcol, trow
+        );
 
         assert!(lcol != INVALID);
         assert!(lrow != INVALID);
@@ -110,6 +118,13 @@ impl Tight {
         self.cells[trow][tcol].lhead = index;
     }
 
+    pub fn insert_lcell(&mut self, lcol:u16, lrow:u16) {
+
+        let (tcol, trow) = self.lcell2tcell(lcol, lrow);
+
+        self.insert(lcol, lrow, tcol, trow);
+    }
+
 
     pub fn remove(&mut self, lcol:u16, lrow:u16, tcol:u16, trow:u16) {
 
@@ -121,6 +136,14 @@ impl Tight {
         let index = self.pop_cell(lcol, lrow, tcol, trow);
 
         self.pool.erase(index);
+    }
+
+
+    pub fn remove_lcell(&mut self, lcol:u16, lrow:u16) {
+
+        let (tcol, trow) = self.lcell2tcell(lcol, lrow);
+
+        self.remove(lcol, lrow, tcol, trow);
     }
 
     
@@ -163,6 +186,14 @@ impl Tight {
         self.cells[trow][tcol].lhead = index;
         
         self.pool[index].next = head;
+    }
+
+    pub fn lcell2tcell(&self, lcol:u16, lrow:u16) -> (u16, u16) {
+
+        assert!(lcol < self.cols * self.factor);
+        assert!(lrow < self.rows * self.factor);
+
+        (lcol / self.factor, lrow / self.factor)
     }
 
     pub fn box2trect(&self, x:i16, y:i16, hw:i16, hh:i16) -> TRect {
@@ -216,6 +247,35 @@ impl Tight {
         }
     }
 
+    pub fn print_titems(&self) {
+        for row in 0..self.rows {
+            for col in 0..self.cols {
+
+                self.print_cell_titems(row, col);
+            }
+        }  
+    }
+
+    pub fn print_cell_titems(&self, trow:u16, tcol:u16) {
+
+        let mut lindex = self.cells[trow][tcol].lhead;
+
+        while lindex != INVALID {
+
+            println!("tcell:({:2},{:2}) -> lhead:{:2}", trow, tcol, lindex);
+
+            let titem = self.pool[lindex];
+
+            let lprev = lindex;
+            lindex = titem.next;
+
+            if !titem.is_free() {
+                print!("{:5}: ", lprev);
+                titem.print();
+            }
+        }
+    }
+
     pub fn print_agents(&self, grid:&DGrid) {
         for row in 0..self.rows {
             for col in 0..self.cols {
@@ -244,12 +304,25 @@ impl Tight {
 
                 grid.loose.print_cell_agents(titem.lrow, titem.lcol);
             }
-
         }
     } 
 
     pub fn print_pool(&self) {
         print!("grid.tight.");
         self.pool.print();
+    }
+
+    pub fn init_test_data(&mut self) {
+
+        self.insert_lcell(32, 17);
+        self.insert_lcell(33, 15);
+        self.insert_lcell(27, 32);
+        self.insert_lcell(14, 7);
+        self.insert_lcell(47, 13);
+        self.insert_lcell(48, 12);
+        self.insert_lcell(4, 6);
+        self.insert_lcell(5, 7);
+        self.insert_lcell(6, 8);
+        self.insert_lcell(13, 24);
     }
 }

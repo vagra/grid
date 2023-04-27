@@ -58,7 +58,7 @@ impl DGrid {
             height: (half_trows * lcell_radius * factor * 2 * 2) as i16,
             
             tight: Tight::new(
-                half_tcols * 2, half_trows * 2, lcell_radius * factor),
+                half_tcols * 2, half_trows * 2, lcell_radius * factor, factor),
             
             loose: Loose::new(
                 half_tcols * factor * 2, half_trows * factor * 2, lcell_radius),
@@ -90,7 +90,7 @@ impl DGrid {
         let trect = self.tight.box2trect(x, y, hw, hh);
 
         if prev_lrect.is_empty() {
-            
+
             for trow in trect.t..=trect.b {
                 for tcol in trect.l..=trect.r {
                     self.tight.insert(lcol, lrow, tcol, trow);
