@@ -6,9 +6,9 @@ use grid::{
 
 fn main() {
     // test_new();
-    // test_insert();
+    test_insert();
     // test_remove();
-    test_move();
+    // test_move();
 }
 
 

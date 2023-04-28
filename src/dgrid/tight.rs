@@ -96,13 +96,6 @@ impl Tight {
 
     pub fn insert(&mut self, lcol:u16, lrow:u16, tcol:u16, trow:u16) {
 
-        /*
-        println!(
-            "tight.insert: ({}, {}) -> ({}, {})",
-            lcol, lrow, tcol, trow
-        );
-        */
-
         assert!(lcol != INVALID);
         assert!(lrow != INVALID);
         assert!(tcol != INVALID);
@@ -156,7 +149,8 @@ impl Tight {
         let mut prev = index;
         loop {
             if index == INVALID {
-                panic!("lcell:({},{}) tcell:({},{}) index:{}", lcol, lrow, tcol, trow, index);
+                panic!("lcell:({},{}) tcell:({},{}) index:{}",
+                    lrow, lcol, trow, tcol, index);
             }
 
             if self.pool[index].lcol == lcol &&
@@ -181,7 +175,7 @@ impl Tight {
     pub fn push_cell(&mut self, index: u16, tcol: u16, trow: u16) {
 
         if index == INVALID {
-            panic!("tcell:({},{}) index:{}", tcol, trow, index);
+            panic!("tcell:({},{}) index:{}", trow, tcol, index);
         }
 
         let head = self.cells[trow][tcol].lhead;

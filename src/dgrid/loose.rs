@@ -111,13 +111,6 @@ impl Loose {
 
         self.cells[row][col].head = index;
 
-        /*
-        println!(
-            "loose.insert: ({}, {}, {}, {}) -> ({}, {})",
-            x, y, hh, hw, col, row
-        );
-        */
-
         (col, row)
     }
 
@@ -187,7 +180,7 @@ impl Loose {
         loop {
 
             if index == INVALID {
-                panic!("id:{} cell:({},{}) index:{}", id, col, row, index);
+                panic!("id:{} cell:({},{}) index:{}", id, row, col, index);
             }
 
             if self.pool[index].id == id {

@@ -1,5 +1,4 @@
 use bevy::prelude::*;
-use bevy_prototype_lyon::prelude::*;
 
 
 mod mods;
@@ -14,10 +13,6 @@ const BG_COLOR: Color = Color::rgb(0.31, 0.47, 0.51);
 enum GameState {
     #[default]
     Starting,
-    DrawTCell,
-    DrawLCell,
-    DrawLRect,
-    DrawAgent,
     Playing,
 }
 
@@ -27,7 +22,6 @@ fn main() {
         .insert_resource(Msaa::Sample4)
         .insert_resource(ClearColor(BG_COLOR))
         .add_plugins(DefaultPlugins)
-        .add_plugin(ShapePlugin)
         .add_state::<GameState>()
         .add_startup_system(create_camera)
         .add_system(update)
@@ -36,20 +30,24 @@ fn main() {
             .run_if(in_state(GameState::Starting))
         )
         .add_system(
-            (create_tcells).after(create_grid)
-            .run_if(in_state(GameState::DrawTCell))
+            (move_agent).after(update)
+            .run_if(in_state(GameState::Playing))
         )
         .add_system(
-            (create_lcells).after(create_tcells)
-            .run_if(in_state(GameState::DrawLCell))
+            (update_tcells).after(move_agent)
+            .run_if(in_state(GameState::Playing))
         )
         .add_system(
-            (create_lrects).after(create_lcells)
-            .run_if(in_state(GameState::DrawLRect))
+            (update_lcells).after(move_agent)
+            .run_if(in_state(GameState::Playing))
         )
         .add_system(
-            (create_agents).after(create_lrects)
-            .run_if(in_state(GameState::DrawAgent))
+            (update_lrects).after(move_agent)
+            .run_if(in_state(GameState::Playing))
+        )
+        .add_system(
+            (update_agents).after(move_agent)
+            .run_if(in_state(GameState::Playing))
         )
         .run();
 }

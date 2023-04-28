@@ -1,36 +1,43 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, sprite::Anchor};
 use grid::{GridComm, INVALID};
-use bevy_prototype_lyon::{prelude::*, shapes::*};
 use super::*;
 
 
 #[derive(Component)]
-pub struct CTCell;
+pub struct TCol(pub u16);
+
+#[derive(Component)]
+pub struct TRow(pub u16);
+
 
 
 #[derive(Bundle)]
 pub struct TCellBundle {
-    pub rect: CTCell,
+    pub tcol: TCol,
+    pub trow: TRow,
 
     #[bundle]
-    pub bundle: ShapeBundle,
+    pub sprite: SpriteBundle,
 }
 
 impl TCellBundle {
 
-    pub fn new(x:i16, y:i16, size:u16) -> Self {
-
-        let shape = Rectangle {
-            extents: Vec2::new(size as f32, size as f32),
-            origin: RectangleOrigin::TopLeft,
-        };
+    pub fn new(tcol:u16, trow:u16, x:i16, y:i16, size:u16) -> Self {
 
         Self {
 
-            rect: CTCell,
+            tcol: TCol(tcol),
+            trow: TRow(trow),
 
-            bundle: ShapeBundle { 
-                path: GeometryBuilder::build_as(&shape),
+            sprite: SpriteBundle { 
+                sprite: Sprite {
+                    color: TCELL_COLOR.clone(),
+                    custom_size: Some(
+                        Vec2::new(size as f32, size as f32)
+                    ),
+                    anchor: Anchor::TopLeft,
+                    ..default()
+                    }, 
                 transform: Transform::from_translation(
                     Vec3{x: x as f32, y: y as f32, z:1.0}
                 ),
@@ -43,37 +50,45 @@ impl TCellBundle {
 
 
 pub fn create_tcells(
-    mut commands: Commands,
-    grid: Res<Grid>,
+    commands: &mut Commands,
+    grid: &Grid,
 ) {
     print!("create tcell...");
 
     for trow in 0..grid.0.tight.rows {
         for tcol in 0..grid.0.tight.cols {
-            let tcell = &grid.0.tight.cells[trow][tcol];
 
             let gx = tcol * grid.0.tight.cell_size;
             let gy = trow * grid.0.tight.cell_size;
 
             let (x, y) = grid.0.grid2pos(gx as i16, gy as i16);
-            // print!("({},{})({},{})  ", gx, gy, x, y);
 
-            if tcell.lhead == INVALID {
-                commands.spawn(TCellBundle::new(x, y, grid.0.tight.cell_size))
-                .insert(Stroke::new(TCELL_BORDER, TLINE_WIDTH));
-            }
-            else {
-                commands.spawn(TCellBundle::new(x, y, grid.0.tight.cell_size))
-                .insert(Fill::color(TCELL_COLOR))
-                .insert(Stroke::new(TCELL_BORDER, TLINE_WIDTH));
-            }
+            commands.spawn(TCellBundle::new(tcol, trow, x, y, grid.0.tight.cell_size));
         }
-
-        // println!();
     }
-
-    commands.insert_resource(NextState(Some(GameState::DrawLCell)));
 
     println!("\tdone.");
 
+}
+
+
+
+pub fn update_tcells(
+    mut query: Query<(
+        &TCol, &TRow,
+        &mut Visibility
+    )>,
+    grid: Res<Grid>,
+) {
+
+    for (tcol, trow, mut visibility) in query.iter_mut() {
+        let tcell = grid.0.tight.cells[trow.0][tcol.0];
+
+        if tcell.lhead == INVALID {
+            *visibility = Visibility::Hidden;
+        }
+        else {
+            *visibility = Visibility::Visible;
+        }
+    }
 }

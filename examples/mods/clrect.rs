@@ -1,6 +1,5 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, sprite::Anchor};
 use grid::INVALID;
-use bevy_prototype_lyon::{prelude::*, shapes::*};
 use super::*;
 
 
@@ -11,26 +10,32 @@ pub struct CLRect;
 #[derive(Bundle)]
 pub struct LRectBundle {
     pub rect: CLRect,
+    pub lcol: LCol,
+    pub lrow: LRow,
 
     #[bundle]
-    pub bundle: ShapeBundle,
+    pub sprite: SpriteBundle,
 }
 
 impl LRectBundle {
 
-    pub fn new(l:i16, t:i16, r:i16, b:i16) -> Self {
-
-        let shape = Rectangle {
-            extents: Vec2::new((r-l+1) as f32, (t-b+1) as f32),
-            origin: RectangleOrigin::TopLeft,
-        };
+    pub fn new(lcol:u16, lrow:u16, l:i16, t:i16, r:i16, b:i16) -> Self {
 
         Self {
 
             rect: CLRect,
+            lcol: LCol(lcol),
+            lrow: LRow(lrow),
 
-            bundle: ShapeBundle { 
-                path: GeometryBuilder::build_as(&shape),
+            sprite: SpriteBundle { 
+                sprite: Sprite {
+                    color: LRECT_COLOR.clone(),
+                    custom_size: Some(
+                        Vec2::new((r-l+1) as f32, (t-b+1) as f32)
+                    ),
+                    anchor: Anchor::TopLeft,
+                    ..default()
+                    }, 
                 transform: Transform::from_translation(
                     Vec3{
                         x: l as f32,
@@ -46,8 +51,8 @@ impl LRectBundle {
 
 
 pub fn create_lrects(
-    mut commands: Commands,
-    grid: Res<Grid>,
+    commands: &mut Commands,
+    grid: &Grid,
 ) {
     print!("create lrect...");
 
@@ -57,16 +62,60 @@ pub fn create_lrects(
 
             if lcell.head != INVALID {
                 commands.spawn(LRectBundle::new(
+                    lcol, lrow,
                     lcell.rect.l, lcell.rect.t,
                     lcell.rect.r, lcell.rect.b
-                ))
-                .insert(Fill::color(LRECT_COLOR))
-                .insert(Stroke::new(LRECT_BORDER, LLINE_WIDTH));
+                ));
+            }
+            else {
+                commands.spawn(LRectBundle::new(
+                    lcol, lrow,
+                    0, 0, 0, 0
+                ));
             }
         }
     }
 
-    commands.insert_resource(NextState(Some(GameState::DrawAgent)));
-
     println!("\tdone.");
+}
+
+
+
+pub fn update_lrects(
+    mut query: Query<
+        (
+            &LCol, &LRow,
+            &mut Visibility,
+            &mut Sprite,
+            &mut Transform,
+        ),
+        With<CLRect>
+    >,
+    grid: Res<Grid>,
+) {
+
+    for (lcol, lrow, mut visibility, mut sprite, mut transform) in query.iter_mut() {
+        let lcell = grid.0.loose.cells[lrow.0][lcol.0];
+
+        if lcell.head == INVALID {
+            *visibility = Visibility::Hidden;
+
+            sprite.custom_size = Some(Vec2::new(0.0, 0.0));
+
+            transform.translation.x = 0.0;
+            transform.translation.y = 0.0;
+        }
+        else {
+            *visibility = Visibility::Visible;
+
+            sprite.custom_size = Some(Vec2::new(
+                (lcell.rect.r - lcell.rect.l + 1) as f32,
+                (lcell.rect.t - lcell.rect.b + 1) as f32,
+            ));
+
+            transform.translation.x = lcell.rect.l as f32;
+            transform.translation.y = lcell.rect.t as f32;
+        }
+
+    }
 }

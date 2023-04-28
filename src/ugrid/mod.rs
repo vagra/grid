@@ -146,7 +146,7 @@ impl UGrid {
         let (prev_col, prev_row) = self.pos2cell(prev_x, prev_y);
         let (col, row) = self.pos2cell(x, y);
 
-        // println!("({},{}) -> ({},{})", prev_col, prev_row, col, row);
+        // println!("({},{}) -> ({},{})", prev_row, prev_col, row, col);
 
         let index: u16;
 
@@ -162,7 +162,8 @@ impl UGrid {
         }
 
         if index == INVALID {
-            panic!("index:{} id:{} prev:({},{}) curr:({},{}) ", index, id, prev_col, prev_row, col, row);
+            panic!("index:{} id:{} prev:({},{}) curr:({},{}) ",
+                index, id, prev_row, prev_col, row, col);
         }
 
         self.pool[index].x = x;
@@ -246,7 +247,7 @@ impl UGrid {
         loop {
 
             if index == INVALID {
-                panic!("id:{} cell:({},{}) index:{}", id, col, row, index);
+                panic!("id:{} cell:({},{}) index:{}", id, row, col, index);
             }
 
             if self.pool[index].id == id {

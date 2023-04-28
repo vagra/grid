@@ -87,6 +87,13 @@ impl DGrid {
 
         let index: u16;
 
+        print!("id:{:3}, ({:2},{:2}) -> ({:2},{:2}), ",
+            id, prev_x, prev_y, x, y
+        );
+        println!("({:2},{:2}) -> ({:2},{:2})",
+            prev_lrow, prev_lcol, lrow, lcol
+        );
+
         if prev_lcol == lcol && prev_lrow == lrow {
 
             index = self.loose.find_in_cell(id, lrow, lcol);
@@ -100,7 +107,7 @@ impl DGrid {
 
         if index == INVALID {
             panic!("index:{} id:{} prev:({},{}) curr:({},{}) ",
-                index, id, prev_lcol, prev_lrow, lcol, lrow);
+                index, id, prev_lrow, prev_lcol, lrow, lcol);
         }
 
         self.loose.pool[index].x = x;

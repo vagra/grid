@@ -8,16 +8,25 @@ pub mod ctcell;
 pub mod cagent;
 
 const LCELL_COLOR: Color = Color::rgba(0.0, 0.6, 0.0, 0.6);
-const LCELL_BORDER: Color = Color::rgba(0.0, 1.0, 0.0, 0.6);
 const LRECT_COLOR: Color = Color::rgba(0.6, 0.6, 0.0, 0.6);
-const LRECT_BORDER: Color = Color::rgba(1.0, 1.0, 0.0, 0.6);
 const TCELL_COLOR: Color = Color::rgba(0.6, 0.0, 0.0, 0.6);
-const TCELL_BORDER: Color = Color::rgba(1.0, 0.0, 0.0, 0.6);
 const AGENT_COLOR: Color = Color::rgba(0.0, 0.0, 0.6, 0.6);
-const AGENT_BORDER: Color = Color::rgba(0.0, 0.0, 1.0, 0.6);
-const LLINE_WIDTH: f32 = 0.5;
-const TLINE_WIDTH: f32 = 1.0;
-const ALINE_WIDTH: f32 = 0.5;
+
+const AGENT_ID: u32 = 107;
+const AGENT_SPEED: f32 = 5.0;
+
+const SQR: f32 = 0.7071;
+
+pub const VECTORES: [Vec2; 8] = [
+	Vec2{ x: 0.0, y:-1.0 },
+	Vec2{ x: SQR, y:-SQR },
+	Vec2{ x: 1.0, y: 0.0 },
+	Vec2{ x: SQR, y: SQR },
+	Vec2{ x: 0.0, y: 1.0 },
+	Vec2{ x:-SQR, y: SQR },
+	Vec2{ x:-1.0, y: 0.0 },
+	Vec2{ x:-SQR, y:-SQR },
+];
 
 
 #[derive(Resource, Deref, DerefMut, TypeUuid)]
@@ -36,18 +45,23 @@ pub fn create_grid(
     mut commands: Commands
 ) {
 
-    print!("create grid...");
+    println!("create grid:");
 
     let mut grid = Grid::default();
     grid.init_test_data();
 
-    grid.remove(103, 6, 23);
-    grid.remove(106, -234, 324);
-    grid.remove(109, 15, 27);
+    // grid.remove(103, 6, 23);
+    // grid.remove(106, -234, 324);
+    // grid.remove(109, 15, 27);
+
+    create_tcells(&mut commands, &grid);
+    create_lcells(&mut commands, &grid);
+    create_lrects(&mut commands, &grid);
+    create_agents(&mut commands, &grid);
 
     commands.insert_resource(grid);
 
-    commands.insert_resource(NextState(Some(GameState::DrawTCell)));
+    commands.insert_resource(NextState(Some(GameState::Playing)));
 
-    println!("\tdone.");
+    println!("create grid done.");
 }
