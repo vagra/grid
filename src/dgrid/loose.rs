@@ -94,6 +94,12 @@ impl Loose {
         }
     }
 
+    pub fn clear(&mut self) {
+
+        self.cells.clear();
+        self.pool.clear();
+    }
+
     pub fn insert(&mut self, id: u32, x:i16, y:i16, hw:i16, hh:i16) -> (u16, u16) {
 
         assert!(id != INACTIVE);

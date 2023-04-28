@@ -18,6 +18,8 @@ fn main() {
     test_dir_query();
 
     print_size();
+
+    test_clear();
 }
 
 
@@ -242,4 +244,24 @@ fn print_size() {
     println!("size of Grid: {}", mem::size_of::<UGrid>());
 
     println!("size of pool: {}", mem::size_of::<Agent>() * POOL_SIZE as usize);
+}
+
+
+
+fn test_clear() {
+    println!("\n------------------------------------------------");
+    println!("test_clear");
+
+    let mut grid = UGrid::default();
+    grid.init_test_data();
+    
+    grid.print_cells();
+    grid.print_pool();
+    grid.print_agents();
+
+    grid.clear();
+
+    grid.print_cells();
+    grid.print_pool();
+    grid.print_agents();
 }

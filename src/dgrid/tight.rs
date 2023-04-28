@@ -95,7 +95,7 @@ impl Tight {
     }
 
     pub fn clear(&mut self) {
-        
+
         self.cells.clear();
         self.pool.clear();
     }

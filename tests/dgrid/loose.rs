@@ -342,3 +342,26 @@ fn out_bounds_remove_work() {
     );
 }
 
+
+
+#[test]
+fn clear_work() {
+    let mut loose = Loose::default();
+
+    loose.init_test_data();
+    loose.clear();
+
+    assert_eq!(loose.cols, 64);
+    assert_eq!(loose.rows, 36);
+
+    for lrow in 0..loose.rows {
+        for lcol in 0..loose.cols {
+
+            assert!(loose.cells[lrow][lcol].is_empty());
+        }
+    }
+
+    assert_eq!(loose.pool.size, 0);
+    assert_eq!(loose.pool.first_free, INVALID);
+    assert_eq!(loose.pool.capacity(), 0);
+}

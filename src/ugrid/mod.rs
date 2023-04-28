@@ -107,6 +107,12 @@ impl UGrid {
         }
     }
 
+    pub fn clear(&mut self) {
+
+        self.cells.clear();
+        self.pool.clear();
+    }
+
     pub fn insert(&mut self, id: u32, x:i16, y:i16) {
 
         assert!(id != INACTIVE);

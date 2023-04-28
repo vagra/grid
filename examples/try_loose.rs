@@ -7,6 +7,7 @@ fn main() {
     test_pos2lcell();
     test_out_bounds_insert();
     test_out_bounds_remove();
+    test_clear();
 }
 
 
@@ -100,6 +101,26 @@ fn test_out_bounds_remove() {
 
     loose.remove(205, -2000, 300);
     loose.remove(208, 200, -1600);
+
+    loose.print_cells();
+    loose.print_pool();
+    loose.print_agents();
+}
+
+
+
+fn test_clear() {
+    println!("\n------------------------------------------------");
+    println!("test_clear");
+
+    let mut loose = Loose::default();
+    loose.init_test_data();
+    
+    loose.print_cells();
+    loose.print_pool();
+    loose.print_agents();
+
+    loose.clear();
 
     loose.print_cells();
     loose.print_pool();

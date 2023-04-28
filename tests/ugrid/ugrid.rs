@@ -331,3 +331,26 @@ fn out_bounds_remove_work() {
 
 }
 
+
+
+#[test]
+fn clear_work() {
+    let mut grid = UGrid::default();
+
+    grid.init_test_data();
+    grid.clear();
+
+    assert_eq!(grid.cols, 20);
+    assert_eq!(grid.rows, 12);
+
+    for trow in 0..grid.rows {
+        for tcol in 0..grid.cols {
+
+            assert!(grid.cells[trow][tcol].is_empty());
+        }
+    }
+
+    assert_eq!(grid.pool.size, 0);
+    assert_eq!(grid.pool.first_free, INVALID);
+    assert_eq!(grid.pool.capacity(), 0);
+}
