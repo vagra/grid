@@ -34,6 +34,14 @@ pub trait ItemComm {
     fn set_next_free(&mut self, index:u16);
 }
 
+pub trait CellSpec {
+    fn clear(&mut self);
+}
+
+pub trait CellComm {
+    fn is_empty(&self) -> bool;
+}
+
 pub trait GridComm {
     fn in_grid(&self, x: i16, y: i16) -> bool;
     fn pos2grid(&self, x:i16, y:i16) -> (i16, i16);

@@ -1,11 +1,13 @@
 use std::{ops::{Index, IndexMut}};
 
+use crate::{CellComm, CellSpec};
+
 
 #[derive(Debug, Clone)]
-pub struct Cols<T>(Vec<T>);
+pub struct Cols<T:CellComm+CellSpec>(Vec<T>);
 
 
-impl<T:Default> Default for Cols<T> {
+impl<T:CellComm+CellSpec + Default> Default for Cols<T> {
 
     fn default() -> Self {
         
@@ -13,7 +15,7 @@ impl<T:Default> Default for Cols<T> {
     }
 }
 
-impl<T> Index<u16> for Cols<T> {
+impl<T:CellComm+CellSpec> Index<u16> for Cols<T> {
     type Output = T;
 
     fn index(&self, index: u16) -> &Self::Output {
@@ -22,7 +24,7 @@ impl<T> Index<u16> for Cols<T> {
     }
 }
 
-impl<T> IndexMut<u16> for Cols<T> {
+impl<T:CellComm+CellSpec> IndexMut<u16> for Cols<T> {
 
     fn index_mut(&mut self, index: u16) -> &mut Self::Output {
 
@@ -31,7 +33,7 @@ impl<T> IndexMut<u16> for Cols<T> {
 }
 
 
-impl<T:Default> Cols<T> {
+impl<T:CellComm+CellSpec + Default> Cols<T> {
 
     pub fn new(cols:u16) -> Self {
 
@@ -53,10 +55,10 @@ impl<T:Default> Cols<T> {
 
 
 #[derive(Debug)]
-pub struct Cells<T>(Vec<Cols<T>>);
+pub struct Cells<T:CellComm+CellSpec>(Vec<Cols<T>>);
 
 
-impl<T:Default> Default for Cells<T> {
+impl<T:CellComm+CellSpec + Default> Default for Cells<T> {
 
     fn default() -> Self {
         
@@ -64,7 +66,7 @@ impl<T:Default> Default for Cells<T> {
     }
 }
 
-impl<T> Index<u16> for Cells<T> {
+impl<T:CellComm+CellSpec> Index<u16> for Cells<T> {
     type Output = Cols<T>;
 
     fn index(&self, index: u16) -> &Self::Output {
@@ -73,7 +75,7 @@ impl<T> Index<u16> for Cells<T> {
     }
 }
 
-impl<T> IndexMut<u16> for Cells<T> {
+impl<T:CellComm+CellSpec> IndexMut<u16> for Cells<T> {
 
     fn index_mut(&mut self, index: u16) -> &mut Self::Output {
 
@@ -81,7 +83,7 @@ impl<T> IndexMut<u16> for Cells<T> {
     }
 }
 
-impl<T:Default> Cells<T> {
+impl<T:CellComm+CellSpec + Default> Cells<T> {
 
     pub fn new(rows: u16, cols: u16) -> Self {
 
@@ -94,6 +96,20 @@ impl<T:Default> Cells<T> {
 
         Self(vec)
     }
+
+    pub fn clear(&mut self) {
+
+        for (_, cols) in self.0.iter_mut().enumerate() {
+            for (_, cell) in cols.0.iter_mut().enumerate() {
+                
+                if !cell.is_empty() {
+
+                    cell.clear();
+                }
+            }
+        }
+    }
+
 
     pub fn len(&self) -> u16 {
         

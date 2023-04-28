@@ -1,6 +1,6 @@
 use std::mem;
 use grid::{
-    *, cells::*, pool::*, items::*,
+    *, pool::*, items::*,
     ugrid::{*, agent::*}
 };
 
@@ -238,8 +238,6 @@ fn print_size() {
 
     println!("size of Agent: {}", mem::size_of::<Agent>());
     println!("size of Items<Agent>: {}", mem::size_of::<Items<Agent>>());
-    println!("size of Cells<Agent>: {}", mem::size_of::<Cells<Agent>>());
-    println!("size of Cols<Agent>: {}", mem::size_of::<Cols<Agent>>());
     println!("size of Pool<Agent>: {}", mem::size_of::<Pool<Agent>>());
     println!("size of Grid: {}", mem::size_of::<UGrid>());
 

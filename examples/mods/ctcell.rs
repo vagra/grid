@@ -84,7 +84,7 @@ pub fn update_tcells(
     for (tcol, trow, mut visibility) in query.iter_mut() {
         let tcell = grid.0.tight.cells[trow.0][tcol.0];
 
-        if tcell.lhead == INVALID {
+        if tcell.head == INVALID {
             *visibility = Visibility::Hidden;
         }
         else {

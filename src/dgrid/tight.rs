@@ -54,7 +54,7 @@ impl Index<(u16, u16)> for Tight {
     
     fn index(&self, index: (u16, u16)) -> &Self::Output {
         let (i, j) = index;
-        let lhead = self.cells[i][j].lhead;
+        let lhead = self.cells[i][j].head;
         &self.pool[lhead]
     }
 }
@@ -63,7 +63,7 @@ impl IndexMut<(u16, u16)> for Tight {
 
     fn index_mut(&mut self, index: (u16, u16)) -> &mut Self::Output {
         let (i, j) = index;
-        let lhead = self.cells[i][j].lhead;
+        let lhead = self.cells[i][j].head;
         &mut self.pool[lhead]
     }
 }
@@ -94,6 +94,10 @@ impl Tight {
         }
     }
 
+    pub fn clear(&mut self) {
+        
+    }
+
     pub fn insert(&mut self, lcol:u16, lrow:u16, tcol:u16, trow:u16) {
 
         assert!(lcol != INVALID);
@@ -103,14 +107,14 @@ impl Tight {
 
         let mut titem = TItem::new(lcol, lrow);
 
-        if self.cells[trow][tcol].lhead != INVALID {
+        if self.cells[trow][tcol].head != INVALID {
 
-            titem.next = self.cells[trow][tcol].lhead;
+            titem.next = self.cells[trow][tcol].head;
         }
 
         let index = self.pool.insert(titem);
 
-        self.cells[trow][tcol].lhead = index;
+        self.cells[trow][tcol].head = index;
     }
 
     pub fn insert_lcell(&mut self, lcol:u16, lrow:u16) {
@@ -144,7 +148,7 @@ impl Tight {
     
     pub fn pop_cell(&mut self, lcol:u16, lrow:u16, tcol: u16, trow: u16) -> u16 {
 
-        let mut index = self.cells[trow][tcol].lhead;
+        let mut index = self.cells[trow][tcol].head;
 
         let mut prev = index;
         loop {
@@ -162,8 +166,8 @@ impl Tight {
             index = self.pool[index].next;
         }
 
-        if index == self.cells[trow][tcol].lhead {
-            self.cells[trow][tcol].lhead = self.pool[index].next;
+        if index == self.cells[trow][tcol].head {
+            self.cells[trow][tcol].head = self.pool[index].next;
         }
         else {
             self.pool[prev].next = self.pool[index].next;
@@ -178,11 +182,23 @@ impl Tight {
             panic!("tcell:({},{}) index:{}", trow, tcol, index);
         }
 
-        let head = self.cells[trow][tcol].lhead;
-        self.cells[trow][tcol].lhead = index;
+        let head = self.cells[trow][tcol].head;
+        self.cells[trow][tcol].head = index;
         
         self.pool[index].next = head;
     }
+
+
+    pub fn clear_cells(&mut self) {
+
+        
+    }
+
+    pub fn clear_pool(&mut self) {
+
+        self.pool.clear();
+    }
+
 
     pub fn lcell2tcell(&self, lcol:u16, lrow:u16) -> (u16, u16) {
 
@@ -232,11 +248,11 @@ impl Tight {
 
         for i in 0..self.rows {
             for j in 0..self.cols {
-                if self.cells[i][j].lhead == INVALID {
+                if self.cells[i][j].head == INVALID {
                     print!("[ ]") 
                 }
                 else {
-                    print!("{:2} ", self.cells[i][j].lhead)
+                    print!("{:2} ", self.cells[i][j].head)
                 }
             }
             println!()
@@ -254,7 +270,7 @@ impl Tight {
 
     pub fn print_cell_titems(&self, trow:u16, tcol:u16) {
 
-        let mut lindex = self.cells[trow][tcol].lhead;
+        let mut lindex = self.cells[trow][tcol].head;
 
         while lindex != INVALID {
 
@@ -283,7 +299,7 @@ impl Tight {
 
     pub fn print_cell_agents(&self, grid:&DGrid, trow:u16, tcol:u16) {
 
-        let mut ihead = self.cells[trow][tcol].lhead;
+        let mut ihead = self.cells[trow][tcol].head;
 
         if ihead == INVALID {
             return;

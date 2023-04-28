@@ -18,15 +18,15 @@ fn insert_work() {
 
     tight.init_test_data();
 
-    assert_eq!(tight.cells[1][1].lhead, 7);
-    assert_eq!(tight.cells[1][3].lhead, 3);
-    assert_eq!(tight.cells[2][1].lhead, 8);
-    assert_eq!(tight.cells[3][8].lhead, 1);
-    assert_eq!(tight.cells[3][11].lhead, 4);
-    assert_eq!(tight.cells[3][12].lhead, 5);
-    assert_eq!(tight.cells[4][8].lhead, 0);
-    assert_eq!(tight.cells[6][3].lhead, 9);
-    assert_eq!(tight.cells[8][6].lhead, 2);
+    assert_eq!(tight.cells[1][1].head, 7);
+    assert_eq!(tight.cells[1][3].head, 3);
+    assert_eq!(tight.cells[2][1].head, 8);
+    assert_eq!(tight.cells[3][8].head, 1);
+    assert_eq!(tight.cells[3][11].head, 4);
+    assert_eq!(tight.cells[3][12].head, 5);
+    assert_eq!(tight.cells[4][8].head, 0);
+    assert_eq!(tight.cells[6][3].head, 9);
+    assert_eq!(tight.cells[8][6].head, 2);
 
     assert_eq!(tight.pool[9],
         TItem{ lcol: 13, lrow: 24, next:INVALID, next_free:INVALID }
@@ -73,13 +73,13 @@ fn remove_lcell_work() {
     tight.remove_lcell(32, 17);
     tight.remove_lcell(47, 13);
 
-    assert_eq!(tight.cells[1][1].lhead, 6);
-    assert_eq!(tight.cells[1][3].lhead, 3);
-    assert_eq!(tight.cells[2][1].lhead, 8);
-    assert_eq!(tight.cells[3][8].lhead, 1);
-    assert_eq!(tight.cells[3][12].lhead, 5);
-    assert_eq!(tight.cells[6][3].lhead, 9);
-    assert_eq!(tight.cells[8][6].lhead, 2);
+    assert_eq!(tight.cells[1][1].head, 6);
+    assert_eq!(tight.cells[1][3].head, 3);
+    assert_eq!(tight.cells[2][1].head, 8);
+    assert_eq!(tight.cells[3][8].head, 1);
+    assert_eq!(tight.cells[3][12].head, 5);
+    assert_eq!(tight.cells[6][3].head, 9);
+    assert_eq!(tight.cells[8][6].head, 2);
 
     assert_eq!(tight.pool[0],
         TItem{ lcol:INVALID, lrow: 17, next:INVALID, next_free:    7 }

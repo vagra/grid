@@ -118,6 +118,12 @@ impl DGrid {
         );
     }
 
+
+    pub fn optimize(&mut self) {
+        
+    }
+
+
     pub fn expand_aabb(&mut self, lcol:u16, lrow:u16,
         x:i16, y:i16, hw:i16, hh:i16) {
 

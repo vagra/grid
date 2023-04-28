@@ -35,6 +35,26 @@ pub fn derive_item(input: TokenStream) -> TokenStream {
 
 
 
+#[proc_macro_derive(CellComm)]
+pub fn derive_cell(input: TokenStream) -> TokenStream {
+    
+    let ast: syn::DeriveInput = syn::parse(input).unwrap();
+    let name = &ast.ident;
+    let gen = quote! {
+
+        impl CellComm for #name {
+            
+            fn is_empty(&self) -> bool {
+
+                self.head == INVALID
+            }
+        }
+    };
+
+    gen.into()
+}
+
+
 #[proc_macro_derive(GridComm)]
 pub fn derive_grid(input: TokenStream) -> TokenStream {
     

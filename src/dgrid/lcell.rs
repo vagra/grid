@@ -1,9 +1,11 @@
 use std::cmp::{min, max};
+use grid_derive::CellComm;
+
 use crate::*;
 use super::rect::*;
 
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, CellComm)]
 pub struct LCell {
     pub head: u16,
     pub rect: LRect,
@@ -17,6 +19,22 @@ impl Default for LCell {
         Self {
             head: INVALID,
             rect: LRect::default(),
+        }
+    }
+}
+
+impl CellSpec for LCell {
+
+    fn clear(&mut self) {
+        
+        if self.head != INVALID {
+
+            self.head = INVALID;
+
+            self.rect.l = I16MAX;
+            self.rect.t = I16MIN;
+            self.rect.r = I16MIN;
+            self.rect.b = I16MAX;
         }
     }
 }

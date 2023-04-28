@@ -58,6 +58,11 @@ Items<T> {
         INVALID
     }
 
+    pub fn clear(&mut self) {
+
+        self.0.clear();
+    }
+
     pub fn print(&self) {
         for (i, item) in self.0.iter().enumerate() {
             print!("{:3}: ", i);
