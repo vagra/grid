@@ -6,6 +6,7 @@ fn main() {
     test_insert_remove();
     test_lcell2tcell();
     test_box2trect();
+    test_clear();
 }
 
 
@@ -69,4 +70,22 @@ fn test_box2trect() {
     println!("{:?}", tight.box2trect(6, 23, 10, 10));
     println!("{:?}", tight.box2trect(40, 97, 10, 10));
 
+}
+
+fn test_clear() {
+    println!("\n------------------------------------------------");
+    println!("test_clear");
+
+    let mut tight = Tight::default();
+    tight.init_test_data();
+    
+    tight.print_cells();
+    tight.print_pool();
+    tight.print_titems();
+
+    tight.clear();
+
+    tight.print_cells();
+    tight.print_pool();
+    tight.print_titems();
 }

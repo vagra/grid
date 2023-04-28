@@ -7,7 +7,8 @@ use crate::{CellComm, CellSpec};
 pub struct Cols<T:CellComm+CellSpec>(Vec<T>);
 
 
-impl<T:CellComm+CellSpec + Default> Default for Cols<T> {
+impl<T:CellComm+CellSpec + Default>
+Default for Cols<T> {
 
     fn default() -> Self {
         
@@ -15,7 +16,8 @@ impl<T:CellComm+CellSpec + Default> Default for Cols<T> {
     }
 }
 
-impl<T:CellComm+CellSpec> Index<u16> for Cols<T> {
+impl<T:CellComm+CellSpec>
+Index<u16> for Cols<T> {
     type Output = T;
 
     fn index(&self, index: u16) -> &Self::Output {
@@ -24,7 +26,8 @@ impl<T:CellComm+CellSpec> Index<u16> for Cols<T> {
     }
 }
 
-impl<T:CellComm+CellSpec> IndexMut<u16> for Cols<T> {
+impl<T:CellComm+CellSpec>
+IndexMut<u16> for Cols<T> {
 
     fn index_mut(&mut self, index: u16) -> &mut Self::Output {
 
@@ -33,7 +36,8 @@ impl<T:CellComm+CellSpec> IndexMut<u16> for Cols<T> {
 }
 
 
-impl<T:CellComm+CellSpec + Default> Cols<T> {
+impl<T:CellComm+CellSpec + Default>
+Cols<T> {
 
     pub fn new(cols:u16) -> Self {
 
@@ -58,7 +62,8 @@ impl<T:CellComm+CellSpec + Default> Cols<T> {
 pub struct Cells<T:CellComm+CellSpec>(Vec<Cols<T>>);
 
 
-impl<T:CellComm+CellSpec + Default> Default for Cells<T> {
+impl<T:CellComm+CellSpec + Default>
+Default for Cells<T> {
 
     fn default() -> Self {
         
@@ -66,7 +71,8 @@ impl<T:CellComm+CellSpec + Default> Default for Cells<T> {
     }
 }
 
-impl<T:CellComm+CellSpec> Index<u16> for Cells<T> {
+impl<T:CellComm+CellSpec>
+Index<u16> for Cells<T> {
     type Output = Cols<T>;
 
     fn index(&self, index: u16) -> &Self::Output {
@@ -75,7 +81,8 @@ impl<T:CellComm+CellSpec> Index<u16> for Cells<T> {
     }
 }
 
-impl<T:CellComm+CellSpec> IndexMut<u16> for Cells<T> {
+impl<T:CellComm+CellSpec>
+IndexMut<u16> for Cells<T> {
 
     fn index_mut(&mut self, index: u16) -> &mut Self::Output {
 
@@ -83,7 +90,8 @@ impl<T:CellComm+CellSpec> IndexMut<u16> for Cells<T> {
     }
 }
 
-impl<T:CellComm+CellSpec + Default> Cells<T> {
+impl<T:CellComm+CellSpec + Default>
+Cells<T> {
 
     pub fn new(rows: u16, cols: u16) -> Self {
 
@@ -102,14 +110,10 @@ impl<T:CellComm+CellSpec + Default> Cells<T> {
         for (_, cols) in self.0.iter_mut().enumerate() {
             for (_, cell) in cols.0.iter_mut().enumerate() {
                 
-                if !cell.is_empty() {
-
-                    cell.clear();
-                }
+                cell.clear();
             }
         }
     }
-
 
     pub fn len(&self) -> u16 {
         

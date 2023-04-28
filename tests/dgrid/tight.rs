@@ -272,3 +272,27 @@ fn lcell2tcell_work() {
     assert_eq!((15, 8), tight.lcell2tcell(63, 35));
     assert_eq!((0, 8), tight.lcell2tcell(0, 35));
 }
+
+
+
+#[test]
+fn clear_work() {
+    let mut tight = Tight::default();
+
+    tight.init_test_data();
+    tight.clear();
+
+    assert_eq!(tight.cols, 16);
+    assert_eq!(tight.rows, 9);
+
+    for trow in 0..tight.rows {
+        for tcol in 0..tight.cols {
+
+            assert!(tight.cells[trow][tcol].is_empty());
+        }
+    }
+
+    assert_eq!(tight.pool.size, 0);
+    assert_eq!(tight.pool.first_free, INVALID);
+    assert_eq!(tight.pool.capacity(), 0);
+}

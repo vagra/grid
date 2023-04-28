@@ -45,7 +45,7 @@ impl LCell {
 
         Self {
             head,
-            ..Default::default()
+            rect: LRect::default(),
         }
     }
 

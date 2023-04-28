@@ -96,6 +96,8 @@ impl Tight {
 
     pub fn clear(&mut self) {
         
+        self.cells.clear();
+        self.pool.clear();
     }
 
     pub fn insert(&mut self, lcol:u16, lrow:u16, tcol:u16, trow:u16) {
@@ -186,17 +188,6 @@ impl Tight {
         self.cells[trow][tcol].head = index;
         
         self.pool[index].next = head;
-    }
-
-
-    pub fn clear_cells(&mut self) {
-
-        
-    }
-
-    pub fn clear_pool(&mut self) {
-
-        self.pool.clear();
     }
 
 
