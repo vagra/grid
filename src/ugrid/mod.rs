@@ -237,6 +237,7 @@ impl UGrid {
 
     pub fn find_in_cell(&mut self, id: u32, row: u16, col: u16) -> u16 {
 
+        assert!(id != INACTIVE);
         assert!(row != INVALID);
         assert!(col != INVALID);
 

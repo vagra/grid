@@ -175,6 +175,30 @@ impl Loose {
         self.pool[index].next = head;
     }
 
+
+    pub fn find_in_cell(&mut self, id: u32, row: u16, col: u16) -> u16 {
+
+        assert!(id != INACTIVE);
+        assert!(row != INVALID);
+        assert!(col != INVALID);
+
+        let mut index = self.cells[row][col].head;
+
+        loop {
+
+            if index == INVALID {
+                panic!("id:{} cell:({},{}) index:{}", id, col, row, index);
+            }
+
+            if self.pool[index].id == id {
+                return index;
+            }
+
+            index = self.pool[index].next;
+        }
+    }
+
+
     pub fn pos2lcell(&self, x:i16, y:i16) -> (u16, u16) {
 
         let (gx, gy) = self.pos2grid(x, y);
@@ -186,6 +210,7 @@ impl Loose {
         (col.clamp(0, self.col_max),
         row.clamp(0, self.row_max))
     }
+
 
     pub fn print_cells(&self) {
 

@@ -73,12 +73,43 @@ impl DGrid {
         self.expand_aabb(lcol, lrow, x, y, hw, hh);
     }
     
-    pub fn remove(&mut self, id: u32, x:i16, y:i16) {
+    pub fn remove(&mut self, id:u32, x:i16, y:i16) {
 
         self.loose.remove(id, x, y);
     }
 
-    
+    pub fn move_cell(&mut self, id:u32, prev_x:i16, prev_y:i16, x:i16, y:i16) {
+
+        assert!(id != INACTIVE);
+
+        let (prev_lcol, prev_lrow) = self.loose.pos2lcell(prev_x, prev_y);
+        let (lcol, lrow) = self.loose.pos2lcell(x, y);
+
+        let index: u16;
+
+        if prev_lcol == lcol && prev_lrow == lrow {
+
+            index = self.loose.find_in_cell(id, lrow, lcol);
+        }
+        else {
+
+            index = self.loose.pop_cell(id, prev_lrow, prev_lcol);
+
+            self.loose.push_cell(index, lrow, lcol);
+        }
+
+        if index == INVALID {
+            panic!("index:{} id:{} prev:({},{}) curr:({},{}) ",
+                index, id, prev_lcol, prev_lrow, lcol, lrow);
+        }
+
+        self.loose.pool[index].x = x;
+        self.loose.pool[index].y = y;
+
+        self.expand_aabb(lcol, lrow, x, y, 
+            self.loose.pool[index].hw, self.loose.pool[index].hh
+        );
+    }
 
     pub fn expand_aabb(&mut self, lcol:u16, lrow:u16,
         x:i16, y:i16, hw:i16, hh:i16) {
@@ -119,8 +150,6 @@ impl DGrid {
         }
 
     }
-
-    
 
     pub fn print_cells(&self) {
         self.tight.print_cells();
