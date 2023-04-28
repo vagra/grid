@@ -88,6 +88,7 @@ impl DGrid {
         lcell.expand(x, y, hw, hh);
 
         let trect = self.tight.box2trect(x, y, hw, hh);
+        // println!("trect: [{},{},{},{}]", trect.l, trect.t, trect.r, trect.b);
 
         if prev_lrect.is_empty() {
 
@@ -129,5 +130,18 @@ impl DGrid {
 
     pub fn print_agents(&self) {
         self.tight.print_agents(self);
+    }
+
+
+    pub fn init_test_data(&mut self) {
+        self.insert(101, 23, 24, 10, 10);
+        self.insert(102, 12, 10, 10, 10);
+        self.insert(103, 6, 23, 10, 10);
+        self.insert(104, 40, 97, 10, 10);
+        self.insert(105, -123, -432, 10, 10);
+        self.insert(106, -234, 324, 10, 10);
+        self.insert(107, 450, 123, 10, 10);
+        self.insert(108, 480, 170, 10, 10);
+        self.insert(109, 15, 27, 10, 10);
     }
 }

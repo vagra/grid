@@ -111,10 +111,12 @@ impl Loose {
 
         self.cells[row][col].head = index;
 
+        /*
         println!(
             "loose.insert: ({}, {}, {}, {}) -> ({}, {})",
             x, y, hh, hw, col, row
         );
+        */
 
         (col, row)
     }
@@ -176,6 +178,7 @@ impl Loose {
     pub fn pos2lcell(&self, x:i16, y:i16) -> (u16, u16) {
 
         let (gx, gy) = self.pos2grid(x, y);
+        // println!("({}, {}) -> ({}, {})", x, y, gx, gy);
 
         let col = ((gx as f32) * self.inv_cell_size) as u16;
         let row = ((gy as f32) * self.inv_cell_size) as u16;
@@ -217,22 +220,27 @@ impl Loose {
 
     pub fn print_cell_agents(&self, lrow:u16, lcol:u16) {
 
-        let mut index = self.cells[lrow][lcol].head;
+        let mut head = self.cells[lrow][lcol].head;
+        let rect = self.cells[lrow][lcol].rect;
         
-        while index != INVALID {
+        if head == INVALID {
+            return;
+        }
 
-            println!("\tlcell:({:2},{:2}) -> head:{:2}", lrow, lcol, index);
+        println!("  lcell:({:2},{:2}) -> head:{:2}", lrow, lcol, head);
+        println!("   rect:[{:4},{:4},{:4},{:4}]", rect.l, rect.t, rect.r, rect.b);
 
-            let agent = self.pool[index];
+        while head != INVALID {
 
-            let prev = index;
-            index = agent.next;
+            let agent = self.pool[head];
+
+            let prev = head;
+            head = agent.next;
 
             if !agent.is_free() {
-                print!("\t{:5}: ", prev);
+                print!("  {:5}: ", prev);
                 agent.print();
             }
-
         }
     }
 

@@ -39,16 +39,11 @@ pub fn create_grid(
     print!("create grid...");
 
     let mut grid = Grid::default();
+    grid.init_test_data();
 
-    grid.0.insert(101, 23, 24, 10, 10);
-    grid.0.insert(102, 12, 10, 10, 10);
-    grid.0.insert(103, 6, 23, 10, 10);
-    grid.0.insert(104, 40, 97, 10, 10);
-    grid.0.insert(105, -123, -432, 10, 10);
-    grid.0.insert(106, -234, 324, 10, 10);
-    grid.0.insert(107, 450, 123, 10, 10);
-    grid.0.insert(108, 480, 170, 10, 10);
-    grid.0.insert(109, 15, 27, 10, 10);
+    grid.remove(103, 6, 23);
+    grid.remove(106, -234, 324);
+    grid.remove(109, 15, 27);
 
     commands.insert_resource(grid);
 

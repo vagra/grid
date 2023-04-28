@@ -96,10 +96,12 @@ impl Tight {
 
     pub fn insert(&mut self, lcol:u16, lrow:u16, tcol:u16, trow:u16) {
 
+        /*
         println!(
             "tight.insert: ({}, {}) -> ({}, {})",
             lcol, lrow, tcol, trow
         );
+        */
 
         assert!(lcol != INVALID);
         assert!(lrow != INVALID);
@@ -287,23 +289,26 @@ impl Tight {
 
     pub fn print_cell_agents(&self, grid:&DGrid, trow:u16, tcol:u16) {
 
-        let mut lindex = self.cells[trow][tcol].lhead;
+        let mut ihead = self.cells[trow][tcol].lhead;
 
-        while lindex != INVALID {
+        if ihead == INVALID {
+            return;
+        }
 
-            println!("tcell:({:2},{:2}) -> lhead:{:2}", trow, tcol, lindex);
+        println!("tcell:({:2},{:2}) -> ihead:{:2}", trow, tcol, ihead);
 
-            let titem = self.pool[lindex];
+        while ihead != INVALID {
 
-            let lprev = lindex;
-            lindex = titem.next;
+            let titem = self.pool[ihead];
 
             if !titem.is_free() {
-                print!("{:5}: ", lprev);
+                print!("{:5}: ", ihead);
                 titem.print();
 
                 grid.loose.print_cell_agents(titem.lrow, titem.lcol);
             }
+
+            ihead = titem.next;
         }
     } 
 

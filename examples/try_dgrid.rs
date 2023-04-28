@@ -5,23 +5,9 @@ use grid::{
 
 
 fn main() {
-    // test_tight_loose_print();
     // test_new();
     test_insert();
-}
-
-
-fn test_tight_loose_print() {
-    println!("\n------------------------------------------------");
-    println!("test_tight_loose_print");
-
-    let grid = DGrid::default();
-
-    println!("tight.cells:");
-    grid.tight.print_cells();
-    
-    println!("loose.cells:");
-    grid.loose.print_cells();
+    // test_remove();
 }
 
 
@@ -35,24 +21,36 @@ fn test_new() {
 }
 
 fn test_insert() {
-
     println!("\n------------------------------------------------");
     println!("test_insert");
 
     let mut grid = DGrid::default();
-
-    grid.insert(101, 23, 24, 10, 10);
-    grid.insert(102, 12, 10, 10, 10);
-    grid.insert(103, 6, 23, 10, 10);
-    grid.insert(104, 40, 97, 10, 10);
-    grid.insert(105, -123, -432, 10, 10);
-    grid.insert(106, -234, 324, 10, 10);
-    grid.insert(107, 450, 123, 10, 10);
-    grid.insert(108, 480, 170, 10, 10);
-    grid.insert(109, 15, 27, 10, 10);
+    grid.init_test_data();
 
     grid.loose.print_cells();
     grid.loose.print_pool();
+    grid.loose.print_agents();
+
+    grid.tight.print_cells();
+    grid.tight.print_pool();
+    grid.print_agents();
+}
+
+fn test_remove() {
+    println!("\n------------------------------------------------");
+    println!("test_remove");
+
+    let mut grid = DGrid::default();
+    grid.init_test_data();
+
+    grid.remove(103, 6, 23);
+    grid.remove(106, -234, 324);
+    grid.remove(109, 15, 27);
+
+    grid.loose.print_cells();
+    grid.loose.print_pool();
+    grid.loose.print_agents();
+    
     grid.tight.print_cells();
     grid.tight.print_pool();
     grid.print_agents();
