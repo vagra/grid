@@ -175,6 +175,37 @@ impl Loose {
     }
 
 
+    pub fn optimize(&mut self) {
+
+        let mut new_pool: Pool<Agent> = Pool::default();
+
+        for lrow in 0..self.rows {
+            for lcol in 0..self.cols {
+
+                let mut indices: Vec<u16> = Vec::default();
+
+                let lcell = &mut self.cells[lrow][lcol];
+
+                while lcell.head != INVALID {
+
+                    let agent = self.pool[lcell.head];
+                    let new_index = new_pool.insert(agent);
+                    indices.push(new_index);
+                    lcell.head = agent.next;
+                }
+
+                for (_, new_index) in indices.iter().enumerate() {
+                    new_pool[*new_index].next = lcell.head;
+                    lcell.head = *new_index;
+                }
+
+            }
+        }
+
+        let _ = std::mem::replace(&mut self.pool, new_pool);
+    }
+
+
     pub fn find_in_cell(&mut self, id: u32, row: u16, col: u16) -> u16 {
 
         assert!(id != INACTIVE);

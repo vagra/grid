@@ -121,6 +121,8 @@ impl DGrid {
 
     pub fn optimize(&mut self) {
         
+        self.tight.clear();
+        self.loose.optimize();
     }
 
 

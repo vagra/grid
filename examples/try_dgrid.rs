@@ -6,9 +6,10 @@ use grid::{
 
 fn main() {
     // test_new();
-    test_insert();
+    // test_insert();
     // test_remove();
     // test_move();
+    test_optimize();
 }
 
 
@@ -71,6 +72,32 @@ fn test_move() {
     grid.loose.print_pool();
     grid.loose.print_agents();
 
+    grid.tight.print_cells();
+    grid.tight.print_pool();
+    grid.print_agents();
+}
+
+
+
+fn test_optimize() {
+    println!("\n------------------------------------------------");
+    println!("test_optimize");
+
+    let mut grid = DGrid::default();
+    grid.init_test_data();
+
+    grid.remove(103, 6, 23);
+    grid.remove(106, -234, 324);
+    grid.remove(109, 15, 27);
+
+    grid.move_cell(107, 450, 123, 470, 150);
+
+    grid.optimize();
+
+    grid.loose.print_cells();
+    grid.loose.print_pool();
+    grid.loose.print_agents();
+    
     grid.tight.print_cells();
     grid.tight.print_pool();
     grid.print_agents();
