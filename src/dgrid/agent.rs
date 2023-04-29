@@ -78,63 +78,31 @@ impl Agent {
     }
 
     pub fn in_grid(&self, grid:&DGrid) -> bool {
-        grid.in_grid(self.x, self.y)
+
+        /*
+        println!("{},{},{},{}",
+            self.x - self.hw,
+            self.x + self.hw,
+            self.y + self.hh,
+            self.y - self.hh
+        ); */
+
+        self.x - self.hw < grid.half_width &&
+        self.x + self.hw >= -grid.half_width &&
+        self.y + self.hh > -grid.half_height &&
+        self.y - self.hh <= grid.half_height
     }
 
-    pub fn is_bump(&self, other:&Agent, check_radius:i16) -> bool {
+    pub fn cross(&self, other:&Agent) -> bool {
 
-        self.is_bump_xy(other.x, other.y, check_radius)
+        self.cross_box(other.x, other.y, other.hw, other.hh)
     }
 
-    pub fn is_bump_xy(&self, x:i16, y:i16, check_radius:i16) -> bool {
+    pub fn cross_box(&self, x:i16, y:i16, hw:i16, hh:i16) -> bool {
 
-        (self.x - x).abs() <= check_radius && 
-        (self.y - y).abs() <= check_radius
-    }
-
-    pub fn is_bump_dxy(&self, dx:i16, dy:i16, check_radius:i16) -> bool {
-
-        dx.abs() <= check_radius && 
-        dy.abs() <= check_radius
-    }
-
-    pub fn bump_front(&self, other:&Agent, dir:u8, check_radius:i16) -> bool {
-
-        self.bump_front_xy(dir, other.x, other.y, check_radius)
-    }
-
-    pub fn bump_front_xy(&self, dir:u8, x:i16, y:i16, check_radius:i16) -> bool {
-        let dx = self.x - x;
-        let dy = self.y - y;
-        
-        self.is_bump_dxy(dx, dy, check_radius) &&
-        Self::at_front_dxy(dir, dx, dy)
-    }
-
-    pub fn at_front(&self, other:&Agent, dir:u8) -> bool {
-
-        self.at_front_xy(dir, other.x, other.y)
-    }
-
-    fn at_front_xy(&self, dir:u8, x:i16, y:i16) -> bool {
-
-        let dx = self.x - x;
-        let dy = self.y - y;
-        
-        Self::at_front_dxy(dir, dx, dy)
-    }
-
-    fn at_front_dxy(dir:u8, dx:i16, dy:i16) -> bool {
-
-        match dir {
-            1 => dx >= 0 && dy <= 0,
-            2 => dx >= dy.abs(),
-            3 => dx >= 0 && dy >= 0,
-            4 => dy >= dx.abs(),
-            5 => dx <= 0 && dy >= 0,
-            6 => dx <= -dy.abs(),
-            7 => dx <= 0 && dy <= 0,
-            _ => dy <= -dx.abs(),
-        }
+        self.x - self.hw <= x + hw &&
+        self.x + self.hw >= x - hw &&
+        self.y + self.hh >= y - hh &&
+        self.y - self.hh <= y + hh
     }
 }

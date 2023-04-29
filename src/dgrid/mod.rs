@@ -10,7 +10,7 @@ pub mod loose;
 
 use crate::{
     *, cells::*, pool::*,
-    dgrid::{tight::*, loose::*}
+    dgrid::{tight::*, loose::*, rect::*, tcell::*, lcell::*, titem::*}
 };
 use grid_derive::GridComm;
 
@@ -118,6 +118,41 @@ impl DGrid {
     }
 
 
+    pub fn query(&self, x:i16, y:i16, hw:i16, hh:i16, omit_id: u32) -> Vec<u32> {
+
+        let trect = self.tight.box2trect(x, y, hw, hh);
+
+        let tvec = self.query_titem_indices(&trect, x, y, hw, hh);
+
+        let mut vec:Vec<u32> = Vec::new();
+        let mut titem: &TItem;
+        let mut lcell: &LCell;
+        let mut index: u16;
+        
+        for (_, tindex) in tvec.iter().enumerate() {
+
+            titem = &self.tight.pool[*tindex];
+
+            lcell = &self.loose.cells[titem.lrow][titem.lcol];
+            index = lcell.head;
+
+            while index != INVALID {
+
+                let agent = self.loose.pool[index];
+
+                if agent.id != omit_id &&
+                    agent.cross_box(x, y, hw, hh) {
+
+                    vec.push(agent.id);
+                }
+
+                index = agent.next;
+            }
+        }
+
+        vec
+    }
+
     pub fn optimize(&mut self) {
 
         self.rebuild_loose();
@@ -193,6 +228,43 @@ impl DGrid {
             }
         }
 
+    }
+
+    fn query_titem_indices(&self, trect:&TRect, x:i16, y:i16, hw:i16, hh:i16) -> Vec<u16> {
+
+        let mut tvec: Vec<u16> = Vec::new();
+        let mut index: u16;
+        let mut tcell: &TCell;
+        let mut titem: &TItem;
+        let mut lcell: &LCell;
+
+        for trow in trect.t..=trect.b {
+            for tcol in trect.l..=trect.r {
+
+                tcell = &self.tight.cells[trow][tcol];
+                index = tcell.head;
+
+                while index != INVALID {
+
+                    titem = &self.tight.pool[index];
+
+                    if !tvec.contains(&index) {
+
+                        lcell = &self.loose.cells[titem.lrow][titem.lcol];
+
+                        if lcell.rect.cross_box(x, y, hw, hh) {
+                            
+                            tvec.push(index);
+                        }
+                    }
+
+                    index = titem.next;
+                }
+
+            }
+        }
+
+        tvec
     }
 
     pub fn print_cells(&self) {

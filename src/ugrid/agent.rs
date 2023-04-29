@@ -70,53 +70,57 @@ impl Agent {
     }
 
     pub fn in_grid(&self, grid:&UGrid) -> bool {
-        grid.in_grid(self.x, self.y)
+
+        self.x >= -grid.half_width &&
+        self.x < grid.half_width &&
+        self.y > -grid.half_height &&
+        self.y <= grid.half_height
     }
 
-    pub fn is_bump(&self, other:&Agent, check_radius:i16) -> bool {
+    pub fn cross(&self, other:&Agent, check_radius:i16) -> bool {
 
-        self.is_bump_xy(other.x, other.y, check_radius)
+        self.cross_pos(other.x, other.y, check_radius)
     }
 
-    pub fn is_bump_xy(&self, x:i16, y:i16, check_radius:i16) -> bool {
+    pub fn cross_pos(&self, x:i16, y:i16, check_radius:i16) -> bool {
 
         (self.x - x).abs() <= check_radius && 
         (self.y - y).abs() <= check_radius
     }
 
-    pub fn is_bump_dxy(&self, dx:i16, dy:i16, check_radius:i16) -> bool {
+    pub fn cross_dpos(&self, dx:i16, dy:i16, check_radius:i16) -> bool {
 
         dx.abs() <= check_radius && 
         dy.abs() <= check_radius
     }
 
-    pub fn bump_front(&self, other:&Agent, dir:u8, check_radius:i16) -> bool {
+    pub fn front_cross(&self, other:&Agent, dir:u8, check_radius:i16) -> bool {
 
-        self.bump_front_xy(dir, other.x, other.y, check_radius)
+        self.front_cross_pos(dir, other.x, other.y, check_radius)
     }
 
-    pub fn bump_front_xy(&self, dir:u8, x:i16, y:i16, check_radius:i16) -> bool {
+    pub fn front_cross_pos(&self, dir:u8, x:i16, y:i16, check_radius:i16) -> bool {
         let dx = self.x - x;
         let dy = self.y - y;
         
-        self.is_bump_dxy(dx, dy, check_radius) &&
-        Self::at_front_dxy(dir, dx, dy)
+        self.cross_dpos(dx, dy, check_radius) &&
+        Self::at_front_dpos(dir, dx, dy)
     }
 
     pub fn at_front(&self, other:&Agent, dir:u8) -> bool {
 
-        self.at_front_xy(dir, other.x, other.y)
+        self.at_front_pos(dir, other.x, other.y)
     }
 
-    fn at_front_xy(&self, dir:u8, x:i16, y:i16) -> bool {
+    fn at_front_pos(&self, dir:u8, x:i16, y:i16) -> bool {
 
         let dx = self.x - x;
         let dy = self.y - y;
         
-        Self::at_front_dxy(dir, dx, dy)
+        Self::at_front_dpos(dir, dx, dy)
     }
 
-    fn at_front_dxy(dir:u8, dx:i16, dy:i16) -> bool {
+    fn at_front_dpos(dir:u8, dx:i16, dy:i16) -> bool {
 
         match dir {
             1 => dx >= 0 && dy <= 0,

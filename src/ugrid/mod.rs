@@ -193,7 +193,7 @@ impl UGrid {
 
                     if (agent.id != omit_id) &&
                         agent.in_grid(self) &&
-                        agent.is_bump_xy(x, y, self.agent_size) {
+                        agent.cross_pos(x, y, self.agent_size) {
 
                         vec.push(index);
                     }
@@ -222,7 +222,7 @@ impl UGrid {
 
                     if agent.id != omit_id &&
                         agent.in_grid(self) &&
-                        agent.bump_front_xy(dir, x, y, self.agent_size) {
+                        agent.front_cross_pos(dir, x, y, self.agent_size) {
 
                         vec.push(index);
                     }

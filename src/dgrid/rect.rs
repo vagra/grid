@@ -29,6 +29,22 @@ impl LRect {
         Self { l, t, r, b }
     }
 
+    pub fn cross_box(&self, x:i16, y:i16, hw:i16, hh:i16) -> bool {
+
+        self.l <= x + hw &&
+        self.r >= x - hw &&
+        self.t >= y - hh &&
+        self.b <= y + hh
+    }
+
+    pub fn cross_lrect(&self, lrect:&LRect) -> bool {
+
+        self.l <= lrect.r &&
+        self.r >= lrect.l &&
+        self.t >= lrect.b &&
+        self.b <= lrect.t
+    }
+
     pub fn reset(&mut self) {
 
         self.l = I16MAX;
