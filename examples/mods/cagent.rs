@@ -60,17 +60,25 @@ pub fn create_agents(
 ) {
     print!("create agents...");
 
-    for index in 0..grid.0.loose.pool.size {
+    for lrow in 0..grid.0.loose.rows {
+        for lcol in 0..grid.0.loose.cols {
+
+            let mut index = grid.0.loose.cells[lrow][lcol].head;
         
-        let agent = grid.0.loose.pool[index];
+            while index != INVALID {
 
-        if !agent.is_free() {
-            
-            println!("{:?}", agent);
+                let agent = grid.0.loose.pool[index];
 
-            commands.spawn(CAgentBundle::new(
-                index, agent.id, agent.x, agent.y, agent.hw, agent.hh
-            ));
+                index = agent.next;
+
+                if !agent.is_free() {
+                    
+                    commands.spawn(CAgentBundle::new(
+                        index, agent.id, agent.x, agent.y, agent.hw, agent.hh
+                    ));
+                }
+
+            }
         }
     }
 
@@ -83,13 +91,12 @@ pub fn create_agents(
 pub fn update_agents(
     mut query: Query<(
         &AIndex,
-        &mut ID,
         &mut Transform
     )>,
     grid: Res<Grid>,
 ) {
 
-    for (index, mut id, mut transform) in query.iter_mut() {
+    for (index, mut transform) in query.iter_mut() {
 
         if index.0 == INVALID {
             continue;
@@ -98,9 +105,6 @@ pub fn update_agents(
         let agent = grid.0.loose.pool[index.0];
 
         if !agent.is_free() {
-
-            id.0 = agent.id;
-
             transform.translation.x = agent.x as f32;
             transform.translation.y = agent.y as f32;
         }
@@ -129,9 +133,6 @@ pub fn move_agent(
         let d = input.pressed(KeyCode::Down);
     
         if let Some(pos) = key2dir(l, r, u, d) {
-
-            // grid.loose.print_pool();
-            // grid.tight.print_pool();
 
             let prev_x = transform.translation.x;
             let prev_y = transform.translation.y;
