@@ -1,7 +1,7 @@
 use crate::*;
 
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct LRect {
     pub l: i16,
     pub t: i16,
@@ -45,7 +45,7 @@ impl LRect {
 
 
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct TRect {
     pub l: u16,
     pub t: u16,
