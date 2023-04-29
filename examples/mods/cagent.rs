@@ -1,20 +1,21 @@
 use bevy::{prelude::*, sprite::Anchor};
-use grid::{INVALID, ItemSpec};
+use grid::{INVALID, ItemSpec, dgrid::agent::*};
 use super::*;
 
 
 #[derive(Component)]
-pub struct AIndex(pub u16);
-
+pub struct DAgent(pub Agent);
 
 #[derive(Component)]
-pub struct ID(pub u32);
-
+pub struct DPos{
+    pub x: i16,
+    pub y: i16,
+}
 
 #[derive(Bundle)]
 pub struct CAgentBundle {
-    pub index: AIndex,
-    pub id: ID,
+    pub agent: DAgent,
+    pub pos: DPos,
 
     #[bundle]
     pub sprite: SpriteBundle,
@@ -23,26 +24,29 @@ pub struct CAgentBundle {
 
 impl CAgentBundle {
 
-    pub fn new(index:u16, id:u32, x:i16, y:i16, hw:i16, hh:i16) -> Self {
+    pub fn new(agent:&Agent) -> Self {
 
         Self {
 
-            index: AIndex(index),
-            id: ID(id),
+            agent: DAgent(*agent),
+            pos: DPos{
+                    x: agent.x,
+                    y: agent.y
+                },
 
             sprite: SpriteBundle { 
                 sprite: Sprite {
                     color: AGENT_COLOR.clone(),
                     custom_size: Some(
-                        Vec2::new((hw * 2) as f32, (hh * 2) as f32)
+                        Vec2::new((agent.hw * 2) as f32, (agent.hh * 2) as f32)
                     ),
                     anchor: Anchor::Center,
                     ..default()
                     }, 
                 transform: Transform::from_translation(
                     Vec3{
-                        x: x as f32,
-                        y: y as f32,
+                        x: agent.x as f32,
+                        y: agent.y as f32,
                         z: 4.0}
                 ),
                 ..default()
@@ -69,14 +73,12 @@ pub fn create_agents(
 
                 let agent = grid.0.loose.pool[index];
 
-                index = agent.next;
-
                 if !agent.is_free() {
                     
-                    commands.spawn(CAgentBundle::new(
-                        index, agent.id, agent.x, agent.y, agent.hw, agent.hh
-                    ));
+                    commands.spawn(CAgentBundle::new(&agent));
                 }
+
+                index = agent.next;
 
             }
         }
@@ -86,101 +88,58 @@ pub fn create_agents(
 }
 
 
-
-
-pub fn update_agents(
-    mut query: Query<(
-        &AIndex,
-        &mut Transform
-    )>,
-    grid: Res<Grid>,
-) {
-
-    for (index, mut transform) in query.iter_mut() {
-
-        if index.0 == INVALID {
-            continue;
-        }
-
-        let agent = grid.0.loose.pool[index.0];
-
-        if !agent.is_free() {
-            transform.translation.x = agent.x as f32;
-            transform.translation.y = agent.y as f32;
-        }
-    }
-}
-
-
 pub fn move_agent(
     mut query: Query<(
-        &ID,
+        &DAgent,
+        &mut DPos,
+        &mut Sprite,
         &mut Transform
     )>,
     mut grid: ResMut<Grid>,
-    input: Res<Input<KeyCode>>
+    cmd: Res<Cmd>,
 ) {
 
-    for (id, mut transform) in query.iter_mut() {
+    for (agent, mut prev, mut sprite, mut transform) in query.iter_mut() {
 
-        if id.0 != AGENT_ID {
+        if agent.0.id != IDS[cmd.index] {
+
+            if sprite.color == CROSS_COLOR {
+
+                sprite.color = AGENT_COLOR;
+            }
+
             continue;
         }
-    
-        let l = input.pressed(KeyCode::Left);
-        let r = input.pressed(KeyCode::Right);
-        let u = input.pressed(KeyCode::Up);
-        let d = input.pressed(KeyCode::Down);
-    
-        if let Some(pos) = key2dir(l, r, u, d) {
 
-            let prev_x = transform.translation.x;
-            let prev_y = transform.translation.y;
+        if let Some(dir) = cmd.dir {
+
+            prev.x = transform.translation.x as i16;
+            prev.y = transform.translation.y as i16;
     
-            let offset = VECTORES[pos];
+            let offset = VECTORES[dir];
             transform.translation.x += AGENT_SPEED * offset.x;
             transform.translation.y += AGENT_SPEED * offset.y;
 
-            grid.move_cell(
-                id.0, prev_x as i16, prev_y as i16,
-                transform.translation.x as i16,
-                transform.translation.y as i16);
+            let x = transform.translation.x as i16;
+            let y = transform.translation.y as i16;
+
+            grid.move_cell(agent.0.id, prev.x, prev.y, x, y);
+
+            grid.optimize();
+
+            let ids = grid.query(
+                x, y, agent.0.hw, agent.0.hh, agent.0.id
+            );
+
+            if ids.len() > 0 {
+                sprite.color = CROSS_COLOR;
+            }
+            else {
+                sprite.color = AGENT_COLOR;
+            }
         }
 
         return;
     }
 }
 
-
-fn key2dir(l:bool, r:bool, u:bool, d:bool) -> Option<usize> {
-    let mut li = l as usize;
-    let mut ri = r as usize;
-    let mut ui = u as usize;
-    let mut di = d as usize;
-
-    if l && r {
-        li = 0;
-        ri = 0;
-    }
-
-    if u && d {
-        ui = 0;
-        di = 0;
-    }
-
-    let pos: usize = (di << 3) + (li << 2) + (ui << 1) + ri;
-
-    match pos {
-        //dlur
-        0b0001 => Some(2),
-        0b0010 => Some(4),
-        0b0100 => Some(6),
-        0b1000 => Some(0),
-        0b0011 => Some(3),
-        0b0110 => Some(5),
-        0b1100 => Some(7),
-        0b1001 => Some(1),
-        _ => None,
-    }
-
-}

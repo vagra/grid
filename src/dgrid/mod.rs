@@ -90,7 +90,7 @@ impl DGrid {
         /*
         println!("id:{:3}, ({:2},{:2}) -> ({:2},{:2}),  ({:2},{:2}) -> ({:2},{:2})",
             id, prev_x, prev_y, x, y, prev_lrow, prev_lcol, lrow, lcol
-        ); */
+        ); */ 
         
 
         if prev_lcol == lcol && prev_lrow == lrow {
@@ -141,6 +141,7 @@ impl DGrid {
                 let agent = self.loose.pool[index];
 
                 if agent.id != omit_id &&
+                    !vec.contains(&agent.id) &&
                     agent.cross_box(x, y, hw, hh) {
 
                     vec.push(agent.id);
