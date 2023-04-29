@@ -13,7 +13,7 @@ const TCELL_COLOR: Color = Color::rgba(0.6, 0.0, 0.0, 0.6);
 const AGENT_COLOR: Color = Color::rgba(0.0, 0.0, 0.6, 0.6);
 
 const AGENT_ID: u32 = 107;
-const AGENT_SPEED: f32 = 5.0;
+const AGENT_SPEED: f32 = 2.0;
 
 const SQR: f32 = 0.7071;
 
@@ -54,6 +54,8 @@ pub fn create_grid(
     // grid.remove(106, -234, 324);
     // grid.remove(109, 15, 27);
 
+    grid.optimize();
+
     create_tcells(&mut commands, &grid);
     create_lcells(&mut commands, &grid);
     create_lrects(&mut commands, &grid);
@@ -64,4 +66,10 @@ pub fn create_grid(
     commands.insert_resource(NextState(Some(GameState::Playing)));
 
     println!("create grid done.");
+}
+
+pub fn optimize_grid(
+    mut grid: ResMut<Grid>
+) {
+    grid.0.optimize();
 }

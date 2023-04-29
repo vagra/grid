@@ -2,7 +2,7 @@ use std::cmp::{min, max};
 use grid_derive::CellComm;
 
 use crate::*;
-use super::rect::*;
+use super::{rect::*, agent::*};
 
 
 #[derive(Debug, Clone, Copy, CellComm)]
@@ -47,6 +47,16 @@ impl LCell {
             head,
             rect: LRect::default(),
         }
+    }
+
+    pub fn reset_rect(&mut self) {
+
+        self.rect.reset();
+    }
+
+    pub fn expand_agent(&mut self, agent: &Agent) {
+
+        self.expand(agent.x, agent.y, agent.hw, agent.hh);
     }
 
     pub fn expand(&mut self, x:i16, y:i16, hw:i16, hh:i16) {

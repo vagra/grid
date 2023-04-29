@@ -29,6 +29,14 @@ impl LRect {
         Self { l, t, r, b }
     }
 
+    pub fn reset(&mut self) {
+
+        self.l = I16MAX;
+        self.t = I16MIN;
+        self.r = I16MIN;
+        self.b = I16MAX;
+    }
+
     pub fn is_empty(&self) -> bool {
 
         self.l > self.r
@@ -63,6 +71,14 @@ impl TRect {
     pub fn new(l:u16, t:u16, r:u16, b:u16) -> Self {
 
         Self { l, t, r, b }
+    }
+
+    pub fn reset(&mut self) {
+
+        self.l = U16MAX;
+        self.t = U16MAX;
+        self.r = 0;
+        self.b = 0;
     }
 
     pub fn is_empty(&self) -> bool {

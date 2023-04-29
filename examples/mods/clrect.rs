@@ -99,11 +99,6 @@ pub fn update_lrects(
 
         if lcell.head == INVALID {
             *visibility = Visibility::Hidden;
-
-            sprite.custom_size = Some(Vec2::new(0.0, 0.0));
-
-            transform.translation.x = 0.0;
-            transform.translation.y = 0.0;
         }
         else {
             *visibility = Visibility::Visible;

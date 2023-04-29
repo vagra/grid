@@ -206,6 +206,28 @@ impl Loose {
     }
 
 
+    pub fn rebuild_rects(&mut self) {
+
+        for lrow in 0..self.rows {
+            for lcol in 0..self.cols {
+
+                let lcell = &mut self.cells[lrow][lcol];
+                lcell.reset_rect();
+
+                let mut index = lcell.head;
+
+                while index != INVALID {
+
+                    let agent = self.pool[index];
+                    lcell.expand_agent(&agent);
+
+                    index = agent.next;
+                }
+            }
+        }
+    }
+
+
     pub fn find_in_cell(&mut self, id: u32, row: u16, col: u16) -> u16 {
 
         assert!(id != INACTIVE);

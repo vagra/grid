@@ -208,6 +208,8 @@ impl Tight {
 
     pub fn lrect2trect(&self, rect:&LRect) -> TRect {
 
+        // println!("{:?}", rect);
+
         let (gl, gt) = self.pos2grid(rect.l, rect.t);
         let (gr, gb) = self.pos2grid(rect.r, rect.b);
         

@@ -87,12 +87,11 @@ impl DGrid {
 
         let index: u16;
 
-        print!("id:{:3}, ({:2},{:2}) -> ({:2},{:2}), ",
-            id, prev_x, prev_y, x, y
-        );
-        println!("({:2},{:2}) -> ({:2},{:2})",
-            prev_lrow, prev_lcol, lrow, lcol
-        );
+        /*
+        println!("id:{:3}, ({:2},{:2}) -> ({:2},{:2}),  ({:2},{:2}) -> ({:2},{:2})",
+            id, prev_x, prev_y, x, y, prev_lrow, prev_lcol, lrow, lcol
+        ); */
+        
 
         if prev_lcol == lcol && prev_lrow == lrow {
 
@@ -120,10 +119,41 @@ impl DGrid {
 
 
     pub fn optimize(&mut self) {
-        
-        self.tight.clear();
-        self.loose.optimize();
+
+        self.rebuild_loose();
+        self.rebuild_tight();
     }
+
+    fn rebuild_loose(&mut self) {
+
+        self.loose.optimize();
+        self.loose.rebuild_rects();
+    }
+
+    fn rebuild_tight(&mut self) {
+
+        self.tight.clear();
+        
+        for lrow in 0..self.loose.rows {
+            for lcol in 0..self.loose.cols {
+
+                let lcell = self.loose.cells[lrow][lcol];
+
+                if lcell.head == INVALID {
+                    continue;
+                }
+
+                let trect = self.tight.lrect2trect(&lcell.rect);
+
+                for trow in trect.t..=trect.b {
+                    for tcol in trect.l..=trect.r {
+
+                        self.tight.insert(lcol, lrow, tcol, trow);
+                    }
+                }
+            }
+        }
+    }   
 
 
     pub fn expand_aabb(&mut self, lcol:u16, lrow:u16,
@@ -134,7 +164,6 @@ impl DGrid {
         lcell.expand(x, y, hw, hh);
 
         let trect = self.tight.box2trect(x, y, hw, hh);
-        // println!("trect: [{},{},{},{}]", trect.l, trect.t, trect.r, trect.b);
 
         if prev_lrect.is_empty() {
 

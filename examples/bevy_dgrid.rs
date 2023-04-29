@@ -34,19 +34,23 @@ fn main() {
             .run_if(in_state(GameState::Playing))
         )
         .add_system(
-            (update_tcells).after(move_agent)
+            (optimize_grid).after(move_agent)
             .run_if(in_state(GameState::Playing))
         )
         .add_system(
-            (update_lcells).after(move_agent)
+            (update_tcells).after(optimize_grid)
             .run_if(in_state(GameState::Playing))
         )
         .add_system(
-            (update_lrects).after(move_agent)
+            (update_lcells).after(optimize_grid)
             .run_if(in_state(GameState::Playing))
         )
         .add_system(
-            (update_agents).after(move_agent)
+            (update_lrects).after(optimize_grid)
+            .run_if(in_state(GameState::Playing))
+        )
+        .add_system(
+            (update_agents).after(optimize_grid)
             .run_if(in_state(GameState::Playing))
         )
         .run();
