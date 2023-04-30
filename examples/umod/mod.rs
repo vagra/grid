@@ -25,8 +25,8 @@ pub const VECTORES: [Vec2; 8] = [
 ];
 
 
-pub const IDS: [u32; 9] = [
-    101, 102, 103, 104, 105, 106, 107, 108, 109
+pub const IDS: [u32; 10] = [
+    100, 101, 102, 103, 104, 105, 106, 107, 108, 109
 ];
 
 
@@ -89,7 +89,7 @@ pub fn change_agent(
         cmd.index = (cmd.index + 1) % 9;
     }
     if x {
-        cmd.index = (cmd.index + 8) & 9;
+        cmd.index = (cmd.index + 8) % 9;
     }
 
     let l = input.pressed(KeyCode::Left);

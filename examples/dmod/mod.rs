@@ -115,7 +115,7 @@ pub fn change_agent(
         cmd.index = (cmd.index + 1) % 9;
     }
     if x {
-        cmd.index = (cmd.index + 8) & 9;
+        cmd.index = (cmd.index + 8) % 9;
     }
 
     let l = input.pressed(KeyCode::Left);
