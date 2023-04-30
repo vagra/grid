@@ -7,9 +7,9 @@ pub mod clrect;
 pub mod ctcell;
 pub mod cagent;
 
+const TCELL_COLOR: Color = Color::rgba(0.3, 0.3, 0.3, 0.6);
 const LCELL_COLOR: Color = Color::rgba(0.0, 0.6, 0.0, 0.6);
 const LRECT_COLOR: Color = Color::rgba(0.8, 0.8, 0.0, 0.6);
-const TCELL_COLOR: Color = Color::rgba(0.6, 0.0, 0.0, 0.6);
 const AGENT_COLOR: Color = Color::rgba(0.0, 0.0, 0.6, 0.6);
 const CROSS_COLOR: Color = Color::rgba(1.0, 0.0, 0.0, 1.0);
 

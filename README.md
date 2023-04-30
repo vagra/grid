@@ -2,6 +2,31 @@
 
 uniform-grid and loose/tight double-grid impl for rust and bevy. 
 
+## examples
+
+arrow keys: move current agent
+z,x: swhtch current agent
+
+### bevy_ugrid
+```
+cargo run -r --example bevy_ugrid
+```
+blue: agent
+green: uniform cell
+red: current agent bumped other
+![bevy_ugrid]()
+
+### bevy_dgrid
+```
+cargo run -r --example bevy_dgrid
+```
+blue: agent
+green: loose cell
+yellow: loose cell aabb rect
+gray: tight cell
+red: current agent bumped other
+![bevy_dgrid]()
+
 
 
 

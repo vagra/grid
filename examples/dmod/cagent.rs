@@ -47,7 +47,7 @@ impl CAgentBundle {
                     Vec3{
                         x: agent.x as f32,
                         y: agent.y as f32,
-                        z: 4.0}
+                        z: 100.0}
                 ),
                 ..default()
             }
