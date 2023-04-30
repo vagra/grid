@@ -1,9 +1,9 @@
 use bevy::prelude::*;
 
 
-mod mods;
+mod dmod;
 
-use mods::{*, clcell::*, clrect::*, ctcell::*, cagent::*};
+use dmod::{*, clcell::*, clrect::*, ctcell::*, cagent::*};
 
 
 const BG_COLOR: Color = Color::rgb(0.31, 0.47, 0.51);
