@@ -118,13 +118,13 @@ impl DGrid {
     }
 
 
-    pub fn query(&self, x:i16, y:i16, hw:i16, hh:i16, omit_id: u32) -> Vec<u32> {
+    pub fn query(&self, x:i16, y:i16, hw:i16, hh:i16, omit_id: u32) -> Vec<u16> {
 
         let trect = self.tight.box2trect(x, y, hw, hh);
 
         let tvec = self.query_titem_indices(&trect, x, y, hw, hh);
 
-        let mut vec:Vec<u32> = Vec::new();
+        let mut vec:Vec<u16> = Vec::new();
         let mut titem: &TItem;
         let mut lcell: &LCell;
         let mut index: u16;
@@ -141,10 +141,9 @@ impl DGrid {
                 let agent = self.loose.pool[index];
 
                 if agent.id != omit_id &&
-                    !vec.contains(&agent.id) &&
                     agent.cross_box(x, y, hw, hh) {
 
-                    vec.push(agent.id);
+                    vec.push(index);
                 }
 
                 index = agent.next;
