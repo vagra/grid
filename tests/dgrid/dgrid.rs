@@ -176,28 +176,28 @@ fn optimize_work() {
     assert_eq!(grid.tight.cells[8][7].head, 7);
 
     assert_eq!(grid.tight.pool[0],
-        TItem{ lcol: 48, lrow: 12, next:65535, next_free:65535 }
+        TItem{ lcol: 48, lrow: 12, next:INVALID, next_free:INVALID }
     );
     assert_eq!(grid.tight.pool[1],
-        TItem{ lcol: 48, lrow: 12, next:65535, next_free:65535 }
+        TItem{ lcol: 48, lrow: 12, next:INVALID, next_free:INVALID }
     );
     assert_eq!(grid.tight.pool[2],
-        TItem{ lcol: 47, lrow: 13, next:    0, next_free:65535 }
+        TItem{ lcol: 47, lrow: 13, next:    0, next_free:INVALID }
     );
     assert_eq!(grid.tight.pool[3],
-        TItem{ lcol: 47, lrow: 13, next:    1, next_free:65535 }
+        TItem{ lcol: 47, lrow: 13, next:    1, next_free:INVALID }
     );
     assert_eq!(grid.tight.pool[4],
-        TItem{ lcol: 33, lrow: 14, next:65535, next_free:65535 }
+        TItem{ lcol: 33, lrow: 14, next:INVALID, next_free:INVALID }
     );
     assert_eq!(grid.tight.pool[5],
-        TItem{ lcol: 32, lrow: 17, next:65535, next_free:65535 }
+        TItem{ lcol: 32, lrow: 17, next:INVALID, next_free:INVALID }
     );
     assert_eq!(grid.tight.pool[6],
-        TItem{ lcol: 27, lrow: 32, next:65535, next_free:65535 }
+        TItem{ lcol: 27, lrow: 32, next:INVALID, next_free:INVALID }
     );
     assert_eq!(grid.tight.pool[7],
-        TItem{ lcol: 27, lrow: 32, next:65535, next_free:65535 }
+        TItem{ lcol: 27, lrow: 32, next:INVALID, next_free:INVALID }
     );
 
 }

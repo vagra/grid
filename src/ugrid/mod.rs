@@ -235,6 +235,37 @@ impl UGrid {
         vec
     }
 
+    pub fn optimize(&mut self) {
+
+        let mut new_pool: Pool<Agent> = Pool::default();
+
+        for row in 0..self.rows {
+            for col in 0..self.cols {
+
+                let mut indices: Vec<u16> = Vec::default();
+
+                let ucell = &mut self.cells[row][col];
+
+                while ucell.head != INVALID {
+
+                    let agent = self.pool[ucell.head];
+                    let new_index = new_pool.insert(agent);
+                    indices.push(new_index);
+                    
+                    ucell.head = agent.next;
+                }
+
+                for (_, new_index) in indices.iter().enumerate() {
+                    new_pool[*new_index].next = ucell.head;
+                    ucell.head = *new_index;
+                }
+
+            }
+        }
+
+        let _ = std::mem::replace(&mut self.pool, new_pool);
+    }
+
     pub fn find_in_pool(&mut self, id: u32) -> u16 {
 
         assert!(id != INACTIVE);

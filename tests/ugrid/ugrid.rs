@@ -92,6 +92,63 @@ fn remove_work() {
 
 }
 
+
+
+#[test]
+fn optimize_work() {
+
+    let mut grid = UGrid::default();
+
+    grid.init_test_data();
+
+    grid.remove(107, 35, 35);
+    grid.remove(109, 21, 23);
+
+    grid.optimize();
+
+    assert_eq!(grid.pool.size, 8);
+    assert_eq!(grid.pool.first_free, INVALID);
+    assert_eq!(grid.pool.capacity(), 8);
+
+    assert_eq!(grid.cells[3][8].head, 0);
+    assert_eq!(grid.cells[3][14].head, 1);
+    assert_eq!(grid.cells[5][10].head, 5);
+    assert_eq!(grid.cells[7][6].head, 6);
+    assert_eq!(grid.cells[7][11].head, 7);
+
+    assert_eq!(grid[(5, 10)].next, 4);
+    assert_eq!(grid.pool[grid[(5, 10)].next].next, 3);
+    assert_eq!(grid.pool[grid.pool[grid[(5, 10)].next].next].next, 2);
+    assert_eq!(grid.pool[grid.pool[grid.pool[grid[(5, 10)].next].next].next].next, INVALID);
+
+    assert_eq!(grid.pool[0],
+        Agent{ id:102, x:-123, y: 223, next:INVALID, next_free:INVALID }
+    );
+    assert_eq!(grid.pool[1],
+        Agent{ id:105, x: 423, y: 223, next:INVALID, next_free:INVALID }
+    );
+    assert_eq!(grid.pool[2],
+        Agent{ id:108, x:  42, y:  43, next:INVALID, next_free:INVALID }
+    );
+    assert_eq!(grid.pool[3],
+        Agent{ id:106, x:  24, y:  62, next:    2, next_free:INVALID }
+    );
+    assert_eq!(grid.pool[4],
+        Agent{ id:101, x:  12, y:  23, next:    3, next_free:INVALID }
+    );
+    assert_eq!(grid.pool[5],
+        Agent{ id:100, x:  54, y:  29, next:    4, next_free:INVALID }
+    );
+    assert_eq!(grid.pool[6],
+        Agent{ id:103, x:-323, y:-123, next:INVALID, next_free:INVALID }
+    );
+    assert_eq!(grid.pool[7],
+        Agent{ id:104, x: 123, y:-123, next:INVALID, next_free:INVALID }
+    );
+
+}
+
+
 #[test]
 fn move_cell_work() {
     let mut grid = UGrid::default();

@@ -7,6 +7,7 @@ use grid::{
 
 fn main() {
     test_insert_remove();
+    test_optimize();
     test_move_cell();
     test_pos2grid();
     test_pos2cell();
@@ -55,6 +56,28 @@ fn test_move_cell() {
     grid.move_cell(107, 35, 35, 143, -165);
     grid.move_cell(106, 24, 62, 112, -123);
     grid.move_cell(106, 112, -123, 24, 62);
+    
+    grid.print_cells();
+    grid.print_pool();
+    grid.print_agents();
+}
+
+fn test_optimize() {
+    println!("\n------------------------------------------------");
+    println!("test_optimize");
+
+    let mut grid = UGrid::default();
+
+    grid.init_test_data();
+    
+    grid.remove(107, 35, 35);
+    grid.remove(109, 21, 23);
+
+    grid.print_cells();
+    grid.print_pool();
+    grid.print_agents();
+
+    grid.optimize();
     
     grid.print_cells();
     grid.print_pool();
