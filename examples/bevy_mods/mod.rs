@@ -39,24 +39,24 @@ pub struct Cmd{
 }
 
 
+pub fn key2dir(input:&Input<KeyCode>) ->Option<usize> {
 
-pub fn key2dir(l:bool, r:bool, u:bool, d:bool) -> Option<usize> {
-    let mut li = l as usize;
-    let mut ri = r as usize;
-    let mut ui = u as usize;
-    let mut di = d as usize;
+	let mut l = input.pressed(KeyCode::Left) as usize;
+    let mut r = input.pressed(KeyCode::Right) as usize;
+    let mut u = input.pressed(KeyCode::Up) as usize;
+    let mut d = input.pressed(KeyCode::Down) as usize;
 
-    if l && r {
-        li = 0;
-        ri = 0;
+    if l > 0 && r > 0 {
+        l = 0;
+        r = 0;
     }
 
-    if u && d {
-        ui = 0;
-        di = 0;
+    if u > 0 && d > 0 {
+        u = 0;
+        d = 0;
     }
 
-    let pos: usize = (di << 3) + (li << 2) + (ui << 1) + ri;
+    let pos: usize = (d << 3) + (l << 2) + (u << 1) + r;
 
     match pos {
         //dlur
@@ -70,5 +70,4 @@ pub fn key2dir(l:bool, r:bool, u:bool, d:bool) -> Option<usize> {
         0b1001 => Some(1),
         _ => None,
     }
-
 }

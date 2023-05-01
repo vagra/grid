@@ -85,11 +85,6 @@ pub fn change_uagent(
         cmd.index = (cmd.index + 8) % 9;
     }
 
-    let l = input.pressed(KeyCode::Left);
-    let r = input.pressed(KeyCode::Right);
-    let u = input.pressed(KeyCode::Up);
-    let d = input.pressed(KeyCode::Down);
-    
-    cmd.dir = key2dir(l, r, u, d);
+    cmd.dir = key2dir(&input);
 }
 
