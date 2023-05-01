@@ -130,8 +130,6 @@ pub fn move_dagent(
                 sprite.color = AGENT_COLOR;
             }
         }
-
-        return;
     }
 }
 
