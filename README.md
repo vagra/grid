@@ -22,7 +22,7 @@ red: current agent bumped other
 
 ### many_ugrid
 ```
-cargo run -r --example bevy_ugrid
+cargo run -r --example many_ugrid
 ```
 
 ![many_ugrid](https://github.com/vagra/grid/blob/6a9281ae8ea9d6e5e7ffcf370aa7d7fc783f98b2/assets/many_ugrid.png)
