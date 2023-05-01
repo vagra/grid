@@ -28,7 +28,7 @@ fn new_work() {
 fn insert_work() {
 
     let mut grid = DGrid::default();
-    grid.init_test_data();
+    grid.insert_test_data();
 
     assert_eq!(grid.loose.pool[0],
         Agent{ id:101, x: 23, y: 24, hw: 10, hh: 10, next:INVALID, next_free:INVALID }
@@ -62,7 +62,7 @@ fn insert_work() {
 fn remove_work() {
 
     let mut grid = DGrid::default();
-    grid.init_test_data();
+    grid.insert_test_data();
 
     grid.remove(103, 6, 23);
     grid.remove(106, -234, 324);
@@ -100,7 +100,7 @@ fn remove_work() {
 fn move_work() {
 
     let mut grid = DGrid::default();
-    grid.init_test_data();
+    grid.insert_test_data();
 
     grid.move_cell(107, 450, 123, 470, 150);
 
@@ -126,7 +126,7 @@ fn move_work() {
 fn optimize_work() {
 
     let mut grid = DGrid::default();
-    grid.init_test_data();
+    grid.insert_test_data();
 
     grid.remove(103, 6, 23);
     grid.remove(106, -234, 324);

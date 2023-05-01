@@ -28,7 +28,7 @@ fn test_insert() {
     println!("test_insert");
 
     let mut grid = DGrid::default();
-    grid.init_test_data();
+    grid.insert_test_data();
 
     grid.loose.print_cells();
     grid.loose.print_pool();
@@ -44,7 +44,7 @@ fn test_remove() {
     println!("test_remove");
 
     let mut grid = DGrid::default();
-    grid.init_test_data();
+    grid.insert_test_data();
 
     grid.remove(103, 6, 23);
     grid.remove(106, -234, 324);
@@ -65,7 +65,7 @@ fn test_move() {
     println!("test_move");
 
     let mut grid = DGrid::default();
-    grid.init_test_data();
+    grid.insert_test_data();
 
     grid.move_cell(107, 450, 123, 470, 150);
 
@@ -85,7 +85,7 @@ fn test_optimize() {
     println!("test_optimize");
 
     let mut grid = DGrid::default();
-    grid.init_test_data();
+    grid.insert_test_data();
 
     grid.remove(103, 6, 23);
     grid.remove(106, -234, 324);

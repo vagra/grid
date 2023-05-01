@@ -1,6 +1,5 @@
 use bevy::{prelude::*, reflect::TypeUuid};
 use grid::dgrid::{DGrid, agent::Agent};
-use crate::*;
 use super::*;
 
 pub mod dagent;
@@ -107,7 +106,7 @@ pub fn optimize_dgrid(
 }
 
 
-pub fn change_dagent(
+pub fn keyboard_input(
     mut cmd: ResMut<Cmd>,
     input: Res<Input<KeyCode>>
 ) {

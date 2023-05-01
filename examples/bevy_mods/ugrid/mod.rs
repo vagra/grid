@@ -1,6 +1,5 @@
 use bevy::{prelude::*, reflect::TypeUuid};
 use grid::ugrid::{UGrid, agent::Agent};
-use crate::*;
 use super::*;
 
 pub mod uagent;
@@ -10,6 +9,8 @@ use {
     uagent::*,
     ucell::*
 };
+
+
 
 pub const IDS: [u32; 10] = [
     100, 101, 102, 103, 104, 105, 106, 107, 108, 109
@@ -51,7 +52,7 @@ pub fn create_ugrid(
     println!("create grid:");
 
     let mut grid = RUGrid::default();
-    grid.init_test_data();
+    grid.insert_test_data();
 
     create_ucells(&mut commands, &grid);
     create_uagents(&mut commands, &grid);
@@ -70,7 +71,36 @@ pub fn create_ugrid(
 }
 
 
-pub fn change_uagent(
+
+pub fn many_create_ugrid(
+    mut commands: Commands
+) {
+
+    println!("create random ugrid:");
+
+    let mut grid = RUGrid::default();
+    
+    grid.insert_rand_data(AGENTS);
+
+    create_ucells(&mut commands, &grid);
+    many_create_uagents(&mut commands, &grid);
+
+    commands.insert_resource(grid);
+
+    let cmd:Cmd = Cmd{
+        index: 0,
+        dir: None,
+    };
+    commands.insert_resource(cmd);
+
+    commands.insert_resource(NextState(Some(GameState::Playing)));
+
+    println!("create random ugrid done.");
+}
+
+
+
+pub fn keyboard_input(
     mut cmd: ResMut<Cmd>,
     input: Res<Input<KeyCode>>
 ) {

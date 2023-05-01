@@ -3,20 +3,13 @@ use bevy::prelude::*;
 
 mod bevy_mods;
 
-use bevy_mods::dgrid::{
-    *, dagent::*, lcell::*, lrect::*, tcell::*,
+use bevy_mods::{
+    *,
+    dgrid::{*, dagent::*, lcell::*, lrect::*, tcell::*}
 };
 
 
 const BG_COLOR: Color = Color::rgb(0.31, 0.47, 0.51);
-
-
-#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, Default, States)]
-enum GameState {
-    #[default]
-    Starting,
-    Playing,
-}
 
 
 fn main() {
@@ -32,11 +25,11 @@ fn main() {
             .run_if(in_state(GameState::Starting))
         )
         .add_system(
-            (change_dagent).after(update)
+            (keyboard_input).after(update)
             .run_if(in_state(GameState::Playing))
         )
         .add_system(
-            (move_dagent).after(change_dagent)
+            (move_dagent).after(keyboard_input)
             .run_if(in_state(GameState::Playing))
         )
         .add_system(

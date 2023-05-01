@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, diagnostic::FrameTimeDiagnosticsPlugin};
 
 mod bevy_mods;
 
@@ -16,11 +16,12 @@ fn main() {
         .insert_resource(Msaa::Sample4)
         .insert_resource(ClearColor(BG_COLOR))
         .add_plugins(DefaultPlugins)
+        .add_plugin(FrameTimeDiagnosticsPlugin::default())
         .add_state::<GameState>()
         .add_startup_system(create_camera)
         .add_system(update)
         .add_system(
-            (create_ugrid).after(update)
+            (many_create_ugrid).after(update)
             .run_if(in_state(GameState::Starting))
         )
         .add_system(
@@ -28,7 +29,7 @@ fn main() {
             .run_if(in_state(GameState::Playing))
         )
         .add_system(
-            (move_uagent).after(keyboard_input)
+            (many_move_uagents).after(keyboard_input)
             .run_if(in_state(GameState::Playing))
         )
         .add_system(
@@ -47,5 +48,3 @@ fn create_camera(mut commands: Commands) {
 fn update() {
 
 }
-
-

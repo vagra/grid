@@ -30,7 +30,7 @@ fn test_insert_remove() {
 
     let mut grid = UGrid::default();
 
-    grid.init_test_data();
+    grid.insert_test_data();
     
     grid.remove(107, 35, 35);
     grid.remove(109, 21, 23);
@@ -47,7 +47,7 @@ fn test_move_cell() {
 
     let mut grid = UGrid::default();
 
-    grid.init_test_data();
+    grid.insert_test_data();
 
     grid.print_cells();
     grid.print_pool();
@@ -68,7 +68,7 @@ fn test_optimize() {
 
     let mut grid = UGrid::default();
 
-    grid.init_test_data();
+    grid.insert_test_data();
     
     grid.remove(107, 35, 35);
     grid.remove(109, 21, 23);
@@ -90,7 +90,7 @@ fn test_query() {
     println!("test_query");
 
     let mut grid = UGrid::default();
-    grid.init_test_data();
+    grid.insert_test_data();
 
     grid.insert(201, 25, 45);
     let vec = grid.query(25, 45, 201);
@@ -103,7 +103,7 @@ fn test_dir_query() {
     println!("test_dir_query");
 
     let mut grid = UGrid::default();
-    grid.init_test_data();
+    grid.insert_test_data();
 
     grid.insert(201, 25, 45);
 
@@ -185,7 +185,7 @@ fn test_find_in_cell() {
     println!("test_find_in_cell");
 
     let mut grid = UGrid::default();
-    grid.init_test_data();
+    grid.insert_test_data();
 
     grid.insert(122, -528, 0);
     grid.print_cells();
@@ -206,7 +206,7 @@ fn test_out_bounds_insert() {
     println!("test_out_bounds_insert");
 
     let mut grid = UGrid::default();
-    grid.init_test_data();
+    grid.insert_test_data();
 
     grid.print_cells();
     grid.print_pool();
@@ -232,7 +232,7 @@ fn test_out_bounds_remove() {
     println!("test_out_bounds_remove");
 
     let mut grid = UGrid::default();
-    grid.init_test_data();
+    grid.insert_test_data();
 
     grid.print_cells();
     grid.print_pool();
@@ -259,7 +259,7 @@ fn print_size() {
 
     let mut grid = UGrid::default();
 
-    grid.init_test_data();
+    grid.insert_test_data();
 
     println!("size of Agent: {}", mem::size_of::<Agent>());
     println!("size of Items<Agent>: {}", mem::size_of::<Items<Agent>>());
@@ -276,7 +276,7 @@ fn test_clear() {
     println!("test_clear");
 
     let mut grid = UGrid::default();
-    grid.init_test_data();
+    grid.insert_test_data();
     
     grid.print_cells();
     grid.print_pool();

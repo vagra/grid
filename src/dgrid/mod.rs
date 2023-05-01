@@ -13,6 +13,7 @@ use crate::{
     dgrid::{tight::*, loose::*, rect::*, tcell::*, lcell::*, titem::*}
 };
 use grid_derive::GridComm;
+use rand::Rng;
 
 #[derive(Debug, GridComm)]
 pub struct DGrid{
@@ -267,6 +268,18 @@ impl DGrid {
         tvec
     }
 
+    pub fn gen_rand_box(&self, half_min:i16, half_max:i16) -> (i16, i16, i16, i16) {
+
+        let mut rng = rand::thread_rng();
+        
+        (
+            rng.gen_range( -self.half_width..self.half_width ),
+            rng.gen_range( -self.half_height..self.half_height ),
+            rng.gen_range( half_min..half_max ),
+            rng.gen_range( half_min..half_max )
+        )
+    }
+
     pub fn print_cells(&self) {
         self.tight.print_cells();
         self.loose.print_cells();
@@ -278,7 +291,7 @@ impl DGrid {
     }
 
 
-    pub fn init_test_data(&mut self) {
+    pub fn insert_test_data(&mut self) {
         self.insert(101, 23, 24, 10, 10);
         self.insert(102, 12, 10, 10, 10);
         self.insert(103, 6, 23, 10, 10);
@@ -288,5 +301,15 @@ impl DGrid {
         self.insert(107, 450, 123, 10, 10);
         self.insert(108, 480, 170, 10, 10);
         self.insert(109, 15, 27, 10, 10);
+    }
+
+    pub fn insert_rand_data(&mut self, count:u32, half_min:i16, half_max:i16) {
+
+        for i in 0..count {
+
+            let (x, y, hw, hh) = self.gen_rand_box(half_min, half_max);
+
+            self.insert(i, x, y, hw, hh);
+        }
     }
 }

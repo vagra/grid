@@ -9,6 +9,7 @@ use crate::{
 };
 
 use grid_derive::GridComm;
+use rand::Rng;
 
 
 #[derive(Debug, GridComm)]
@@ -356,6 +357,14 @@ impl UGrid {
         self.pool[index].next = head;
     }
 
+    pub fn gen_rand_pos(&self) -> (i16, i16) {
+
+        let mut rng = rand::thread_rng();
+        
+        ( rng.gen_range( -self.half_width..self.half_width ),
+            rng.gen_range( -self.half_height..self.half_height ) )
+    }
+
     pub fn pos2cell(&self, x:i16, y:i16) -> (u16, u16) {
 
         let (dx, dy) = self.pos2grid(x, y);
@@ -438,7 +447,7 @@ impl UGrid {
         }
     }
 
-    pub fn init_test_data(&mut self) {
+    pub fn insert_test_data(&mut self) {
         self.insert(100, 54, 29);
         self.insert(101, 12, 23);
         self.insert(102, -123, 223);
@@ -450,5 +459,15 @@ impl UGrid {
         self.insert(107, 35, 35);
         self.insert(108, 42, 43);
         self.insert(109, 21, 23);
+    }
+
+    pub fn insert_rand_data(&mut self, count:u32) {
+
+        for i in 0..count {
+
+            let (x, y) = self.gen_rand_pos();
+
+            self.insert(i, x, y);
+        }
     }
 }

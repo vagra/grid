@@ -5,7 +5,7 @@ use super::*;
 
 
 #[derive(Bundle)]
-pub struct CAgentBundle {
+pub struct DAgentBundle {
     pub agent: DAgent,
     pub pos: DPos,
 
@@ -14,7 +14,7 @@ pub struct CAgentBundle {
 }
 
 
-impl CAgentBundle {
+impl DAgentBundle {
 
     pub fn new(agent:&Agent) -> Self {
 
@@ -67,7 +67,7 @@ pub fn create_dagents(
 
                 if !agent.is_free() {
                     
-                    commands.spawn(CAgentBundle::new(&agent));
+                    commands.spawn(DAgentBundle::new(&agent));
                 }
 
                 index = agent.next;

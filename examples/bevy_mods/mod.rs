@@ -4,6 +4,7 @@ use bevy::{prelude::*, reflect::TypeUuid};
 
 pub mod dgrid;
 pub mod ugrid;
+pub mod mover;
 
 
 const TCELL_COLOR: Color = Color::rgba(0.3, 0.3, 0.3, 0.6);
@@ -18,6 +19,8 @@ const AGENT_SPEED: f32 = 2.0;
 
 const SQR: f32 = 0.7071;
 
+const DIRECTIONS:usize = 8;
+
 pub const VECTORES: [Vec2; 8] = [
 	Vec2{ x: 0.0, y:-1.0 },
 	Vec2{ x: SQR, y:-SQR },
@@ -28,6 +31,23 @@ pub const VECTORES: [Vec2; 8] = [
 	Vec2{ x:-1.0, y: 0.0 },
 	Vec2{ x:-SQR, y:-SQR },
 ];
+
+const MIN_SPEED:f32 = 1.0;
+const MAX_SPEED:f32 = 2.0;
+const MIN_DURATION:f32 = 2.0;
+const MAX_DURATION:f32 = 8.0;
+
+const AGENTS: u32 = 5000;
+
+pub const MAIN_ID: u32 = 101;
+
+
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, Default, States)]
+pub enum GameState {
+    #[default]
+    Starting,
+    Playing,
+}
 
 
 
