@@ -1,19 +1,13 @@
 use bevy::{prelude::*, sprite::Anchor};
 use grid::{GridComm, INVALID};
+use super::super::*;
 use super::*;
-
-
-#[derive(Component)]
-pub struct LCol(pub u16);
-
-#[derive(Component)]
-pub struct LRow(pub u16);
 
 
 #[derive(Bundle)]
 pub struct LCellBundle {
-    pub lcol: LCol,
-    pub lrow: LRow,
+    pub lcol: UCol,
+    pub lrow: URow,
 
     #[bundle]
     pub sprite: SpriteBundle,
@@ -25,12 +19,12 @@ impl LCellBundle {
 
         Self {
 
-            lcol: LCol(lcol),
-            lrow: LRow(lrow),
+            lcol: UCol(lcol),
+            lrow: URow(lrow),
 
             sprite: SpriteBundle { 
                 sprite: Sprite {
-                    color: LCELL_COLOR.clone(),
+                    color: UCELL_COLOR.clone(),
                     custom_size: Some(
                         Vec2::new(size as f32, size as f32)
                     ),
@@ -48,21 +42,21 @@ impl LCellBundle {
 }
 
 
-pub fn create_lcells(
+pub fn create_ucells(
     commands: &mut Commands,
-    grid: &Grid,
+    grid: &RUGrid,
 ) {
-    print!("create lcell...");
+    print!("create ucell...");
 
-    for lrow in 0..grid.0.loose.rows {
-        for lcol in 0..grid.0.loose.cols {
+    for lrow in 0..grid.0.rows {
+        for lcol in 0..grid.0.cols {
 
-            let gx = lcol * grid.0.loose.cell_size;
-            let gy = lrow * grid.0.loose.cell_size;
+            let gx = lcol * grid.0.cell_size;
+            let gy = lrow * grid.0.cell_size;
 
             let (x, y) = grid.0.grid2pos(gx as i16, gy as i16);
 
-            commands.spawn(LCellBundle::new(lcol, lrow, x, y, grid.0.loose.cell_size));
+            commands.spawn(LCellBundle::new(lcol, lrow, x, y, grid.0.cell_size));
         }
     }
 
@@ -72,18 +66,18 @@ pub fn create_lcells(
 
 
 
-pub fn update_lcells(
+pub fn update_ucells(
     mut query: Query<(
-        &LCol, &LRow,
+        &UCol, &URow,
         &mut Visibility
     )>,
-    grid: Res<Grid>,
+    grid: Res<RUGrid>,
 ) {
 
     for (lcol, lrow, mut visibility) in query.iter_mut() {
-        let lcell = grid.0.loose.cells[lrow.0][lcol.0];
+        let ucell = grid.0.cells[lrow.0][lcol.0];
 
-        if lcell.head == INVALID {
+        if ucell.head == INVALID {
             *visibility = Visibility::Hidden;
         }
         else {

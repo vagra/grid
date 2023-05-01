@@ -1,9 +1,13 @@
 use bevy::prelude::*;
 
+mod bevy_mods;
 
-mod umod;
+use bevy_mods::ugrid::{
+    *, 
+    ucell::*, 
+    uagent::*,
+};
 
-use umod::{*, cucell::*, cagent::*};
 
 const BG_COLOR: Color = Color::rgb(0.31, 0.47, 0.51);
 
@@ -25,19 +29,19 @@ fn main() {
         .add_startup_system(create_camera)
         .add_system(update)
         .add_system(
-            (create_grid).after(update)
+            (create_ugrid).after(update)
             .run_if(in_state(GameState::Starting))
         )
         .add_system(
-            (change_agent).after(update)
+            (change_uagent).after(update)
             .run_if(in_state(GameState::Playing))
         )
         .add_system(
-            (move_agent).after(change_agent)
+            (move_uagent).after(change_uagent)
             .run_if(in_state(GameState::Playing))
         )
         .add_system(
-            (update_ucells).after(move_agent)
+            (update_ucells).after(move_uagent)
             .run_if(in_state(GameState::Playing))
         )
         .run();

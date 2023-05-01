@@ -1,37 +1,30 @@
 use bevy::{prelude::*, sprite::Anchor};
 use grid::{GridComm, INVALID};
+use super::super::*;
 use super::*;
 
 
-#[derive(Component)]
-pub struct TCol(pub u16);
-
-#[derive(Component)]
-pub struct TRow(pub u16);
-
-
-
 #[derive(Bundle)]
-pub struct TCellBundle {
-    pub tcol: TCol,
-    pub trow: TRow,
+pub struct LCellBundle {
+    pub lcol: LCol,
+    pub lrow: LRow,
 
     #[bundle]
     pub sprite: SpriteBundle,
 }
 
-impl TCellBundle {
+impl LCellBundle {
 
-    pub fn new(tcol:u16, trow:u16, x:i16, y:i16, size:u16) -> Self {
+    pub fn new(lcol:u16, lrow:u16, x:i16, y:i16, size:u16) -> Self {
 
         Self {
 
-            tcol: TCol(tcol),
-            trow: TRow(trow),
+            lcol: LCol(lcol),
+            lrow: LRow(lrow),
 
             sprite: SpriteBundle { 
                 sprite: Sprite {
-                    color: TCELL_COLOR.clone(),
+                    color: LCELL_COLOR.clone(),
                     custom_size: Some(
                         Vec2::new(size as f32, size as f32)
                     ),
@@ -39,7 +32,7 @@ impl TCellBundle {
                     ..default()
                     }, 
                 transform: Transform::from_translation(
-                    Vec3{x: x as f32, y: y as f32, z:1.0}
+                    Vec3{x: x as f32, y: y as f32, z:2.0}
                 ),
                 ..default()
             }
@@ -49,21 +42,21 @@ impl TCellBundle {
 }
 
 
-pub fn create_tcells(
+pub fn create_lcells(
     commands: &mut Commands,
-    grid: &Grid,
+    grid: &RDGrid,
 ) {
-    print!("create tcell...");
+    print!("create lcell...");
 
-    for trow in 0..grid.0.tight.rows {
-        for tcol in 0..grid.0.tight.cols {
+    for lrow in 0..grid.0.loose.rows {
+        for lcol in 0..grid.0.loose.cols {
 
-            let gx = tcol * grid.0.tight.cell_size;
-            let gy = trow * grid.0.tight.cell_size;
+            let gx = lcol * grid.0.loose.cell_size;
+            let gy = lrow * grid.0.loose.cell_size;
 
             let (x, y) = grid.0.grid2pos(gx as i16, gy as i16);
 
-            commands.spawn(TCellBundle::new(tcol, trow, x, y, grid.0.tight.cell_size));
+            commands.spawn(LCellBundle::new(lcol, lrow, x, y, grid.0.loose.cell_size));
         }
     }
 
@@ -73,18 +66,18 @@ pub fn create_tcells(
 
 
 
-pub fn update_tcells(
+pub fn update_lcells(
     mut query: Query<(
-        &TCol, &TRow,
+        &LCol, &LRow,
         &mut Visibility
     )>,
-    grid: Res<Grid>,
+    grid: Res<RDGrid>,
 ) {
 
-    for (tcol, trow, mut visibility) in query.iter_mut() {
-        let tcell = grid.0.tight.cells[trow.0][tcol.0];
+    for (lcol, lrow, mut visibility) in query.iter_mut() {
+        let lcell = grid.0.loose.cells[lrow.0][lcol.0];
 
-        if tcell.head == INVALID {
+        if lcell.head == INVALID {
             *visibility = Visibility::Hidden;
         }
         else {

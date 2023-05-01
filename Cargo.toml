@@ -10,6 +10,7 @@ grid_derive = { path = "crates/grid_derive", version = "0.1" }
 
 [dev-dependencies]
 bevy = "0.10"
+rand = "0.8"
 
 [profile.dev]
 opt-level = 1

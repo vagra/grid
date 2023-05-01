@@ -1,9 +1,11 @@
 use bevy::prelude::*;
 
 
-mod dmod;
+mod bevy_mods;
 
-use dmod::{*, clcell::*, clrect::*, ctcell::*, cagent::*};
+use bevy_mods::dgrid::{
+    *, dagent::*, lcell::*, lrect::*, tcell::*,
+};
 
 
 const BG_COLOR: Color = Color::rgb(0.31, 0.47, 0.51);
@@ -26,27 +28,27 @@ fn main() {
         .add_startup_system(create_camera)
         .add_system(update)
         .add_system(
-            (create_grid).after(update)
+            (create_dgrid).after(update)
             .run_if(in_state(GameState::Starting))
         )
         .add_system(
-            (change_agent).after(update)
+            (change_dagent).after(update)
             .run_if(in_state(GameState::Playing))
         )
         .add_system(
-            (move_agent).after(change_agent)
+            (move_dagent).after(change_dagent)
             .run_if(in_state(GameState::Playing))
         )
         .add_system(
-            (update_tcells).after(move_agent)
+            (update_tcells).after(move_dagent)
             .run_if(in_state(GameState::Playing))
         )
         .add_system(
-            (update_lcells).after(move_agent)
+            (update_lcells).after(move_dagent)
             .run_if(in_state(GameState::Playing))
         )
         .add_system(
-            (update_lrects).after(optimize_grid)
+            (update_lrects).after(optimize_dgrid)
             .run_if(in_state(GameState::Playing))
         )
         .run();

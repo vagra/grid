@@ -1,5 +1,6 @@
 use bevy::{prelude::*, sprite::Anchor};
 use grid::INVALID;
+use super::super::*;
 use super::*;
 
 
@@ -52,7 +53,7 @@ impl LRectBundle {
 
 pub fn create_lrects(
     commands: &mut Commands,
-    grid: &Grid,
+    grid: &RDGrid,
 ) {
     print!("create lrect...");
 
@@ -91,7 +92,7 @@ pub fn update_lrects(
         ),
         With<CLRect>
     >,
-    grid: Res<Grid>,
+    grid: Res<RDGrid>,
 ) {
 
     for (lcol, lrow, mut visibility, mut sprite, mut transform) in query.iter_mut() {

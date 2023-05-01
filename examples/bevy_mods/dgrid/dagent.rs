@@ -1,16 +1,8 @@
 use bevy::{prelude::*, sprite::Anchor};
 use grid::{INVALID, ItemSpec, dgrid::agent::*};
+use super::super::*;
 use super::*;
 
-
-#[derive(Component)]
-pub struct DAgent(pub Agent);
-
-#[derive(Component)]
-pub struct DPos{
-    pub x: i16,
-    pub y: i16,
-}
 
 #[derive(Bundle)]
 pub struct CAgentBundle {
@@ -58,9 +50,9 @@ impl CAgentBundle {
 
 
 
-pub fn create_agents(
+pub fn create_dagents(
     commands: &mut Commands,
-    grid: &Grid,
+    grid: &RDGrid,
 ) {
     print!("create agents...");
 
@@ -88,14 +80,14 @@ pub fn create_agents(
 }
 
 
-pub fn move_agent(
+pub fn move_dagent(
     mut query: Query<(
         &DAgent,
         &mut DPos,
         &mut Sprite,
         &mut Transform
     )>,
-    mut grid: ResMut<Grid>,
+    mut grid: ResMut<RDGrid>,
     cmd: Res<Cmd>,
 ) {
 
