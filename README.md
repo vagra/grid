@@ -20,6 +20,13 @@ red: current agent bumped other
 
 ![bevy_ugrid](https://github.com/vagra/grid/blob/9d0cadfe9925d35710dd9e995116895c31f68341/assets/bevy_ugrid.png)
 
+### many_ugrid
+```
+cargo run -r --example bevy_ugrid
+```
+
+![many_ugrid](https://github.com/vagra/grid/blob/9d0cadfe9925d35710dd9e995116895c31f68341/assets/bevy_ugrid.png)
+
 ### bevy_dgrid
 ```
 cargo run -r --example bevy_dgrid
