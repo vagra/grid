@@ -64,6 +64,8 @@ impl Mover {
     
         let range: i32 = rand::thread_rng().gen_range(-2..3);
         self.dir = (self.dir as i32 + range + DIRECTIONS as i32) as usize % DIRECTIONS;
+
+        self.bumped = true;
     }
 
 }

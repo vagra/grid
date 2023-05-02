@@ -88,23 +88,35 @@ impl Agent {
         (self.y - y).abs() <= check_radius
     }
 
-    pub fn cross_dpos(&self, dx:i16, dy:i16, check_radius:i16) -> bool {
-
-        dx.abs() <= check_radius && 
-        dy.abs() <= check_radius
-    }
-
     pub fn front_cross(&self, other:&Agent, dir:u8, check_radius:i16) -> bool {
 
         self.front_cross_pos(dir, other.x, other.y, check_radius)
     }
 
     pub fn front_cross_pos(&self, dir:u8, x:i16, y:i16, check_radius:i16) -> bool {
-        let dx = self.x - x;
-        let dy = self.y - y;
-        
-        self.cross_dpos(dx, dy, check_radius) &&
-        Self::at_front_dpos(dir, dx, dy)
+
+        match dir {
+
+            1 => { self.cross_bottom(x, y, check_radius) ||
+                    self.cross_right(x, y, check_radius) },
+
+            2 => { self.cross_right(x, y, check_radius) },
+
+            3 => { self.cross_right(x, y, check_radius) ||
+                    self.cross_top(x, y, check_radius) },
+
+            4 => { self.cross_top(x, y, check_radius) },
+
+            5 => { self.cross_top(x, y, check_radius) ||
+                    self.cross_left(x, y, check_radius) },
+
+            6 => { self.cross_right(x, y, check_radius) },
+
+            7 => { self.cross_right(x, y, check_radius) ||
+                    self.cross_bottom(x, y, check_radius) },
+
+            _ => { self.cross_bottom(x, y, check_radius) },
+        }
     }
 
     pub fn at_front(&self, other:&Agent, dir:u8) -> bool {
@@ -117,11 +129,6 @@ impl Agent {
         let dx = self.x - x;
         let dy = self.y - y;
         
-        Self::at_front_dpos(dir, dx, dy)
-    }
-
-    fn at_front_dpos(dir:u8, dx:i16, dy:i16) -> bool {
-
         match dir {
             1 => dx >= 0 && dy <= 0,
             2 => dx >= dy.abs(),
@@ -132,6 +139,30 @@ impl Agent {
             7 => dx <= 0 && dy <= 0,
             _ => dy <= -dx.abs(),
         }
+    }
+
+    fn cross_bottom(&self, x:i16, y:i16, d:i16) -> bool {
+
+        (self.y - y >= -d) &&
+        ((self.x - x <= d) || (self.x - x >= -d))
+    }
+
+    fn cross_top(&self, x:i16, y:i16, d:i16) -> bool {
+
+        (self.y - y <= d) &&
+        ((self.x - x <= d) || (self.x - x >= -d))
+    }
+
+    fn cross_left(&self, x:i16, y:i16, d:i16) -> bool {
+
+        (self.x - x >= - d) &&
+        ((self.y - y <= d) || (self.y - y >= - d))
+    }
+
+    fn cross_right(&self, x:i16, y:i16, d:i16) -> bool {
+
+        (self.x - x <= d) &&
+        ((self.y - y <= d) || (self.y - y >= - d))
     }
 
 }

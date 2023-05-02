@@ -220,7 +220,9 @@ pub fn many_move_dagents(
                 continue;
             }
 
-            let ids = grid.query( x, y, agent.0.hw, agent.0.hh, agent.0.id );
+            let ids = grid.query(
+                    x, y, agent.0.hw, agent.0.hh, agent.0.id
+                );
 
             if ids.len() > 0 {
                 mover.bump();

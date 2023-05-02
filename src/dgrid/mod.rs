@@ -108,7 +108,47 @@ impl DGrid {
                 let agent = self.loose.pool[index];
 
                 if agent.id != omit_id &&
+                    agent.in_grid(self) &&
                     agent.cross_box(x, y, hw, hh) {
+
+                    vec.push(index);
+                }
+
+                index = agent.next;
+            }
+        }
+
+        vec
+    }
+
+
+    pub fn dir_query(
+        &self, dir: u8, x: i16, y: i16, hw:i16, hh:i16, omit_id: u32
+    ) -> Vec<u16> {
+
+        let trect = self.tight.box2trect(x, y, hw, hh);
+
+        let tvec = self.query_titem_indices(&trect, x, y, hw, hh);
+
+        let mut vec:Vec<u16> = Vec::new();
+        let mut titem: &TItem;
+        let mut lcell: &LCell;
+        let mut index: u16;
+        
+        for (_, tindex) in tvec.iter().enumerate() {
+
+            titem = &self.tight.pool[*tindex];
+
+            lcell = &self.loose.cells[titem.lrow][titem.lcol];
+            index = lcell.head;
+
+            while index != INVALID {
+
+                let agent = self.loose.pool[index];
+
+                if agent.id != omit_id &&
+                    agent.in_grid(self) &&
+                    agent.front_cross_box(dir, x, y, hw, hh) {
 
                     vec.push(index);
                 }

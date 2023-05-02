@@ -222,7 +222,12 @@ pub fn many_move_uagents(
             let ids = grid.dir_query( mover.dir as u8, x, y, agent.0.id );
 
             if ids.len() > 0 {
-                mover.bump();
+                if !mover.bumped {
+                    mover.bump();
+                }
+            }
+            else {
+                mover.bumped = false;
             }
 
             continue;

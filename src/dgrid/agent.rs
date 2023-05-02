@@ -77,20 +77,25 @@ impl Agent {
         }
     }
 
+    pub fn l(&self) -> i16 { self.x - self.hw }
+    pub fn r(&self) -> i16 { self.x + self.hw }
+    pub fn t(&self) -> i16 { self.y + self.hh }
+    pub fn b(&self) -> i16 { self.y - self.hh }
+
     pub fn in_grid(&self, grid:&DGrid) -> bool {
 
         /*
         println!("{},{},{},{}",
-            self.x - self.hw,
-            self.x + self.hw,
-            self.y + self.hh,
-            self.y - self.hh
+            self.l(),
+            self.r(),
+            self.t(),
+            self.b()
         ); */
 
-        self.x - self.hw < grid.half_width &&
-        self.x + self.hw >= -grid.half_width &&
-        self.y + self.hh > -grid.half_height &&
-        self.y - self.hh <= grid.half_height
+        self.l() < grid.half_width &&
+        self.r() >= -grid.half_width &&
+        self.t() > -grid.half_height &&
+        self.b() <= grid.half_height
     }
 
     pub fn cross(&self, other:&Agent) -> bool {
@@ -100,9 +105,59 @@ impl Agent {
 
     pub fn cross_box(&self, x:i16, y:i16, hw:i16, hh:i16) -> bool {
 
-        self.x - self.hw <= x + hw &&
-        self.x + self.hw >= x - hw &&
-        self.y + self.hh >= y - hh &&
-        self.y - self.hh <= y + hh
+        self.l() <= x + hw &&
+        self.r() >= x - hw &&
+        self.t() >= y - hh &&
+        self.b() <= y + hh
+    }
+
+    pub fn front_cross_box(&self, dir:u8, x:i16, y:i16, hw:i16, hh:i16) -> bool {
+        
+        match dir {
+
+            1 => { self.cross_bottom(x, y, hw, hh) ||
+                    self.cross_right(x, y, hw, hh) },
+
+            2 => { self.cross_right(x, y, hw, hh) },
+
+            3 => { self.cross_right(x, y, hw, hh) ||
+                    self.cross_top(x, y, hw, hh) },
+
+            4 => { self.cross_top(x, y, hw, hh) },
+
+            5 => { self.cross_top(x, y, hw, hh) ||
+                    self.cross_left(x, y, hw, hh) },
+
+            6 => { self.cross_right(x, y, hw, hh) },
+
+            7 => { self.cross_right(x, y, hw, hh) ||
+                    self.cross_bottom(x, y, hw, hh) },
+
+            _ => { self.cross_bottom(x, y, hw, hh) },
+        }
+    }
+
+    fn cross_bottom(&self, x:i16, y:i16, hw:i16, hh:i16) -> bool {
+
+        (self.t() >= y - hh) &&
+        ((self.l() <= x + hw) || (self.r() >= x - hw))
+    }
+
+    fn cross_top(&self, x:i16, y:i16, hw:i16, hh:i16) -> bool {
+
+        (self.b() <= y + hh) &&
+        ((self.l() <= x + hw) || (self.r() >= x - hw))
+    }
+
+    fn cross_left(&self, x:i16, y:i16, hw:i16, hh:i16) -> bool {
+
+        (self.r() >= x - hw) &&
+        ((self.t() >= y - hh) || (self.b() <= y + hh))
+    }
+
+    fn cross_right(&self, x:i16, y:i16, hw:i16, hh:i16) -> bool {
+
+        (self.l() <= x + hw) &&
+        ((self.t() >= y - hh) || (self.b() <= y + hh)) 
     }
 }
