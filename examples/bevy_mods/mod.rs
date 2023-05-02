@@ -5,6 +5,7 @@ use bevy::{prelude::*, reflect::TypeUuid};
 pub mod dgrid;
 pub mod ugrid;
 pub mod mover;
+pub mod camera;
 pub mod info;
 
 const TCELL_COLOR: Color = Color::rgba(0.3, 0.3, 0.3, 0.6);
@@ -32,12 +33,12 @@ pub const VECTORES: [Vec2; 8] = [
 	Vec2{ x:-SQR, y:-SQR },
 ];
 
-const MIN_SPEED:f32 = 1.0;
+const MIN_SPEED:f32 = 0.5;
 const MAX_SPEED:f32 = 2.0;
 const MIN_DURATION:f32 = 2.0;
 const MAX_DURATION:f32 = 8.0;
 
-const AGENTS: u32 = 12000;
+const AGENTS: u32 = 25000;
 
 pub const MAIN_ID: u32 = 101;
 

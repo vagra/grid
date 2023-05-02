@@ -54,7 +54,7 @@ impl Mover {
         self.timer = Timer::from_seconds(self.duration, TimerMode::Once);
     }
 
-    pub fn back(&mut self, back: usize) {
+    pub fn back(&mut self, back: u8) {
     
         let range: i32 = rand::thread_rng().gen_range(-1..2);
         self.dir = (back as i32 + range + DIRECTIONS as i32) as usize % DIRECTIONS;

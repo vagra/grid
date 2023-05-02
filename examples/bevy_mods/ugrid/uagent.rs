@@ -1,5 +1,6 @@
 use bevy::{prelude::*, sprite::Anchor};
-use grid::{INVALID, ItemSpec, ugrid::agent::*};
+
+use grid::{INVALID, ItemSpec, GridComm, ugrid::agent::*};
 use super::super::*;
 use super::{*, mover::Mover};
 
@@ -107,6 +108,15 @@ pub fn many_create_uagents(
                 if !agent.is_free() {
                     
                     commands.spawn(UAgentBundle::new(&agent, grid.0.agent_size, true));
+
+                    if agent.id == MAIN_ID {
+
+                        let mut camera = Camera2dBundle::default();
+                        camera.transform.translation.x = agent.x as f32;
+                        camera.transform.translation.y = agent.y as f32;
+
+                        commands.spawn(camera);
+                    }
                 }
 
                 index = agent.next;
@@ -196,15 +206,22 @@ pub fn many_move_uagents(
 
             prev.x = transform.translation.x as i16;
             prev.y = transform.translation.y as i16;
-    
+
             let offset = VECTORES[mover.dir];
-            transform.translation.x += AGENT_SPEED * offset.x;
-            transform.translation.y += AGENT_SPEED * offset.y;
+            transform.translation.x += mover.speed * offset.x;
+            transform.translation.y += mover.speed * offset.y;
 
             let x = transform.translation.x as i16;
             let y = transform.translation.y as i16;
 
             grid.move_cell(agent.0.id, prev.x, prev.y, x, y);
+
+            if let Some(dir) = grid.out_bounds(x, y) {
+
+                mover.back(dir);
+                
+                continue;
+            }
 
             let ids = grid.dir_query( mover.dir as u8, x, y, agent.0.id );
 
@@ -240,3 +257,4 @@ pub fn many_move_uagents(
         }
     }
 }
+

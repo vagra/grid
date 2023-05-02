@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 use bevy::diagnostic::*;
+use super::*;
 
 const FONT_TTF: &str = "FiraCode-Regular.ttf";
 
@@ -31,12 +32,16 @@ impl Info {
             color: FONT_COLOR,
         };
 
+        let agents = format!("\nagents: {}", AGENTS);
+
         Self {
             fps: FPS,
 
             text_bundle: TextBundle::from_sections([
-                TextSection::new("\nfps: ", text_style.clone()),    // 0
+                TextSection::new("\n   fps: ", text_style.clone()),    // 0
                 TextSection::from_style(text_style.clone()),        // 1
+
+                TextSection::new(agents, text_style.clone()),    // 2
             ])
             .with_style(Style {
                 position_type: PositionType::Absolute,

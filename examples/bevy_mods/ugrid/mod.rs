@@ -48,7 +48,7 @@ impl RUGrid {
 
     pub fn new() -> Self {
 
-        Self(UGrid::new(5, 25, 40, 24))
+        Self(UGrid::new(5, 20, 40, 30))
     }
 }
 
@@ -105,8 +105,6 @@ pub fn many_create_ugrid(
 
     println!("create random ugrid done.");
 }
-
-
 
 pub fn keyboard_input(
     mut cmd: ResMut<Cmd>,

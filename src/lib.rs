@@ -44,6 +44,7 @@ pub trait CellComm {
 
 pub trait GridComm {
     fn in_grid(&self, x: i16, y: i16) -> bool;
+    fn out_bounds(&self, x: i16, y: i16) -> Option<u8>;
     fn pos2grid(&self, x:i16, y:i16) -> (i16, i16);
     fn grid2pos(&self, x:i16, y:i16) -> (i16, i16);
 }
