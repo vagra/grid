@@ -81,41 +81,7 @@ impl DGrid {
 
     pub fn move_cell(&mut self, id:u32, prev_x:i16, prev_y:i16, x:i16, y:i16) {
 
-        assert!(id != INACTIVE);
-
-        let (prev_lcol, prev_lrow) = self.loose.pos2lcell(prev_x, prev_y);
-        let (lcol, lrow) = self.loose.pos2lcell(x, y);
-
-        let index: u16;
-
-        /*
-        println!("id:{:3}, ({:2},{:2}) -> ({:2},{:2}),  ({:2},{:2}) -> ({:2},{:2})",
-            id, prev_x, prev_y, x, y, prev_lrow, prev_lcol, lrow, lcol
-        ); */ 
-        
-
-        if prev_lcol == lcol && prev_lrow == lrow {
-
-            index = self.loose.find_in_cell(id, lrow, lcol);
-        }
-        else {
-
-            index = self.loose.pop_cell(id, prev_lrow, prev_lcol);
-
-            self.loose.push_cell(index, lrow, lcol);
-        }
-
-        if index == INVALID {
-            panic!("index:{} id:{} prev:({},{}) curr:({},{}) ",
-                index, id, prev_lrow, prev_lcol, lrow, lcol);
-        }
-
-        self.loose.pool[index].x = x;
-        self.loose.pool[index].y = y;
-
-        self.expand_aabb(lcol, lrow, x, y, 
-            self.loose.pool[index].hw, self.loose.pool[index].hh
-        );
+        self.loose.move_lcell(id, prev_x, prev_y, x, y);
     }
 
 
@@ -162,7 +128,6 @@ impl DGrid {
 
     fn rebuild_loose(&mut self) {
 
-        self.loose.optimize();
         self.loose.rebuild_rects();
     }
 
@@ -228,7 +193,6 @@ impl DGrid {
                 }
             }
         }
-
     }
 
     fn query_titem_indices(&self, trect:&TRect, x:i16, y:i16, hw:i16, hh:i16) -> Vec<u16> {

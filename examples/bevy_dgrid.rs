@@ -41,7 +41,7 @@ fn main() {
             .run_if(in_state(GameState::Playing))
         )
         .add_system(
-            (update_lrects).after(optimize_dgrid)
+            (update_lrects).after(move_dagent)
             .run_if(in_state(GameState::Playing))
         )
         .run();

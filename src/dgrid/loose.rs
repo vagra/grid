@@ -132,6 +132,39 @@ impl Loose {
         self.pool.erase(index);
     }
 
+    pub fn move_lcell(&mut self, id:u32, prev_x:i16, prev_y:i16, x:i16, y:i16) {
+
+        assert!(id != INACTIVE);
+
+        let (prev_lcol, prev_lrow) = self.pos2lcell(prev_x, prev_y);
+        let (lcol, lrow) = self.pos2lcell(x, y);
+
+        let index: u16;
+
+        if prev_lcol == lcol && prev_lrow == lrow {
+
+            index = self.find_in_cell(id, lrow, lcol);
+        }
+        else {
+
+            index = self.pop_cell(id, prev_lrow, prev_lcol);
+
+            self.push_cell(index, lrow, lcol);
+        }
+
+        if index == INVALID {
+            panic!("index:{} id:{} prev:({},{}) curr:({},{}) ",
+                index, id, prev_lrow, prev_lcol, lrow, lcol);
+        }
+
+        self.pool[index].x = x;
+        self.pool[index].y = y;
+
+        self.expand_lrect(lcol, lrow, x, y, 
+            self.pool[index].hw, self.pool[index].hh
+        );
+    }
+
     
     pub fn pop_cell(&mut self, id: u32, row: u16, col: u16) -> u16 {
 
@@ -172,6 +205,14 @@ impl Loose {
         self.cells[row][col].head = index;
         
         self.pool[index].next = head;
+    }
+
+    pub fn expand_lrect(&mut self,
+        lcol:u16, lrow:u16,
+        x:i16, y:i16, hw:i16, hh:i16) {
+
+        let lcell = &mut self.cells[lrow][lcol];
+        lcell.expand(x, y, hw, hh);
     }
 
 
