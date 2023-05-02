@@ -5,7 +5,7 @@ use bevy::{prelude::*, reflect::TypeUuid};
 pub mod dgrid;
 pub mod ugrid;
 pub mod mover;
-
+pub mod info;
 
 const TCELL_COLOR: Color = Color::rgba(0.3, 0.3, 0.3, 0.6);
 const LCELL_COLOR: Color = Color::rgba(0.0, 0.6, 0.0, 0.6);
@@ -37,7 +37,7 @@ const MAX_SPEED:f32 = 2.0;
 const MIN_DURATION:f32 = 2.0;
 const MAX_DURATION:f32 = 8.0;
 
-const AGENTS: u32 = 5000;
+const AGENTS: u32 = 12000;
 
 pub const MAIN_ID: u32 = 101;
 

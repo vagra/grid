@@ -3,7 +3,7 @@ use bevy::{prelude::*, diagnostic::FrameTimeDiagnosticsPlugin};
 mod bevy_mods;
 
 use bevy_mods::{
-    *,
+    *, info::*,
     ugrid::{*, ucell::*, uagent::*},
 };
 
@@ -19,6 +19,7 @@ fn main() {
         .add_plugin(FrameTimeDiagnosticsPlugin::default())
         .add_state::<GameState>()
         .add_startup_system(create_camera)
+        .add_startup_system(create_info)
         .add_system(update)
         .add_system(
             (many_create_ugrid).after(update)
@@ -34,6 +35,10 @@ fn main() {
         )
         .add_system(
             (update_ucells).after(move_uagent)
+            .run_if(in_state(GameState::Playing))
+        )
+        .add_system(
+            (update_info).after(update)
             .run_if(in_state(GameState::Playing))
         )
         .run();

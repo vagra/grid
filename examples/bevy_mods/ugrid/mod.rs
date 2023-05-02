@@ -44,6 +44,14 @@ impl Default for RUGrid {
     }
 }
 
+impl RUGrid {
+
+    pub fn new() -> Self {
+
+        Self(UGrid::new(5, 25, 40, 24))
+    }
+}
+
 
 pub fn create_ugrid(
     mut commands: Commands
@@ -78,7 +86,7 @@ pub fn many_create_ugrid(
 
     println!("create random ugrid:");
 
-    let mut grid = RUGrid::default();
+    let mut grid = RUGrid::new();
     
     grid.insert_rand_data(AGENTS);
 
