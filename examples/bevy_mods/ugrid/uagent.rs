@@ -20,10 +20,6 @@ impl UAgentBundle {
 
     pub fn new(agent:&Agent, size:i16, moving:bool) -> Self {
 
-        if moving && agent.id == MAIN_ID {
-            println!("main agent: ({},{})", agent.x, agent.y);
-        }
-
         Self {
 
             agent: UAgent(*agent),

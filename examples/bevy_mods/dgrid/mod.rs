@@ -55,6 +55,14 @@ impl Default for RDGrid {
     }
 }
 
+impl RDGrid {
+
+    pub fn new() -> Self {
+
+        Self(DGrid::new(4, 25, 10, 10))
+    }
+}
+
 
 pub fn create_dgrid(
     mut commands: Commands
@@ -99,12 +107,35 @@ pub fn create_dgrid(
     println!("create grid done.");
 }
 
-pub fn optimize_dgrid(
-    mut grid: ResMut<RDGrid>
+pub fn many_create_dgrid(
+    mut commands: Commands
 ) {
-    grid.0.optimize();
-}
 
+    println!("create many dgrid:");
+
+    let mut grid = RDGrid::new();
+    
+    grid.insert_rand_data(AGENTS, MIN_HALF_SIZE, MAX_HALF_SIZE);
+
+    grid.optimize();
+
+    create_tcells(&mut commands, &grid);
+    create_lcells(&mut commands, &grid);
+    create_lrects(&mut commands, &grid);
+    many_create_dagents(&mut commands, &grid);
+
+    commands.insert_resource(grid);
+
+    let cmd:Cmd = Cmd{
+        index: 0,
+        dir: None,
+    };
+    commands.insert_resource(cmd);
+
+    commands.insert_resource(NextState(Some(GameState::Playing)));
+
+    println!("create many dgrid done.");
+}
 
 pub fn keyboard_input(
     mut cmd: ResMut<Cmd>,

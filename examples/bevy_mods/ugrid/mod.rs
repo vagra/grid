@@ -84,7 +84,7 @@ pub fn many_create_ugrid(
     mut commands: Commands
 ) {
 
-    println!("create random ugrid:");
+    println!("create many ugrid:");
 
     let mut grid = RUGrid::new();
     
@@ -103,7 +103,7 @@ pub fn many_create_ugrid(
 
     commands.insert_resource(NextState(Some(GameState::Playing)));
 
-    println!("create random ugrid done.");
+    println!("create many ugrid done.");
 }
 
 pub fn keyboard_input(

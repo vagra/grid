@@ -4,7 +4,7 @@ mod bevy_mods;
 
 use bevy_mods::{
     *, info::*, camera::*,
-    ugrid::{*, ucell::*, uagent::*},
+    dgrid::{*, dagent::*, lcell::*, lrect::*, tcell::*}
 };
 
 
@@ -21,7 +21,7 @@ fn main() {
         .add_startup_system(create_info)
         .add_system(update)
         .add_system(
-            (many_create_ugrid).after(update)
+            (many_create_dgrid).after(update)
             .run_if(in_state(GameState::Starting))
         )
         .add_system(
@@ -29,7 +29,7 @@ fn main() {
             .run_if(in_state(GameState::Playing))
         )
         .add_system(
-            (many_move_uagents).after(keyboard_input)
+            (many_move_dagents).after(keyboard_input)
             .run_if(in_state(GameState::Playing))
         )
         .add_system(
@@ -37,7 +37,15 @@ fn main() {
             .run_if(in_state(GameState::Playing))
         )
         .add_system(
-            (update_ucells).after(many_move_uagents)
+            (update_tcells).after(many_move_dagents)
+            .run_if(in_state(GameState::Playing))
+        )
+        .add_system(
+            (update_lcells).after(many_move_dagents)
+            .run_if(in_state(GameState::Playing))
+        )
+        .add_system(
+            (update_lrects).after(many_move_dagents)
             .run_if(in_state(GameState::Playing))
         )
         .add_system(
