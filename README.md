@@ -4,7 +4,7 @@ uniform-grid and loose/tight double-grid impl for rust and bevy.
 
 ## examples
 
-arrow keys: move current agent
+arrow keys: move current agent / camera
 
 z,x: swhtch current agent
 
@@ -44,7 +44,11 @@ red: current agent bumped other
 ![bevy_dgrid](https://github.com/vagra/grid/blob/9d0cadfe9925d35710dd9e995116895c31f68341/assets/bevy_dgrid.png)
 
 
-
+### many_dgrid
+```
+cargo run -r --example many_dgrid
+```
+![many_dgrid](https://github.com/vagra/grid/blob/1029a790f531d543e4c34595b2ead3bd9ab4a524/assets/many_dgrid.png)
 
 ## thanks for
 
