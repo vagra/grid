@@ -19,7 +19,6 @@ pub struct UGrid{
     pub agent_size: i16,
     pub cell_size: u16,
 
-    agent_radius: i16,
     inv_cell_size: f32,
 
     max_col: u16,
@@ -45,7 +44,6 @@ impl Default for UGrid {
             agent_size: 20,
             cell_size: 100,
 
-            agent_radius: 10,
             inv_cell_size: 0.01,
 
             max_col: 19,
@@ -95,7 +93,6 @@ impl UGrid {
             agent_size: (agent_radius * 2) as i16,
             cell_size: cell_radius * 2,
 
-            agent_radius: agent_radius as i16,
             inv_cell_size: 1.0 / (cell_radius * 2) as f32,
 
             max_col: half_cols * 2 - 1,
@@ -229,7 +226,7 @@ impl UGrid {
 
                     if agent.id != omit_id &&
                         agent.in_grid(self) &&
-                        agent.front_cross_pos(dir, x, y, self.agent_radius) {
+                        agent.front_cross_pos(dir, x, y, self.agent_size) {
 
                         vec.push(index);
                     }
@@ -250,6 +247,8 @@ impl UGrid {
         let mut dirs: [bool; 8] = [false; 8];
         let mut index: u16;
         let mut agent: Agent;
+        let mut dx: i16;
+        let mut dy: i16;
         for row in min_row..=max_row {
             for col in min_col..=max_col {
 
@@ -260,17 +259,20 @@ impl UGrid {
 
                     if agent.id != omit_id &&
                         agent.in_grid(self) {
+                        
+                        dx = agent.x - x;
+                        dy = agent.y - y;
 
-                        if !dirs[0] && agent.cross_bottom(x, y, self.agent_radius) {
+                        if !dirs[0] && agent.cross_bottom(dx, dy, self.agent_size) {
                             dirs[0] = true;
                         }
-                        if !dirs[2] && agent.cross_right(x, y, self.agent_radius) {
+                        if !dirs[2] && agent.cross_right(dx, dy, self.agent_size) {
                             dirs[2] = true;
                         }
-                        if !dirs[4] && agent.cross_top(x, y, self.agent_radius) {
+                        if !dirs[4] && agent.cross_top(dx, dy, self.agent_size) {
                             dirs[4] = true;
                         }
-                        if !dirs[6] && agent.cross_left(x, y, self.agent_radius) {
+                        if !dirs[6] && agent.cross_left(dx, dy, self.agent_size) {
                             dirs[6] = true;
                         }
                     }
