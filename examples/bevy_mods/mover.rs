@@ -10,7 +10,7 @@ pub struct Mover {
     pub speed: f32,
     pub duration: f32,
     pub timer: Timer,
-    pub bumped: bool,
+    pub delay: usize,
 }
 
 impl Default for Mover {
@@ -22,7 +22,7 @@ impl Default for Mover {
             speed: 0.0, 
             duration: 0.0, 
             timer: Timer::default(),
-            bumped: false,
+            delay: BUMP_DELAY,
         }
     }
 }
@@ -43,7 +43,7 @@ impl Mover {
 
             timer: Timer::from_seconds(seconds, TimerMode::Once),
 
-            bumped: false,
+            delay: BUMP_DELAY,
         }
     }
 
@@ -65,7 +65,7 @@ impl Mover {
         let range: i32 = rand::thread_rng().gen_range(-2..3);
         self.dir = (self.dir as i32 + range + DIRECTIONS as i32) as usize % DIRECTIONS;
 
-        self.bumped = true;
+        self.delay = BUMP_DELAY;
     }
 
 }

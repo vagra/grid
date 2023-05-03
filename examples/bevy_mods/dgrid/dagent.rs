@@ -220,8 +220,15 @@ pub fn many_move_dagents(
                 continue;
             }
 
-            let ids = grid.query(
-                    x, y, agent.0.hw, agent.0.hh, agent.0.id
+            if mover.delay > 0 {
+
+                mover.delay -= 1;
+
+                continue;
+            }
+
+            let ids = grid.dir_query(
+                    mover.dir as u8, x, y, agent.0.hw, agent.0.hh, agent.0.id
                 );
 
             if ids.len() > 0 {

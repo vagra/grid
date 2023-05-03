@@ -219,15 +219,17 @@ pub fn many_move_uagents(
                 continue;
             }
 
+            if mover.delay > 0 {
+
+                mover.delay -= 1;
+
+                continue;
+            }
+
             let ids = grid.dir_query( mover.dir as u8, x, y, agent.0.id );
 
             if ids.len() > 0 {
-                if !mover.bumped {
-                    mover.bump();
-                }
-            }
-            else {
-                mover.bumped = false;
+                mover.bump();
             }
 
             continue;

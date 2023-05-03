@@ -41,6 +41,8 @@ const MAX_DURATION:f32 = 8.0;
 const MIN_HALF_SIZE:i16 = 2;
 const MAX_HALF_SIZE:i16 = 10;
 
+const BUMP_DELAY:usize = 10;
+
 const AGENTS: u32 = 15000;
 
 pub const MAIN_ID: u32 = 101;
