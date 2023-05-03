@@ -10,7 +10,7 @@ pub struct Mover {
     pub speed: f32,
     pub duration: f32,
     pub timer: Timer,
-    pub delay: usize,
+    pub pause: bool,
 }
 
 impl Default for Mover {
@@ -22,7 +22,7 @@ impl Default for Mover {
             speed: 0.0, 
             duration: 0.0, 
             timer: Timer::default(),
-            delay: BUMP_DELAY,
+            pause: false,
         }
     }
 }
@@ -43,7 +43,7 @@ impl Mover {
 
             timer: Timer::from_seconds(seconds, TimerMode::Once),
 
-            delay: BUMP_DELAY,
+            pause: false,
         }
     }
 
@@ -64,23 +64,36 @@ impl Mover {
     
         let range: i32 = rand::thread_rng().gen_range(-2..3);
         self.dir = (self.dir as i32 + range + DIRECTIONS as i32) as usize % DIRECTIONS;
+    }
 
-        self.delay = BUMP_DELAY;
+    pub fn dodge(&mut self, dirs:&Vec<usize>) {
+
+        if dirs.contains(&self.dir) {
+            return;
+        }
+
+        let index = rand::thread_rng().gen_range(0..dirs.len());
+        self.dir = dirs[index];
+    }
+
+    pub fn stop(&mut self) {
+
+        self.pause = true;
     }
 
 }
 
-fn rand_dir() -> usize {
+pub fn rand_dir() -> usize {
 
     rand::thread_rng().gen_range(0..DIRECTIONS)
 }
 
-fn rand_speed() -> f32 {
+pub fn rand_speed() -> f32 {
 
     rand::thread_rng().gen_range(MIN_SPEED..MAX_SPEED)
 }
 
-fn rand_duration() -> f32 {
+pub fn rand_duration() -> f32 {
 
     rand::thread_rng().gen_range(MIN_DURATION..MAX_DURATION)
 }

@@ -15,12 +15,13 @@ fn main() {
     test_out_bounds_insert();
     test_out_bounds_remove();
 
-    test_query();
+    test_query(); 
     test_dir_query();
+    test_query_dirs();
 
     print_size();
 
-    test_clear();
+    test_clear(); 
 }
 
 
@@ -132,6 +133,41 @@ fn test_dir_query() {
 
     vec = grid.dir_query(7, 25, 45, 201);
     grid.print_dir_query(7, &vec);
+
+}
+
+
+
+fn test_query_dirs() {
+    println!("\n------------------------------------------------");
+    println!("test_query_dirs");
+
+    let mut grid = UGrid::default();
+    grid.insert_test_data();
+
+    grid.insert(201, 25, 45);
+
+    let vec = grid.query_dirs(25, 45, 201);
+    println!("201: {:?}", &vec);
+
+    let vec = grid.query_dirs(12, 23, 101);
+    println!("101: {:?}", &vec);
+    let vec = grid.query_dirs(-123, 223, 102);
+    println!("102: {:?}", &vec);
+    let vec = grid.query_dirs(-323, -123, 103);
+    println!("103: {:?}", &vec);
+    let vec = grid.query_dirs(123, -123, 104);
+    println!("104: {:?}", &vec);
+    let vec = grid.query_dirs(423, 223, 105);
+    println!("105: {:?}", &vec);
+    let vec = grid.query_dirs(24, 62, 106);
+    println!("106: {:?}", &vec);
+    let vec = grid.query_dirs(35, 35, 107);
+    println!("107: {:?}", &vec);
+    let vec = grid.query_dirs(42, 43, 108);
+    println!("108: {:?}", &vec);
+    let vec = grid.query_dirs(21, 23, 109);
+    println!("109: {:?}", &vec);
 
 }
 

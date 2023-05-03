@@ -1,5 +1,5 @@
 use bevy::{prelude::*, reflect::TypeUuid};
-use grid::ugrid::{UGrid, agent::Agent};
+use grid::ugrid::UGrid;
 use super::*;
 
 pub mod uagent;
@@ -24,9 +24,9 @@ pub struct UCol(pub u16);
 pub struct URow(pub u16);
 
 #[derive(Component)]
-pub struct UAgent(pub Agent);
+pub struct UID(pub u32);
 
-#[derive(Component)]
+#[derive(Component, Default)]
 pub struct UPos{
     pub x: i16,
     pub y: i16,
@@ -48,7 +48,7 @@ impl RUGrid {
 
     pub fn new() -> Self {
 
-        Self(UGrid::new(5, 20, 40, 30))
+        Self(UGrid::new(5, 20, 50, 30))
     }
 }
 

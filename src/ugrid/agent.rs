@@ -88,34 +88,34 @@ impl Agent {
         (self.y - y).abs() <= check_radius
     }
 
-    pub fn front_cross(&self, other:&Agent, dir:u8, check_radius:i16) -> bool {
+    pub fn front_cross(&self, other:&Agent, dir:u8, radius:i16) -> bool {
 
-        self.front_cross_pos(dir, other.x, other.y, check_radius)
+        self.front_cross_pos(dir, other.x, other.y, radius)
     }
 
-    pub fn front_cross_pos(&self, dir:u8, x:i16, y:i16, check_radius:i16) -> bool {
+    pub fn front_cross_pos(&self, dir:u8, x:i16, y:i16, radius:i16) -> bool {
 
         match dir {
 
-            1 => { self.cross_bottom(x, y, check_radius) ||
-                    self.cross_right(x, y, check_radius) },
+            1 => { self.cross_bottom(x, y, radius) ||
+                    self.cross_right(x, y, radius) },
 
-            2 => { self.cross_right(x, y, check_radius) },
+            2 => { self.cross_right(x, y, radius) },
 
-            3 => { self.cross_right(x, y, check_radius) ||
-                    self.cross_top(x, y, check_radius) },
+            3 => { self.cross_right(x, y, radius) ||
+                    self.cross_top(x, y, radius) },
 
-            4 => { self.cross_top(x, y, check_radius) },
+            4 => { self.cross_top(x, y, radius) },
 
-            5 => { self.cross_top(x, y, check_radius) ||
-                    self.cross_left(x, y, check_radius) },
+            5 => { self.cross_top(x, y, radius) ||
+                    self.cross_left(x, y, radius) },
 
-            6 => { self.cross_right(x, y, check_radius) },
+            6 => { self.cross_left(x, y, radius) },
 
-            7 => { self.cross_right(x, y, check_radius) ||
-                    self.cross_bottom(x, y, check_radius) },
+            7 => { self.cross_left(x, y, radius) ||
+                    self.cross_bottom(x, y, radius) },
 
-            _ => { self.cross_bottom(x, y, check_radius) },
+            _ => { self.cross_bottom(x, y, radius) },
         }
     }
 
@@ -141,28 +141,36 @@ impl Agent {
         }
     }
 
-    fn cross_bottom(&self, x:i16, y:i16, d:i16) -> bool {
+    pub fn cross_bottom(&self, x:i16, y:i16, r:i16) -> bool {
 
-        (self.y - y >= -d) &&
-        ((self.x - x <= d) || (self.x - x >= -d))
+        self.y + r >= y - r &&
+        self.y + r <= y + r &&
+        self.x - r <= x + r &&
+        self.x + r >= x - r
     }
 
-    fn cross_top(&self, x:i16, y:i16, d:i16) -> bool {
+    pub fn cross_top(&self, x:i16, y:i16, r:i16) -> bool {
 
-        (self.y - y <= d) &&
-        ((self.x - x <= d) || (self.x - x >= -d))
+        self.y - r <= y + r &&
+        self.y - r >= y - r &&
+        self.x - r <= x + r &&
+        self.x + r >= x - r
     }
 
-    fn cross_left(&self, x:i16, y:i16, d:i16) -> bool {
+    pub fn cross_left(&self, x:i16, y:i16, r:i16) -> bool {
 
-        (self.x - x >= - d) &&
-        ((self.y - y <= d) || (self.y - y >= - d))
+        self.x + r >= x - r &&
+        self.x + r <= x + r &&
+        self.y - r <= y + r &&
+        self.y + r >= y - r
     }
 
-    fn cross_right(&self, x:i16, y:i16, d:i16) -> bool {
+    pub fn cross_right(&self, x:i16, y:i16, r:i16) -> bool {
 
-        (self.x - x <= d) &&
-        ((self.y - y <= d) || (self.y - y >= - d))
+        self.x - r <= x + r &&
+        self.x - r >= x - r &&
+        self.y - r <= y + r &&
+        self.y + r >= y - r
     }
 
 }

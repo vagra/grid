@@ -19,6 +19,7 @@ pub struct UGrid{
     pub agent_size: i16,
     pub cell_size: u16,
 
+    agent_radius: i16,
     inv_cell_size: f32,
 
     max_col: u16,
@@ -44,6 +45,7 @@ impl Default for UGrid {
             agent_size: 20,
             cell_size: 100,
 
+            agent_radius: 10,
             inv_cell_size: 0.01,
 
             max_col: 19,
@@ -93,6 +95,7 @@ impl UGrid {
             agent_size: (agent_radius * 2) as i16,
             cell_size: cell_radius * 2,
 
+            agent_radius: agent_radius as i16,
             inv_cell_size: 1.0 / (cell_radius * 2) as f32,
 
             max_col: half_cols * 2 - 1,
@@ -151,9 +154,7 @@ impl UGrid {
         assert!(id != INACTIVE);
 
         let (prev_col, prev_row) = self.pos2cell(prev_x, prev_y);
-        let (col, row) = self.pos2cell(x, y);
-
-        // println!("({},{}) -> ({},{})", prev_row, prev_col, row, col);
+        let (col, row) = self.pos2cell(x, y);        
 
         let index: u16;
 
@@ -172,6 +173,11 @@ impl UGrid {
             panic!("index:{} id:{} prev:({},{}) curr:({},{}) ",
                 index, id, prev_row, prev_col, row, col);
         }
+
+        /*
+        println!("({},{}) -> ({},{})  {:?}",
+            prev_x, prev_y, x, y, self.pool[index]);
+        */
 
         self.pool[index].x = x;
         self.pool[index].y = y;
@@ -223,13 +229,70 @@ impl UGrid {
 
                     if agent.id != omit_id &&
                         agent.in_grid(self) &&
-                        agent.front_cross_pos(dir, x, y, self.agent_size) {
+                        agent.front_cross_pos(dir, x, y, self.agent_radius) {
 
                         vec.push(index);
                     }
 
                     index = agent.next;
                 }
+            }
+        }
+
+        vec
+    }
+
+    pub fn query_dirs(&self, x: i16, y: i16, omit_id: u32) -> Vec<usize> {
+        let (min_col, min_row) = self.pos2cell(x - self.agent_size, y + self.agent_size);
+        let (max_col, max_row) = self.pos2cell(x + self.agent_size, y - self.agent_size);
+
+        let mut vec: Vec<usize> = Vec::new();
+        let mut dirs: [bool; 8] = [false; 8];
+        let mut index: u16;
+        let mut agent: Agent;
+        for row in min_row..=max_row {
+            for col in min_col..=max_col {
+
+                index = self.cells[row][col].head;
+
+                while index != INVALID {
+                    agent = self.pool[index];
+
+                    if agent.id != omit_id &&
+                        agent.in_grid(self) {
+
+                        if !dirs[0] && agent.cross_bottom(x, y, self.agent_radius) {
+                            dirs[0] = true;
+                        }
+                        if !dirs[2] && agent.cross_right(x, y, self.agent_radius) {
+                            dirs[2] = true;
+                        }
+                        if !dirs[4] && agent.cross_top(x, y, self.agent_radius) {
+                            dirs[4] = true;
+                        }
+                        if !dirs[6] && agent.cross_left(x, y, self.agent_radius) {
+                            dirs[6] = true;
+                        }
+                    }
+
+                    if dirs[0] && dirs[2] && dirs[4] && dirs[6] {
+            
+                        return vec;
+                    }
+
+                    index = agent.next;
+                }
+            }
+        }
+
+        if dirs[0] && dirs[2] { dirs[1] = true }
+        if dirs[2] && dirs[4] { dirs[3] = true }
+        if dirs[4] && dirs[6] { dirs[5] = true }
+        if dirs[6] && dirs[0] { dirs[7] = true }
+
+        for i in 0..8 {
+            if !dirs[i] {
+                vec.push(i)
             }
         }
 

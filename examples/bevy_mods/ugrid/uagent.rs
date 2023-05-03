@@ -2,12 +2,12 @@ use bevy::{prelude::*, sprite::Anchor};
 
 use grid::{INVALID, ItemSpec, GridComm, ugrid::agent::*};
 use super::super::*;
-use super::{*, mover::Mover};
+use super::{*, mover::*};
 
 
 #[derive(Bundle)]
 pub struct UAgentBundle {
-    pub agent: UAgent,
+    pub agent: UID,
     pub pos: UPos,
     pub mover: Mover,
 
@@ -22,7 +22,7 @@ impl UAgentBundle {
 
         Self {
 
-            agent: UAgent(*agent),
+            agent: UID(agent.id),
             pos: UPos{
                     x: agent.x,
                     y: agent.y
@@ -127,7 +127,7 @@ pub fn many_create_uagents(
 
 pub fn move_uagent(
     mut query: Query<(
-        &UAgent,
+        &UID,
         &mut UPos,
         &mut Sprite,
         &mut Transform
@@ -136,15 +136,17 @@ pub fn move_uagent(
     cmd: Res<Cmd>,
 ) {
 
-    for (agent, mut prev, mut sprite, mut transform) in query.iter_mut() {
+    let mut curr:UPos = UPos::default();
+    let mut offset:Vec2;
+    let mut ids:Vec<u16>;
 
-        if agent.0.id != IDS[cmd.index] {
+    for (uid, mut prev, mut sprite, mut transform) in query.iter_mut() {
+
+        if uid.0 != IDS[cmd.index] {
 
             if sprite.color == CROSS_COLOR {
-
                 sprite.color = AGENT_COLOR;
             }
-
             continue;
         }
 
@@ -153,16 +155,16 @@ pub fn move_uagent(
             prev.x = transform.translation.x as i16;
             prev.y = transform.translation.y as i16;
     
-            let offset = VECTORES[dir];
+            offset = VECTORES[dir];
             transform.translation.x += AGENT_SPEED * offset.x;
             transform.translation.y += AGENT_SPEED * offset.y;
 
-            let x = transform.translation.x as i16;
-            let y = transform.translation.y as i16;
+            curr.x = transform.translation.x as i16;
+            curr.y = transform.translation.y as i16;
 
-            grid.move_cell(agent.0.id, prev.x, prev.y, x, y);
+            grid.move_cell(uid.0, prev.x, prev.y, curr.x, curr.y);
 
-            let ids = grid.query( x, y, agent.0.id );
+            ids = grid.query( curr.x, curr.y, uid.0 );
 
             if ids.len() > 0 {
                 sprite.color = CROSS_COLOR;
@@ -177,7 +179,7 @@ pub fn move_uagent(
 
 pub fn many_move_uagents(
     mut query: Query<(
-        &UAgent,
+        &UID,
         &mut UPos,
         &mut Mover,
         &mut Sprite,
@@ -188,9 +190,13 @@ pub fn many_move_uagents(
     time: Res<Time>,
 ) {
 
-    for (agent, mut prev, mut mover, mut sprite, mut transform) in query.iter_mut() {
+    let mut curr:UPos = UPos::default();
+    let mut offset:Vec2;
+    let mut ids:Vec<u16>;
 
-        if agent.0.id != MAIN_ID {
+    for (uid, mut prev, mut mover, mut sprite, mut transform) in query.iter_mut() {
+
+        if uid.0 != MAIN_ID {
 
             mover.timer.tick(time.delta());
 
@@ -200,36 +206,38 @@ pub fn many_move_uagents(
                 mover.random();
             }
 
+            if mover.pause {
+
+                mover.pause = false;
+                continue;
+            }
+
             prev.x = transform.translation.x as i16;
             prev.y = transform.translation.y as i16;
 
-            let offset = VECTORES[mover.dir];
+            offset = VECTORES[mover.dir];
             transform.translation.x += mover.speed * offset.x;
             transform.translation.y += mover.speed * offset.y;
 
-            let x = transform.translation.x as i16;
-            let y = transform.translation.y as i16;
+            curr.x = transform.translation.x as i16;
+            curr.y = transform.translation.y as i16;
 
-            grid.move_cell(agent.0.id, prev.x, prev.y, x, y);
+            grid.move_cell(uid.0, prev.x, prev.y, curr.x, curr.y);
 
-            if let Some(dir) = grid.out_bounds(x, y) {
+
+            if let Some(dir) = grid.out_bounds(curr.x, curr.y) {
 
                 mover.back(dir);
-                
                 continue;
             }
 
-            if mover.delay > 0 {
+            let dirs = grid.query_dirs( curr.x, curr.y, uid.0 );
 
-                mover.delay -= 1;
-
-                continue;
+            if dirs.len() > 0 {
+                mover.dodge(&dirs);
             }
-
-            let ids = grid.dir_query( mover.dir as u8, x, y, agent.0.id );
-
-            if ids.len() > 0 {
-                mover.bump();
+            else {
+                mover.stop();
             }
 
             continue;
@@ -240,16 +248,16 @@ pub fn many_move_uagents(
             prev.x = transform.translation.x as i16;
             prev.y = transform.translation.y as i16;
     
-            let offset = VECTORES[dir];
+            offset = VECTORES[dir];
             transform.translation.x += AGENT_SPEED * offset.x;
             transform.translation.y += AGENT_SPEED * offset.y;
 
-            let x = transform.translation.x as i16;
-            let y = transform.translation.y as i16;
+            curr.x = transform.translation.x as i16;
+            curr.y = transform.translation.y as i16;
 
-            grid.move_cell(agent.0.id, prev.x, prev.y, x, y);
+            grid.move_cell(uid.0, prev.x, prev.y, curr.x, curr.y);
 
-            let ids = grid.query( x, y, agent.0.id );
+            ids = grid.query( curr.x, curr.y, uid.0 );
 
             if ids.len() > 0 {
                 sprite.color = CROSS_COLOR;

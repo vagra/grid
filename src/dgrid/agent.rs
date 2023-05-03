@@ -137,25 +137,25 @@ impl Agent {
         }
     }
 
-    fn cross_bottom(&self, x:i16, y:i16, hw:i16, hh:i16) -> bool {
+    pub fn cross_bottom(&self, x:i16, y:i16, hw:i16, hh:i16) -> bool {
 
         (self.t() >= y - hh) &&
         ((self.l() <= x + hw) || (self.r() >= x - hw))
     }
 
-    fn cross_top(&self, x:i16, y:i16, hw:i16, hh:i16) -> bool {
+    pub fn cross_top(&self, x:i16, y:i16, hw:i16, hh:i16) -> bool {
 
         (self.b() <= y + hh) &&
         ((self.l() <= x + hw) || (self.r() >= x - hw))
     }
 
-    fn cross_left(&self, x:i16, y:i16, hw:i16, hh:i16) -> bool {
+    pub fn cross_left(&self, x:i16, y:i16, hw:i16, hh:i16) -> bool {
 
         (self.r() >= x - hw) &&
         ((self.t() >= y - hh) || (self.b() <= y + hh))
     }
 
-    fn cross_right(&self, x:i16, y:i16, hw:i16, hh:i16) -> bool {
+    pub fn cross_right(&self, x:i16, y:i16, hw:i16, hh:i16) -> bool {
 
         (self.l() <= x + hw) &&
         ((self.t() >= y - hh) || (self.b() <= y + hh)) 

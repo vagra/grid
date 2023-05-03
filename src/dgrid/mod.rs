@@ -160,6 +160,69 @@ impl DGrid {
         vec
     }
 
+    pub fn query_dirs(&self, x: i16, y: i16, hw:i16, hh:i16, omit_id: u32) -> Vec<usize> {
+
+        let trect = self.tight.box2trect(x, y, hw, hh);
+
+        let tvec = self.query_titem_indices(&trect, x, y, hw, hh);
+
+        let mut vec: Vec<usize> = Vec::new();
+        let mut dirs: [bool; 8] = [false; 8];
+        let mut titem: &TItem;
+        let mut lcell: &LCell;
+        let mut index: u16;
+        
+        for (_, tindex) in tvec.iter().enumerate() {
+
+            titem = &self.tight.pool[*tindex];
+
+            lcell = &self.loose.cells[titem.lrow][titem.lcol];
+            index = lcell.head;
+
+            while index != INVALID {
+
+                let agent = self.loose.pool[index];
+
+                if agent.id != omit_id &&
+                    agent.in_grid(self) {
+
+                    if !dirs[0] && agent.cross_bottom(x, y, hw, hh) {
+                        dirs[0] = true;
+                    }
+                    if !dirs[2] && agent.cross_right(x, y, hw, hh) {
+                        dirs[2] = true;
+                    }
+                    if !dirs[4] && agent.cross_top(x, y, hw, hh) {
+                        dirs[4] = true;
+                    }
+                    if !dirs[6] && agent.cross_left(x, y, hw, hh) {
+                        dirs[6] = true;
+                    }
+                }
+
+                if dirs[0] && dirs[2] && dirs[4] && dirs[6] {
+            
+                    return vec;
+                }
+
+                index = agent.next;
+            }
+        }
+
+        dirs[1] = dirs[0] && dirs[2];
+        dirs[3] = dirs[2] && dirs[4];
+        dirs[5] = dirs[4] && dirs[6];
+        dirs[7] = dirs[6] && dirs[0];
+
+        for i in 0..8 {
+            if dirs[i] {
+                vec.push(i)
+            }
+        }
+
+        vec
+    }
+
     pub fn optimize(&mut self) {
 
         self.rebuild_loose();
