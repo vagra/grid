@@ -25,7 +25,7 @@ red: current agent bumped other
 cargo run -r --example many_ugrid
 ```
 
-![many_ugrid](https://github.com/vagra/grid/blob/2c0e801ee43a8b66b13b95431770fb91d355b9ef/assets/many_ugrid.png)
+![many_ugrid](https://github.com/vagra/grid/blob/36b0ceac3e55a7169ece2c08031465115600c231/assets/many_ugrid.png)
 
 ### bevy_dgrid
 ```
