@@ -1,5 +1,5 @@
-use crate::ItemComm;
 use grid_derive::ItemComm;
+use crate::*;
 use super::*;
 
 
@@ -40,7 +40,7 @@ impl ItemSpec for Agent {
     }
 
     fn set_id(&mut self, id:Self::ID) {
-        self.id = id
+        self.id = id;
     }
 
     fn is_free(&self) -> bool {
@@ -84,14 +84,6 @@ impl Agent {
 
     pub fn in_grid(&self, grid:&DGrid) -> bool {
 
-        /*
-        println!("{},{},{},{}",
-            self.l(),
-            self.r(),
-            self.t(),
-            self.b()
-        ); */
-
         self.l() < grid.half_width &&
         self.r() >= -grid.half_width &&
         self.t() > -grid.half_height &&
@@ -100,10 +92,13 @@ impl Agent {
 
     pub fn cross(&self, other:&Agent) -> bool {
 
-        self.cross_box(other.x, other.y, other.hw, other.hh)
+        self.l() <= other.r() &&
+        self.r() >= other.l() &&
+        self.t() >= other.b() &&
+        self.b() <= other.t()
     }
 
-    pub fn cross_box(&self, x:i16, y:i16, hw:i16, hh:i16) -> bool {
+    pub fn box_cross(&self, x:i16, y:i16, hw:i16, hh:i16) -> bool {
 
         self.l() <= x + hw &&
         self.r() >= x - hw &&
@@ -111,53 +106,26 @@ impl Agent {
         self.b() <= y + hh
     }
 
-    pub fn front_cross_box(&self, dir:u8, x:i16, y:i16, hw:i16, hh:i16) -> bool {
-        
-        match dir {
 
-            1 => { self.cross_bottom(x, y, hw, hh) ||
-                    self.cross_right(x, y, hw, hh) },
+    pub fn at_front(&self, dir:u8, other:&Agent) -> bool {
 
-            2 => { self.cross_right(x, y, hw, hh) },
-
-            3 => { self.cross_right(x, y, hw, hh) ||
-                    self.cross_top(x, y, hw, hh) },
-
-            4 => { self.cross_top(x, y, hw, hh) },
-
-            5 => { self.cross_top(x, y, hw, hh) ||
-                    self.cross_left(x, y, hw, hh) },
-
-            6 => { self.cross_right(x, y, hw, hh) },
-
-            7 => { self.cross_right(x, y, hw, hh) ||
-                    self.cross_bottom(x, y, hw, hh) },
-
-            _ => { self.cross_bottom(x, y, hw, hh) },
-        }
+        self.pos_at_front(dir, other.x, other.y)
     }
 
-    pub fn cross_bottom(&self, x:i16, y:i16, hw:i16, hh:i16) -> bool {
+    fn pos_at_front(&self, dir:u8, x:i16, y:i16) -> bool {
 
-        (self.t() >= y - hh) &&
-        ((self.l() <= x + hw) || (self.r() >= x - hw))
+        dpos_at_front(dir, self.x - x, self.y - y)
     }
 
-    pub fn cross_top(&self, x:i16, y:i16, hw:i16, hh:i16) -> bool {
 
-        (self.b() <= y + hh) &&
-        ((self.l() <= x + hw) || (self.r() >= x - hw))
+    pub fn cross_dirs(&self, dirs:&mut [bool;8], other:&Agent) {
+
+        dpos_cross_dirs(dirs, self.x - other.x, self.y - other.y)
     }
 
-    pub fn cross_left(&self, x:i16, y:i16, hw:i16, hh:i16) -> bool {
+    pub fn pos_cross_dirs(&self, dirs:&mut [bool;8], x:i16, y:i16) {
 
-        (self.r() >= x - hw) &&
-        ((self.t() >= y - hh) || (self.b() <= y + hh))
+        dpos_cross_dirs(dirs, self.x - x, self.y - y)
     }
 
-    pub fn cross_right(&self, x:i16, y:i16, hw:i16, hh:i16) -> bool {
-
-        (self.l() <= x + hw) &&
-        ((self.t() >= y - hh) || (self.b() <= y + hh)) 
-    }
 }

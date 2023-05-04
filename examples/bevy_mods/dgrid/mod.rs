@@ -1,6 +1,5 @@
 use bevy::{prelude::*, reflect::TypeUuid};
-use grid::dgrid::{DGrid, agent::Agent};
-use crate::input::*;
+use grid::dgrid::DGrid;
 use super::*;
 
 pub mod dagent;
@@ -35,13 +34,19 @@ pub struct TCol(pub u16);
 pub struct TRow(pub u16);
 
 #[derive(Component)]
-pub struct DAgent(pub Agent);
+pub struct DID(pub u32);
 
 
-#[derive(Component)]
+#[derive(Component, Default)]
 pub struct DPos{
     pub x: i16,
     pub y: i16,
+}
+
+#[derive(Component, Default)]
+pub struct DSize{
+    pub hw: i16,
+    pub hh: i16,
 }
 
 
@@ -136,22 +141,4 @@ pub fn many_create_dgrid(
     commands.insert_resource(NextState(Some(GameState::Playing)));
 
     println!("create many dgrid done.");
-}
-
-pub fn keyboard_input(
-    mut cmd: ResMut<Cmd>,
-    input: Res<Input<KeyCode>>
-) {
-
-    let z = input.pressed(KeyCode::Z);
-    let x = input.pressed(KeyCode::X);
-
-    if z {
-        cmd.index = (cmd.index + 1) % 9;
-    }
-    if x {
-        cmd.index = (cmd.index + 8) % 9;
-    }
-    
-    cmd.dir = key2dir(&input);
 }

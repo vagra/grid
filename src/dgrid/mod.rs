@@ -9,8 +9,8 @@ pub mod lcell;
 pub mod loose;
 
 use crate::{
-    *, cells::*, pool::*,
-    dgrid::{tight::*, loose::*, rect::*, tcell::*, lcell::*, titem::*}
+    *, cells::*, pool::*, dpos::*,
+    dgrid::{agent::*, tight::*, loose::*, rect::*, tcell::*, lcell::*, titem::*}
 };
 use grid_derive::GridComm;
 use rand::Rng;
@@ -91,7 +91,7 @@ impl DGrid {
 
         let tvec = self.query_titem_indices(&trect, x, y, hw, hh);
 
-        let mut vec:Vec<u16> = Vec::new();
+        let mut vec: Vec<u16> = Vec::new();
         let mut titem: &TItem;
         let mut lcell: &LCell;
         let mut index: u16;
@@ -109,7 +109,7 @@ impl DGrid {
 
                 if agent.id != omit_id &&
                     agent.in_grid(self) &&
-                    agent.cross_box(x, y, hw, hh) {
+                    agent.box_cross(x, y, hw, hh) {
 
                     vec.push(index);
                 }
@@ -121,44 +121,6 @@ impl DGrid {
         vec
     }
 
-
-    pub fn dir_query(
-        &self, dir: u8, x: i16, y: i16, hw:i16, hh:i16, omit_id: u32
-    ) -> Vec<u16> {
-
-        let trect = self.tight.box2trect(x, y, hw, hh);
-
-        let tvec = self.query_titem_indices(&trect, x, y, hw, hh);
-
-        let mut vec:Vec<u16> = Vec::new();
-        let mut titem: &TItem;
-        let mut lcell: &LCell;
-        let mut index: u16;
-        
-        for (_, tindex) in tvec.iter().enumerate() {
-
-            titem = &self.tight.pool[*tindex];
-
-            lcell = &self.loose.cells[titem.lrow][titem.lcol];
-            index = lcell.head;
-
-            while index != INVALID {
-
-                let agent = self.loose.pool[index];
-
-                if agent.id != omit_id &&
-                    agent.in_grid(self) &&
-                    agent.front_cross_box(dir, x, y, hw, hh) {
-
-                    vec.push(index);
-                }
-
-                index = agent.next;
-            }
-        }
-
-        vec
-    }
 
     pub fn query_dirs(&self, x: i16, y: i16, hw:i16, hh:i16, omit_id: u32) -> Vec<usize> {
 
@@ -171,6 +133,11 @@ impl DGrid {
         let mut titem: &TItem;
         let mut lcell: &LCell;
         let mut index: u16;
+        let mut agent: Agent;
+        let mut dx: i16;
+        let mut dy: i16;
+        let mut sw: i16;
+        let mut sh: i16;
         
         for (_, tindex) in tvec.iter().enumerate() {
 
@@ -181,41 +148,28 @@ impl DGrid {
 
             while index != INVALID {
 
-                let agent = self.loose.pool[index];
+                agent = self.loose.pool[index];
 
                 if agent.id != omit_id &&
                     agent.in_grid(self) {
 
-                    if !dirs[0] && agent.cross_bottom(x, y, hw, hh) {
-                        dirs[0] = true;
-                    }
-                    if !dirs[2] && agent.cross_right(x, y, hw, hh) {
-                        dirs[2] = true;
-                    }
-                    if !dirs[4] && agent.cross_top(x, y, hw, hh) {
-                        dirs[4] = true;
-                    }
-                    if !dirs[6] && agent.cross_left(x, y, hw, hh) {
-                        dirs[6] = true;
-                    }
-                }
+                    dx = agent.x - x;
+                    dy = agent.y - y;
+                    sw = agent.hw + hw;
+                    sh = agent.hh + hh;
 
-                if dirs[0] && dirs[2] && dirs[4] && dirs[6] {
-            
-                    return vec;
+                    if dbox_cross(dx, dy, sw, sh) {
+
+                        dpos_cross_dirs(&mut dirs, dx, dy);
+                    }
                 }
 
                 index = agent.next;
             }
         }
 
-        dirs[1] = dirs[0] && dirs[2];
-        dirs[3] = dirs[2] && dirs[4];
-        dirs[5] = dirs[4] && dirs[6];
-        dirs[7] = dirs[6] && dirs[0];
-
         for i in 0..8 {
-            if dirs[i] {
+            if !dirs[i] {
                 vec.push(i)
             }
         }

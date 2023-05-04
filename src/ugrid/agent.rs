@@ -80,20 +80,13 @@ impl Agent {
 
     pub fn cross(&self, other:&Agent, agent_size:i16) -> bool {
 
-        self.cross_pos(other.x, other.y, agent_size)
+        self.pos_cross(other.x, other.y, agent_size)
     }
 
-    pub fn cross_pos(&self, x:i16, y:i16, agent_size:i16) -> bool {
+    pub fn pos_cross(&self, x:i16, y:i16, agent_size:i16) -> bool {
 
-        self.cross_dpos(self.x - x, self.y - y, agent_size)
+        dpos_cross(self.x - x, self.y - y, agent_size)
     }
-
-    pub fn cross_dpos(&self, dx:i16, dy:i16, agent_size:i16) -> bool {
-
-        dx.abs() <= agent_size && 
-        dy.abs() <= agent_size
-    }
-
 
     pub fn at_front(&self, dir:u8, other:&Agent) -> bool {
 
@@ -102,98 +95,16 @@ impl Agent {
 
     fn pos_at_front(&self, dir:u8, x:i16, y:i16) -> bool {
 
-        self.dpos_at_front(dir, self.x - x, self.y - y)
-    }
-
-    fn dpos_at_front(&self, dir:u8, dx:i16, dy:i16) -> bool {
-        
-        match dir {
-            1 => dx >= 0 && dy <= 0,
-            2 => dx >= dy.abs(),
-            3 => dx >= 0 && dy >= 0,
-            4 => dy >= dx.abs(),
-            5 => dx <= 0 && dy >= 0,
-            6 => dx <= -dy.abs(),
-            7 => dx <= 0 && dy <= 0,
-            _ => dy <= -dx.abs(),
-        }
+        dpos_at_front(dir, self.x - x, self.y - y)
     }
 
     pub fn cross_dirs(&self, dirs:&mut [bool;8], other:&Agent) {
 
-        self.dpos_cross_dirs(dirs, self.x - other.x, self.y - other.y)
+        dpos_cross_dirs(dirs, self.x - other.x, self.y - other.y)
     }
 
     pub fn pos_cross_dirs(&self, dirs:&mut [bool;8], x:i16, y:i16) {
 
-        self.dpos_cross_dirs(dirs, self.x - x, self.y - y)
+        dpos_cross_dirs(dirs, self.x - x, self.y - y)
     }
-
-    pub fn dpos_cross_dirs(&self, dirs:&mut [bool;8], dx:i16, dy:i16) {
-
-        if dx >= 0 {
-
-            if dy >= dx.abs() {
-
-                dirs[2] = true;
-                dirs[3] = true;
-                dirs[4] = true;
-                dirs[5] = true;
-                return;                
-            }
-
-            if dy >= 0 {
-                dirs[1] = true;
-                dirs[2] = true;
-                dirs[3] = true;
-                dirs[4] = true;
-                return;
-            }
-
-            if dy < -dx.abs() {
-                dirs[7] = true;
-                dirs[0] = true;
-                dirs[1] = true;
-                dirs[2] = true;
-                return;
-            }
-            
-            dirs[0] = true;
-            dirs[1] = true;
-            dirs[2] = true;
-            dirs[3] = true;
-            return;
-        }
-
-        if dy >= dx.abs() {
-            dirs[3] = true;
-            dirs[4] = true;
-            dirs[5] = true;
-            dirs[6] = true;
-            return;                
-        }
-
-        if dy >= 0 {
-            dirs[4] = true;
-            dirs[5] = true;
-            dirs[6] = true;
-            dirs[7] = true;
-            return;
-        }
-
-        if dy < -dx.abs() {
-            dirs[6] = true;
-            dirs[7] = true;
-            dirs[0] = true;
-            dirs[1] = true;
-            return;
-        }
-        
-        dirs[5] = true;
-        dirs[6] = true;
-        dirs[7] = true;
-        dirs[0] = true;
-        return;
-    }
-
 }

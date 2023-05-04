@@ -1,5 +1,24 @@
 use bevy::prelude::*;
+use super::*;
 
+
+pub fn keyboard_input(
+    mut cmd: ResMut<Cmd>,
+    input: Res<Input<KeyCode>>
+) {
+
+    let z = input.pressed(KeyCode::Z);
+    let x = input.pressed(KeyCode::X);
+
+    if z {
+        cmd.index = (cmd.index + 1) % 9;
+    }
+    if x {
+        cmd.index = (cmd.index + 8) % 9;
+    }
+    
+    cmd.dir = key2dir(&input);
+}
 
 pub fn key2dir(input:&Input<KeyCode>) ->Option<usize> {
 

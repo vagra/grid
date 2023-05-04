@@ -1,13 +1,14 @@
 use bevy::{prelude::*, sprite::Anchor};
 use grid::{INVALID, ItemSpec, GridComm, dgrid::agent::*};
 use super::super::*;
-use super::{*, mover::Mover};
+use super::{*, mover::Mover, sprite::*};
 
 
 #[derive(Bundle)]
 pub struct DAgentBundle {
-    pub agent: DAgent,
+    pub id: DID,
     pub pos: DPos,
+    pub size: DSize,
     pub mover: Mover,
 
     #[bundle]
@@ -21,10 +22,14 @@ impl DAgentBundle {
 
         Self {
 
-            agent: DAgent(*agent),
+            id: DID(agent.id),
             pos: DPos{
                     x: agent.x,
                     y: agent.y
+                },
+            size: DSize {
+                    hw: agent.hw,
+                    hh: agent.hh
                 },
             mover:  if moving { Mover::new() }
                     else { Mover::default() },
@@ -38,12 +43,13 @@ impl DAgentBundle {
                     anchor: Anchor::Center,
                     ..default()
                     }, 
+
                 transform: Transform::from_translation(
-                    Vec3{
-                        x: agent.x as f32,
-                        y: agent.y as f32,
-                        z: 10.0}
-                ),
+                            Vec3{
+                                x: agent.x as f32,
+                                y: agent.y as f32,
+                                z: 10.0}
+                            ),
                 ..default()
             }
             
@@ -113,6 +119,7 @@ pub fn many_create_dagents(
                 }
 
                 index = agent.next;
+
             }
         }
     }
@@ -123,7 +130,8 @@ pub fn many_create_dagents(
 
 pub fn move_dagent(
     mut query: Query<(
-        &DAgent,
+        &DID,
+        &DSize,
         &mut DPos,
         &mut Sprite,
         &mut Transform
@@ -132,9 +140,12 @@ pub fn move_dagent(
     cmd: Res<Cmd>,
 ) {
 
-    for (agent, mut prev, mut sprite, mut transform) in query.iter_mut() {
+    let mut curr:DPos = DPos::default();
+    let mut ids:Vec<u16>;
 
-        if agent.0.id != IDS[cmd.index] {
+    for (did, size, mut prev, mut sprite, mut transform) in query.iter_mut() {
+
+        if did.0 != IDS[cmd.index] {
 
             if sprite.color == CROSS_COLOR {
 
@@ -146,23 +157,13 @@ pub fn move_dagent(
 
         if let Some(dir) = cmd.dir {
 
-            prev.x = transform.translation.x as i16;
-            prev.y = transform.translation.y as i16;
-    
-            let offset = VECTORES[dir];
-            transform.translation.x += AGENT_SPEED * offset.x;
-            transform.translation.y += AGENT_SPEED * offset.y;
+            (prev.x, prev.y, curr.x, curr.y) = move_sprite(dir, AGENT_SPEED, &mut transform);
 
-            let x = transform.translation.x as i16;
-            let y = transform.translation.y as i16;
-
-            grid.move_cell(agent.0.id, prev.x, prev.y, x, y);
+            grid.move_cell(did.0, prev.x, prev.y, curr.x, curr.y);
 
             grid.optimize();
 
-            let ids = grid.query(
-                x, y, agent.0.hw, agent.0.hh, agent.0.id
-            );
+            ids = grid.query( curr.x, curr.y, size.hw, size.hh, did.0 );
 
             if ids.len() > 0 {
                 sprite.color = CROSS_COLOR;
@@ -178,7 +179,8 @@ pub fn move_dagent(
 
 pub fn many_move_dagents(
     mut query: Query<(
-        &DAgent,
+        &DID,
+        &DSize,
         &mut DPos,
         &mut Mover,
         &mut Sprite,
@@ -189,9 +191,13 @@ pub fn many_move_dagents(
     time: Res<Time>,
 ) {
 
-    for (agent, mut prev, mut mover, mut sprite, mut transform) in query.iter_mut() {
+    let mut curr:DPos = DPos::default();
+    let mut dirs:Vec<usize>;
+    let mut ids:Vec<u16>;
 
-        if agent.0.id != MAIN_ID {
+    for (did, size, mut prev, mut mover, mut sprite, mut transform) in query.iter_mut() {
+
+        if did.0 != MAIN_ID {
 
             mover.timer.tick(time.delta());
 
@@ -201,31 +207,29 @@ pub fn many_move_dagents(
                 mover.random();
             }
 
-            prev.x = transform.translation.x as i16;
-            prev.y = transform.translation.y as i16;
+            if mover.pause {
 
-            let offset = VECTORES[mover.dir];
-            transform.translation.x += mover.speed * offset.x;
-            transform.translation.y += mover.speed * offset.y;
-
-            let x = transform.translation.x as i16;
-            let y = transform.translation.y as i16;
-
-            grid.move_cell(agent.0.id, prev.x, prev.y, x, y);
-
-            if let Some(dir) = grid.out_bounds(x, y) {
-
-                mover.back(dir);
-                
+                mover.pause = false;
                 continue;
             }
 
-            let ids = grid.dir_query(
-                    mover.dir as u8, x, y, agent.0.hw, agent.0.hh, agent.0.id
-                );
+            (prev.x, prev.y, curr.x, curr.y) = move_sprite(mover.dir, mover.speed, &mut transform);
 
-            if ids.len() > 0 {
-                mover.bump();
+            grid.move_cell(did.0, prev.x, prev.y, curr.x, curr.y);
+
+            if let Some(dir) = grid.out_bounds(curr.x, curr.y) {
+
+                mover.back(dir);
+                continue;
+            }
+
+            dirs = grid.query_dirs( curr.x, curr.y, size.hw, size.hh, did.0 );
+
+            if dirs.len() > 0 {
+                mover.dodge(&dirs);
+            }
+            else {
+                mover.stop();
             }
 
             continue;
@@ -233,19 +237,11 @@ pub fn many_move_dagents(
 
         if let Some(dir) = cmd.dir {
 
-            prev.x = transform.translation.x as i16;
-            prev.y = transform.translation.y as i16;
-    
-            let offset = VECTORES[dir];
-            transform.translation.x += AGENT_SPEED * offset.x;
-            transform.translation.y += AGENT_SPEED * offset.y;
+            (prev.x, prev.y, curr.x, curr.y) = move_sprite(dir, AGENT_SPEED, &mut transform);
 
-            let x = transform.translation.x as i16;
-            let y = transform.translation.y as i16;
+            grid.move_cell(did.0, prev.x, prev.y, curr.x, curr.y);
 
-            grid.move_cell(agent.0.id, prev.x, prev.y, x, y);
-
-            let ids = grid.query( x, y, agent.0.hw, agent.0.hh, agent.0.id );
+            ids = grid.query( curr.x, curr.y, size.hw, size.hh, did.0 );
 
             if ids.len() > 0 {
                 sprite.color = CROSS_COLOR;

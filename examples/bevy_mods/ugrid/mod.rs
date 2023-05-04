@@ -1,6 +1,5 @@
 use bevy::{prelude::*, reflect::TypeUuid};
 use grid::ugrid::UGrid;
-use crate::input::*;
 use super::*;
 
 pub mod uagent;
@@ -10,8 +9,6 @@ use {
     uagent::*,
     ucell::*
 };
-
-
 
 pub const IDS: [u32; 10] = [
     100, 101, 102, 103, 104, 105, 106, 107, 108, 109
@@ -106,22 +103,3 @@ pub fn many_create_ugrid(
 
     println!("create many ugrid done.");
 }
-
-pub fn keyboard_input(
-    mut cmd: ResMut<Cmd>,
-    input: Res<Input<KeyCode>>
-) {
-
-    let z = input.pressed(KeyCode::Z);
-    let x = input.pressed(KeyCode::X);
-
-    if z {
-        cmd.index = (cmd.index + 1) % 9;
-    }
-    if x {
-        cmd.index = (cmd.index + 8) % 9;
-    }
-
-    cmd.dir = key2dir(&input);
-}
-

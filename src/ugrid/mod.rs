@@ -4,7 +4,7 @@ pub mod ucell;
 pub mod agent;
 
 use crate::{
-    *, cells::*, pool::*,
+    *, cells::*, pool::*, dpos::*,
     ugrid::{agent::*, ucell::*}
 };
 
@@ -195,9 +195,9 @@ impl UGrid {
                 while index != INVALID {
                     let agent = self.pool[index];
 
-                    if (agent.id != omit_id) &&
+                    if agent.id != omit_id &&
                         agent.in_grid(self) &&
-                        agent.cross_pos(x, y, self.agent_size) {
+                        agent.pos_cross(x, y, self.agent_size) {
 
                         vec.push(index);
                     }
@@ -234,9 +234,9 @@ impl UGrid {
                         dx = agent.x - x;
                         dy = agent.y - y;
 
-                        if agent.cross_dpos(dx, dy, self.agent_size) {
+                        if dpos_cross(dx, dy, self.agent_size) {
 
-                            agent.dpos_cross_dirs(&mut dirs, dx, dy);
+                            dpos_cross_dirs(&mut dirs, dx, dy);
                         }
                     }
 

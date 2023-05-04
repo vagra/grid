@@ -14,10 +14,10 @@ pub mod input;
 
 const TCELL_COLOR: Color = Color::rgba(0.3, 0.3, 0.3, 0.6);
 const LCELL_COLOR: Color = Color::rgba(0.0, 0.6, 0.0, 0.6);
-const LRECT_COLOR: Color = Color::rgba(0.8, 0.8, 0.0, 0.6);
+const LRECT_COLOR: Color = Color::rgba(0.8, 0.8, 0.0, 0.4);
 const UCELL_COLOR: Color = Color::rgba(0.0, 0.6, 0.0, 0.6);
 
-const AGENT_COLOR: Color = Color::rgba(0.0, 0.0, 0.6, 0.6);
+const AGENT_COLOR: Color = Color::rgba(0.0, 0.0, 1.0, 0.8);
 const CROSS_COLOR: Color = Color::rgba(1.0, 0.0, 0.0, 1.0);
 
 const AGENT_SPEED: f32 = 2.0;
@@ -45,10 +45,9 @@ const MAX_DURATION:f32 = 8.0;
 const MIN_HALF_SIZE:i16 = 2;
 const MAX_HALF_SIZE:i16 = 10;
 
-const AGENTS: u32 = 21000;
-
 pub const MAIN_ID: u32 = 0;
 
+const AGENTS: u32 = 21000;
 
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, Default, States)]
 pub enum GameState {

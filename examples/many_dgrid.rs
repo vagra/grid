@@ -3,7 +3,7 @@ use bevy::{prelude::*, diagnostic::FrameTimeDiagnosticsPlugin};
 mod bevy_mods;
 
 use bevy_mods::{
-    *, info::*, camera::*,
+    *, info::*, camera::*, input::*,
     dgrid::{*, dagent::*, lcell::*, lrect::*, tcell::*}
 };
 

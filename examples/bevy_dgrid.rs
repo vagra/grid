@@ -4,7 +4,7 @@ use bevy::prelude::*;
 mod bevy_mods;
 
 use bevy_mods::{
-    *,
+    *, input::*,
     dgrid::{*, dagent::*, lcell::*, lrect::*, tcell::*}
 };
 

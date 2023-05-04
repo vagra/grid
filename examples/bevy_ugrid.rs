@@ -3,7 +3,7 @@ use bevy::prelude::*;
 mod bevy_mods;
 
 use bevy_mods::{
-    *,
+    *, input::*,
     ugrid::{*, ucell::*, uagent::*},
 };
 

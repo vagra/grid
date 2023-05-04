@@ -8,7 +8,7 @@ use super::{*, mover::*};
 
 #[derive(Bundle)]
 pub struct UAgentBundle {
-    pub agent: UID,
+    pub id: UID,
     pub pos: UPos,
     pub mover: Mover,
 
@@ -23,7 +23,7 @@ impl UAgentBundle {
 
         Self {
 
-            agent: UID(agent.id),
+            id: UID(agent.id),
             pos: UPos{
                     x: agent.x,
                     y: agent.y
@@ -45,7 +45,7 @@ impl UAgentBundle {
                             Vec3{
                                 x: agent.x as f32,
                                 y: agent.y as f32,
-                                z: 4.0}
+                                z: 10.0}
                             ),
                 ..default()
             }
@@ -183,6 +183,7 @@ pub fn many_move_uagents(
 ) {
 
     let mut curr:UPos = UPos::default();
+    let mut dirs:Vec<usize>;
     let mut ids:Vec<u16>;
 
     for (uid, mut prev, mut mover, mut sprite, mut transform) in query.iter_mut() {
@@ -207,14 +208,13 @@ pub fn many_move_uagents(
 
             grid.move_cell(uid.0, prev.x, prev.y, curr.x, curr.y);
 
-
             if let Some(dir) = grid.out_bounds(curr.x, curr.y) {
 
                 mover.back(dir);
                 continue;
             }
 
-            let dirs = grid.query_dirs( curr.x, curr.y, uid.0 );
+            dirs = grid.query_dirs( curr.x, curr.y, uid.0 );
 
             if dirs.len() > 0 {
                 mover.dodge(&dirs);

@@ -1,6 +1,7 @@
 pub mod items;
 pub mod cells;
 pub mod pool;
+pub mod dpos;
 
 pub mod ugrid;
 pub mod dgrid;
