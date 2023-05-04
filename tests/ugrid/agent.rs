@@ -64,45 +64,45 @@ fn at_front_work() {
     let agent6 = Agent::new(6, -4, -6);
     let agent7 = Agent::new(7, 0, -8);
 
-    assert!(!agent0.at_front(&agent, 6));
-    assert!(agent0.at_front(&agent, 7));
-    assert!(agent0.at_front(&agent, 0));
-    assert!(!agent0.at_front(&agent, 1));
+    assert!(!agent0.at_front(6, &agent));
+    assert!(agent0.at_front(7, &agent));
+    assert!(agent0.at_front(0, &agent));
+    assert!(!agent0.at_front(1, &agent));
 
-    assert!(!agent1.at_front(&agent, 7));
-    assert!(agent1.at_front(&agent, 0));
-    assert!(agent1.at_front(&agent, 1));
-    assert!(!agent1.at_front(&agent, 2));
+    assert!(!agent1.at_front(7, &agent));
+    assert!(agent1.at_front(0, &agent));
+    assert!(agent1.at_front(1, &agent));
+    assert!(!agent1.at_front(2, &agent));
 
-    assert!(!agent2.at_front(&agent, 0));
-    assert!(agent2.at_front(&agent, 1));
-    assert!(agent2.at_front(&agent, 2));
-    assert!(!agent2.at_front(&agent, 3));
+    assert!(!agent2.at_front(0, &agent));
+    assert!(agent2.at_front(1, &agent));
+    assert!(agent2.at_front(2, &agent));
+    assert!(!agent2.at_front(3, &agent));
 
-    assert!(!agent3.at_front(&agent, 1));
-    assert!(agent3.at_front(&agent, 2));
-    assert!(agent3.at_front(&agent, 3));
-    assert!(!agent3.at_front(&agent, 4));
+    assert!(!agent3.at_front(1, &agent));
+    assert!(agent3.at_front(2, &agent));
+    assert!(agent3.at_front(3, &agent));
+    assert!(!agent3.at_front(4, &agent));
 
-    assert!(!agent4.at_front(&agent, 3));
-    assert!(agent4.at_front(&agent, 4));
-    assert!(agent4.at_front(&agent, 5));
-    assert!(!agent4.at_front(&agent, 6));
+    assert!(!agent4.at_front(3, &agent));
+    assert!(agent4.at_front(4, &agent));
+    assert!(agent4.at_front(5, &agent));
+    assert!(!agent4.at_front(6, &agent));
 
-    assert!(!agent5.at_front(&agent, 4));
-    assert!(agent5.at_front(&agent, 5));
-    assert!(agent5.at_front(&agent, 6));
-    assert!(!agent5.at_front(&agent, 7));
+    assert!(!agent5.at_front(4, &agent));
+    assert!(agent5.at_front(5, &agent));
+    assert!(agent5.at_front(6, &agent));
+    assert!(!agent5.at_front(7, &agent));
 
-    assert!(!agent6.at_front(&agent, 5));
-    assert!(agent6.at_front(&agent, 6));
-    assert!(agent6.at_front(&agent, 7));
-    assert!(!agent6.at_front(&agent, 0));
+    assert!(!agent6.at_front(5, &agent));
+    assert!(agent6.at_front(6, &agent));
+    assert!(agent6.at_front(7, &agent));
+    assert!(!agent6.at_front(0, &agent));
 
-    assert!(!agent7.at_front(&agent, 5));
-    assert!(agent7.at_front(&agent, 6));
-    assert!(agent7.at_front(&agent, 7));
-    assert!(agent7.at_front(&agent, 0));
-    assert!(!agent7.at_front(&agent, 1));
+    assert!(!agent7.at_front(5, &agent));
+    assert!(agent7.at_front(6, &agent));
+    assert!(agent7.at_front(7, &agent));
+    assert!(agent7.at_front(0, &agent));
+    assert!(!agent7.at_front(1, &agent));
 }
 

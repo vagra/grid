@@ -77,6 +77,7 @@ impl Agent {
         self.y <= grid.half_height
     }
 
+
     pub fn cross(&self, other:&Agent, agent_size:i16) -> bool {
 
         self.cross_pos(other.x, other.y, agent_size)
@@ -84,8 +85,7 @@ impl Agent {
 
     pub fn cross_pos(&self, x:i16, y:i16, agent_size:i16) -> bool {
 
-        (self.x - x).abs() <= agent_size && 
-        (self.y - y).abs() <= agent_size
+        self.cross_dpos(self.x - x, self.y - y, agent_size)
     }
 
     pub fn cross_dpos(&self, dx:i16, dy:i16, agent_size:i16) -> bool {
@@ -94,49 +94,18 @@ impl Agent {
         dy.abs() <= agent_size
     }
 
-    pub fn front_cross(&self, other:&Agent, dir:u8, agent_size:i16) -> bool {
 
-        self.front_cross_pos(dir, other.x, other.y, agent_size)
+    pub fn at_front(&self, dir:u8, other:&Agent) -> bool {
+
+        self.pos_at_front(dir, other.x, other.y)
     }
 
-    pub fn front_cross_pos(&self, dir:u8, x:i16, y:i16, agent_size:i16) -> bool {
+    fn pos_at_front(&self, dir:u8, x:i16, y:i16) -> bool {
 
-        let dx = self.x - x;
-        let dy = self.y - y;
-
-        match dir {
-
-            1 => { self.cross_bottom(dx, dy, agent_size) ||
-                    self.cross_right(dx, dy, agent_size) },
-
-            2 => { self.cross_right(dx, dy, agent_size) },
-
-            3 => { self.cross_right(dx, dy, agent_size) ||
-                    self.cross_top(dx, dy, agent_size) },
-
-            4 => { self.cross_top(dx, dy, agent_size) },
-
-            5 => { self.cross_top(dx, dy, agent_size) ||
-                    self.cross_left(dx, dy, agent_size) },
-
-            6 => { self.cross_left(dx, dy, agent_size) },
-
-            7 => { self.cross_left(dx, dy, agent_size) ||
-                    self.cross_bottom(dx, dy, agent_size) },
-
-            _ => { self.cross_bottom(dx, dy, agent_size) },
-        }
+        self.dpos_at_front(dir, self.x - x, self.y - y)
     }
 
-    pub fn at_front(&self, other:&Agent, dir:u8) -> bool {
-
-        self.at_front_pos(dir, other.x, other.y)
-    }
-
-    fn at_front_pos(&self, dir:u8, x:i16, y:i16) -> bool {
-
-        let dx = self.x - x;
-        let dy = self.y - y;
+    fn dpos_at_front(&self, dir:u8, dx:i16, dy:i16) -> bool {
         
         match dir {
             1 => dx >= 0 && dy < 0,
@@ -150,7 +119,17 @@ impl Agent {
         }
     }
 
-    pub fn cross_dirs(&self, dirs:&mut [bool;8], dx:i16, dy:i16) {
+    pub fn cross_dirs(&self, dirs:&mut [bool;8], other:&Agent) {
+
+        self.dpos_cross_dirs(dirs, self.x - other.x, self.y - other.y)
+    }
+
+    pub fn pos_cross_dirs(&self, dirs:&mut [bool;8], x:i16, y:i16) {
+
+        self.dpos_cross_dirs(dirs, self.x - x, self.y - y)
+    }
+
+    pub fn dpos_cross_dirs(&self, dirs:&mut [bool;8], dx:i16, dy:i16) {
 
         if dx >= 0 {
 
@@ -215,64 +194,6 @@ impl Agent {
         dirs[7] = true;
         dirs[0] = true;
         return;
-    }
-
-    pub fn dpos2dir(&self, dx:i16, dy:i16, d:i16) -> usize {
-
-
-        if dx >= dy.abs() {
-            return 3
-        }
-        if dx < -dy.abs() {
-            return 6
-        }
-        if dy >= dx.abs() {
-            return 4
-        }
-        if dy < -dx.abs() {
-            return 0
-        }
-
-        if dx >= 0 {
-            
-            if dy < 0 {
-                return 1
-            }
-            return 3;
-        }
-
-        if dy < 0 {
-            return 7
-        }
-        return 5;
-
-        0
-
-
-    }
-
-    pub fn cross_bottom(&self, dx:i16, dy:i16, d:i16) -> bool {
-
-        dy >= -d && dy <= 0 &&
-        dx <= d && dx >= -d
-    }
-
-    pub fn cross_top(&self, dx:i16, dy:i16, d:i16) -> bool {
-
-        dy <= d && dy >= 0 &&
-        dx <= d && dx >= -d
-    }
-
-    pub fn cross_left(&self, dx:i16, dy:i16, d:i16) -> bool {
-
-        dx >= -d && dx <= 0 &&
-        dy <= d && dy >= -d
-    }
-
-    pub fn cross_right(&self, dx:i16, dy:i16, d:i16) -> bool {
-
-        dx <= d && dx >= 0 &&
-        dy <= d && dy >= -d
     }
 
 }

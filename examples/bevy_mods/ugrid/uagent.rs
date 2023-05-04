@@ -1,6 +1,7 @@
 use bevy::{prelude::*, sprite::Anchor};
 
 use grid::{INVALID, ItemSpec, GridComm, ugrid::agent::*};
+use crate::sprite::*;
 use super::super::*;
 use super::{*, mover::*};
 
@@ -137,7 +138,6 @@ pub fn move_uagent(
 ) {
 
     let mut curr:UPos = UPos::default();
-    let mut offset:Vec2;
     let mut ids:Vec<u16>;
 
     for (uid, mut prev, mut sprite, mut transform) in query.iter_mut() {
@@ -152,15 +152,7 @@ pub fn move_uagent(
 
         if let Some(dir) = cmd.dir {
 
-            prev.x = transform.translation.x as i16;
-            prev.y = transform.translation.y as i16;
-    
-            offset = VECTORES[dir];
-            transform.translation.x += AGENT_SPEED * offset.x;
-            transform.translation.y += AGENT_SPEED * offset.y;
-
-            curr.x = transform.translation.x as i16;
-            curr.y = transform.translation.y as i16;
+            (prev.x, prev.y, curr.x, curr.y) = move_sprite(dir, AGENT_SPEED, &mut transform);
 
             grid.move_cell(uid.0, prev.x, prev.y, curr.x, curr.y);
 
@@ -191,7 +183,6 @@ pub fn many_move_uagents(
 ) {
 
     let mut curr:UPos = UPos::default();
-    let mut offset:Vec2;
     let mut ids:Vec<u16>;
 
     for (uid, mut prev, mut mover, mut sprite, mut transform) in query.iter_mut() {
@@ -212,15 +203,7 @@ pub fn many_move_uagents(
                 continue;
             }
 
-            prev.x = transform.translation.x as i16;
-            prev.y = transform.translation.y as i16;
-
-            offset = VECTORES[mover.dir];
-            transform.translation.x += mover.speed * offset.x;
-            transform.translation.y += mover.speed * offset.y;
-
-            curr.x = transform.translation.x as i16;
-            curr.y = transform.translation.y as i16;
+            (prev.x, prev.y, curr.x, curr.y) = move_sprite(mover.dir, mover.speed, &mut transform);
 
             grid.move_cell(uid.0, prev.x, prev.y, curr.x, curr.y);
 
@@ -245,15 +228,7 @@ pub fn many_move_uagents(
 
         if let Some(dir) = cmd.dir {
 
-            prev.x = transform.translation.x as i16;
-            prev.y = transform.translation.y as i16;
-    
-            offset = VECTORES[dir];
-            transform.translation.x += AGENT_SPEED * offset.x;
-            transform.translation.y += AGENT_SPEED * offset.y;
-
-            curr.x = transform.translation.x as i16;
-            curr.y = transform.translation.y as i16;
+            (prev.x, prev.y, curr.x, curr.y) = move_sprite(dir, AGENT_SPEED, &mut transform);
 
             grid.move_cell(uid.0, prev.x, prev.y, curr.x, curr.y);
 

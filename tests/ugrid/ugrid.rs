@@ -231,48 +231,6 @@ fn query_work() {
 
 
 #[test]
-fn dir_query_work() {
-    let mut grid = UGrid::default();
-
-    grid.insert_test_data();
-
-    grid.insert(201, 25, 45);
-    let mut vec:Vec<u16>;
-
-    vec = grid.dir_query(0, 25, 45, 201);
-    assert_eq!(vec.len(), 2);
-    assert_eq!(vec, [8u16, 7u16]);
-
-    vec = grid.dir_query(1, 25, 45, 201);
-    assert_eq!(vec.len(), 2);
-    assert_eq!(vec, [8u16, 7u16]);
-
-    vec = grid.dir_query(2, 25, 45, 201);
-    assert_eq!(vec.len(), 2);
-    assert_eq!(vec, [8u16, 7u16]);
-
-    vec = grid.dir_query(3, 25, 45, 201);
-    assert_eq!(vec.len(), 3);
-    assert_eq!(vec, [8u16, 7u16, 6u16]);
-
-    vec = grid.dir_query(4, 25, 45, 201);
-    assert_eq!(vec.len(), 1);
-    assert_eq!(vec, [6u16]);
-
-    vec = grid.dir_query(5, 25, 45, 201);
-    assert_eq!(vec.len(), 1);
-    assert_eq!(vec, [6u16]);
-
-    vec = grid.dir_query(6, 25, 45, 201);
-    assert_eq!(vec.len(), 1);
-    assert_eq!(vec, [6u16]);
-
-    vec = grid.dir_query(7, 25, 45, 201);
-    assert_eq!(vec.len(), 3);
-    assert_eq!(vec, [8u16, 7u16, 6u16]);
-}
-
-#[test]
 fn in_grid_work() {
 
     let mut grid = UGrid::default();

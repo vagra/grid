@@ -16,7 +16,6 @@ fn main() {
     test_out_bounds_remove();
 
     test_query(); 
-    test_dir_query();
     test_query_dirs();
 
     print_size();
@@ -97,45 +96,6 @@ fn test_query() {
     let vec = grid.query(25, 45, 201);
     grid.print_query(&vec);
 }
-
-
-fn test_dir_query() {
-    println!("\n------------------------------------------------");
-    println!("test_dir_query");
-
-    let mut grid = UGrid::default();
-    grid.insert_test_data();
-
-    grid.insert(201, 25, 45);
-
-    let mut vec:Vec<u16>;
-
-    vec = grid.dir_query(0, 25, 45, 201);
-    grid.print_dir_query(0, &vec);
-
-    vec = grid.dir_query(1, 25, 45, 201);
-    grid.print_dir_query(1, &vec);
-
-    vec = grid.dir_query(2, 25, 45, 201);
-    grid.print_dir_query(2, &vec);
-
-    vec = grid.dir_query(3, 25, 45, 201);
-    grid.print_dir_query(3, &vec);
-
-    vec = grid.dir_query(4, 25, 45, 201);
-    grid.print_dir_query(4, &vec);
-
-    vec = grid.dir_query(5, 25, 45, 201);
-    grid.print_dir_query(5, &vec);
-
-    vec = grid.dir_query(6, 25, 45, 201);
-    grid.print_dir_query(6, &vec);
-
-    vec = grid.dir_query(7, 25, 45, 201);
-    grid.print_dir_query(7, &vec);
-
-}
-
 
 
 fn test_query_dirs() {

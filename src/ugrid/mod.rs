@@ -210,35 +210,6 @@ impl UGrid {
         vec
     }
 
-    pub fn dir_query(&self, dir: u8, x: i16, y: i16, omit_id: u32) -> Vec<u16> {
-        let (min_col, min_row) = self.pos2cell(x - self.agent_size, y + self.agent_size);
-        let (max_col, max_row) = self.pos2cell(x + self.agent_size, y - self.agent_size);
-
-        let mut vec: Vec<u16> = Vec::new();
-        let mut index: u16;
-        for row in min_row..=max_row {
-            for col in min_col..=max_col {
-
-                index = self.cells[row][col].head;
-
-                while index != INVALID {
-                    let agent = self.pool[index];
-
-                    if agent.id != omit_id &&
-                        agent.in_grid(self) &&
-                        agent.front_cross_pos(dir, x, y, self.agent_size) {
-
-                        vec.push(index);
-                    }
-
-                    index = agent.next;
-                }
-            }
-        }
-
-        vec
-    }
-
     pub fn query_dirs(&self, x: i16, y: i16, omit_id: u32) -> Vec<usize> {
         let (min_col, min_row) = self.pos2cell(x - self.agent_size, y + self.agent_size);
         let (max_col, max_row) = self.pos2cell(x + self.agent_size, y - self.agent_size);
@@ -265,7 +236,7 @@ impl UGrid {
 
                         if agent.cross_dpos(dx, dy, self.agent_size) {
 
-                            agent.cross_dirs(&mut dirs, dx, dy);
+                            agent.dpos_cross_dirs(&mut dirs, dx, dy);
                         }
                     }
 
