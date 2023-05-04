@@ -108,14 +108,14 @@ impl Agent {
     fn dpos_at_front(&self, dir:u8, dx:i16, dy:i16) -> bool {
         
         match dir {
-            1 => dx >= 0 && dy < 0,
+            1 => dx >= 0 && dy <= 0,
             2 => dx >= dy.abs(),
             3 => dx >= 0 && dy >= 0,
             4 => dy >= dx.abs(),
-            5 => dx < 0 && dy >= 0,
-            6 => dx < -dy.abs(),
-            7 => dx < 0 && dy < 0,
-            _ => dy < -dx.abs(),
+            5 => dx <= 0 && dy >= 0,
+            6 => dx <= -dy.abs(),
+            7 => dx <= 0 && dy <= 0,
+            _ => dy <= -dx.abs(),
         }
     }
 
