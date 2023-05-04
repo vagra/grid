@@ -263,34 +263,16 @@ impl UGrid {
                         dx = agent.x - x;
                         dy = agent.y - y;
 
-                        if !dirs[0] && agent.cross_bottom(dx, dy, self.agent_size) {
-                            dirs[0] = true;
-                        }
-                        if !dirs[2] && agent.cross_right(dx, dy, self.agent_size) {
-                            dirs[2] = true;
-                        }
-                        if !dirs[4] && agent.cross_top(dx, dy, self.agent_size) {
-                            dirs[4] = true;
-                        }
-                        if !dirs[6] && agent.cross_left(dx, dy, self.agent_size) {
-                            dirs[6] = true;
-                        }
-                    }
+                        if agent.cross_dpos(dx, dy, self.agent_size) {
 
-                    if dirs[0] && dirs[2] && dirs[4] && dirs[6] {
-            
-                        return vec;
+                            agent.cross_dirs(&mut dirs, dx, dy);
+                        }
                     }
 
                     index = agent.next;
                 }
             }
         }
-
-        if dirs[0] && dirs[2] { dirs[1] = true }
-        if dirs[2] && dirs[4] { dirs[3] = true }
-        if dirs[4] && dirs[6] { dirs[5] = true }
-        if dirs[6] && dirs[0] { dirs[7] = true }
 
         for i in 0..8 {
             if !dirs[i] {
