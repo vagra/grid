@@ -42,12 +42,12 @@ const MAX_SPEED:f32 = 2.0;
 const MIN_DURATION:f32 = 5.0;
 const MAX_DURATION:f32 = 8.0;
 
-const MIN_HALF_SIZE:i16 = 2;
+const MIN_HALF_SIZE:i16 = 4;
 const MAX_HALF_SIZE:i16 = 10;
 
 pub const MAIN_ID: u32 = 0;
 
-const AGENTS: u32 = 21000;
+const AGENTS: u32 = 12000;
 
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, Default, States)]
 pub enum GameState {
