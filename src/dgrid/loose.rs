@@ -201,10 +201,10 @@ impl Loose {
             panic!("cell:({},{}) index:{}", row, col, index);
         }
 
-        let head = self.cells[row][col].head;
+        let prev = self.cells[row][col].head;
         self.cells[row][col].head = index;
         
-        self.pool[index].next = head;
+        self.pool[index].next = prev;
     }
 
     pub fn expand_lrect(&mut self,
@@ -220,17 +220,21 @@ impl Loose {
 
         let mut new_pool: Pool<Agent> = Pool::default();
 
+        let mut new_index: u16;
+        let mut indices: Vec<u16>;
+        let mut lcell: &mut LCell;
+        let mut agent: &Agent;
         for lrow in 0..self.rows {
             for lcol in 0..self.cols {
 
-                let mut indices: Vec<u16> = Vec::default();
+                indices = Vec::default();
 
-                let lcell = &mut self.cells[lrow][lcol];
+                lcell = &mut self.cells[lrow][lcol];
 
                 while lcell.head != INVALID {
 
-                    let agent = self.pool[lcell.head];
-                    let new_index = new_pool.insert(agent);
+                    agent = &self.pool[lcell.head];
+                    new_index = new_pool.insert(*agent);
                     indices.push(new_index);
                     lcell.head = agent.next;
                 }
@@ -249,18 +253,22 @@ impl Loose {
 
     pub fn rebuild_rects(&mut self) {
 
+        let mut lcell: &mut LCell;
+        let mut index: u16;
+        let mut agent: &Agent;
+
         for lrow in 0..self.rows {
             for lcol in 0..self.cols {
 
-                let lcell = &mut self.cells[lrow][lcol];
+                lcell = &mut self.cells[lrow][lcol];
                 lcell.reset_rect();
 
-                let mut index = lcell.head;
+                index = lcell.head;
 
                 while index != INVALID {
 
-                    let agent = self.pool[index];
-                    lcell.expand_agent(&agent);
+                    agent = &self.pool[index];
+                    lcell.expand_agent(agent);
 
                     index = agent.next;
                 }
@@ -339,7 +347,7 @@ impl Loose {
     pub fn print_cell_agents(&self, lrow:u16, lcol:u16) {
 
         let mut head = self.cells[lrow][lcol].head;
-        let rect = self.cells[lrow][lcol].rect;
+        let rect = &self.cells[lrow][lcol].rect;
         
         if head == INVALID {
             return;
@@ -348,11 +356,13 @@ impl Loose {
         println!("  lcell:({:2},{:2}) -> head:{:2}", lrow, lcol, head);
         println!("   rect:[{:4},{:4},{:4},{:4}]", rect.l, rect.t, rect.r, rect.b);
 
+        let mut agent: &Agent;
+        let mut prev: u16;
         while head != INVALID {
 
-            let agent = self.pool[head];
+            agent = &self.pool[head];
 
-            let prev = head;
+            prev = head;
             head = agent.next;
 
             if !agent.is_free() {

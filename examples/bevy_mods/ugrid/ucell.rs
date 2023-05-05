@@ -1,5 +1,5 @@
 use bevy::{prelude::*, sprite::Anchor};
-use grid::{GridComm, INVALID};
+use grid::{*, ugrid::ucell::*};
 use super::super::*;
 use super::*;
 
@@ -48,13 +48,17 @@ pub fn create_ucells(
 ) {
     print!("create ucell...");
 
+    let mut gx: u16;
+    let mut gy: u16;
+    let mut x: i16;
+    let mut y: i16;
     for lrow in 0..grid.0.rows {
         for lcol in 0..grid.0.cols {
 
-            let gx = lcol * grid.0.cell_size;
-            let gy = lrow * grid.0.cell_size;
+            gx = lcol * grid.0.cell_size;
+            gy = lrow * grid.0.cell_size;
 
-            let (x, y) = grid.0.grid2pos(gx as i16, gy as i16);
+            (x, y) = grid.0.grid2pos(gx as i16, gy as i16);
 
             commands.spawn(LCellBundle::new(lcol, lrow, x, y, grid.0.cell_size));
         }
@@ -74,8 +78,9 @@ pub fn update_ucells(
     grid: Res<RUGrid>,
 ) {
 
+    let mut ucell: &UCell;
     for (lcol, lrow, mut visibility) in query.iter_mut() {
-        let ucell = grid.0.cells[lrow.0][lcol.0];
+        ucell = &grid.0.cells[lrow.0][lcol.0];
 
         if ucell.head == INVALID {
             *visibility = Visibility::Hidden;

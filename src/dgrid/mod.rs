@@ -95,6 +95,7 @@ impl DGrid {
         let mut titem: &TItem;
         let mut lcell: &LCell;
         let mut index: u16;
+        let mut agent: &Agent;
         
         for (_, tindex) in tvec.iter().enumerate() {
 
@@ -105,7 +106,7 @@ impl DGrid {
 
             while index != INVALID {
 
-                let agent = self.loose.pool[index];
+                agent = &self.loose.pool[index];
 
                 if agent.id != omit_id &&
                     agent.in_grid(self) &&
@@ -133,7 +134,7 @@ impl DGrid {
         let mut titem: &TItem;
         let mut lcell: &LCell;
         let mut index: u16;
-        let mut agent: Agent;
+        let mut agent: &Agent;
         let mut dx: i16;
         let mut dy: i16;
         let mut sw: i16;
@@ -148,7 +149,7 @@ impl DGrid {
 
             while index != INVALID {
 
-                agent = self.loose.pool[index];
+                agent = &self.loose.pool[index];
 
                 if agent.id != omit_id &&
                     agent.in_grid(self) {
@@ -192,16 +193,18 @@ impl DGrid {
 
         self.tight.clear();
         
+        let mut lcell: &LCell;
+        let mut trect: TRect;
         for lrow in 0..self.loose.rows {
             for lcol in 0..self.loose.cols {
 
-                let lcell = self.loose.cells[lrow][lcol];
+                lcell = &self.loose.cells[lrow][lcol];
 
                 if lcell.head == INVALID {
                     continue;
                 }
 
-                let trect = self.tight.lrect2trect(&lcell.rect);
+                trect = self.tight.lrect2trect(&lcell.rect);
 
                 for trow in trect.t..=trect.b {
                     for tcol in trect.l..=trect.r {
@@ -259,7 +262,6 @@ impl DGrid {
         let mut tcell: &TCell;
         let mut titem: &TItem;
         let mut lcell: &LCell;
-
         for trow in trect.t..=trect.b {
             for tcol in trect.l..=trect.r {
 
@@ -326,9 +328,13 @@ impl DGrid {
 
     pub fn insert_rand_data(&mut self, count:u32, half_min:i16, half_max:i16) {
 
+        let mut x: i16;
+        let mut y: i16;
+        let mut hw: i16;
+        let mut hh: i16;
         for i in 0..count {
 
-            let (x, y, hw, hh) = self.gen_rand_box(half_min, half_max);
+            (x, y, hw, hh) = self.gen_rand_box(half_min, half_max);
 
             self.insert(i, x, y, hw, hh);
         }

@@ -65,14 +65,16 @@ pub fn create_dagents(
 ) {
     print!("create agents...");
 
+    let mut index: u16;
+    let mut agent: &Agent;
     for lrow in 0..grid.0.loose.rows {
         for lcol in 0..grid.0.loose.cols {
 
-            let mut index = grid.0.loose.cells[lrow][lcol].head;
+            index = grid.0.loose.cells[lrow][lcol].head;
         
             while index != INVALID {
 
-                let agent = grid.0.loose.pool[index];
+                agent = &grid.0.loose.pool[index];
 
                 if !agent.is_free() {
                     
@@ -95,14 +97,17 @@ pub fn many_create_dagents(
 ) {
     print!("create random moving dagents...");
 
+    let mut index: u16;
+    let mut agent: &Agent;
+    let mut camera: Camera2dBundle;
     for lrow in 0..grid.0.loose.rows {
         for lcol in 0..grid.0.loose.cols {
 
-            let mut index = grid.0.loose.cells[lrow][lcol].head;
+            index = grid.0.loose.cells[lrow][lcol].head;
         
             while index != INVALID {
 
-                let agent = grid.0.loose.pool[index];
+                agent = &grid.0.loose.pool[index];
 
                 if !agent.is_free() {
                     
@@ -110,7 +115,7 @@ pub fn many_create_dagents(
 
                     if agent.id == MAIN_ID {
 
-                        let mut camera = Camera2dBundle::default();
+                        camera = Camera2dBundle::default();
                         camera.transform.translation.x = agent.x as f32;
                         camera.transform.translation.y = agent.y as f32;
 

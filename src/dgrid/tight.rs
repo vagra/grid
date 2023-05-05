@@ -184,10 +184,10 @@ impl Tight {
             panic!("tcell:({},{}) index:{}", trow, tcol, index);
         }
 
-        let head = self.cells[trow][tcol].head;
+        let prev = self.cells[trow][tcol].head;
         self.cells[trow][tcol].head = index;
         
-        self.pool[index].next = head;
+        self.pool[index].next = prev;
     }
 
 
@@ -263,13 +263,15 @@ impl Tight {
 
         let mut lindex = self.cells[trow][tcol].head;
 
+        let mut titem: &TItem;
+        let mut lprev: u16;
         while lindex != INVALID {
 
             println!("tcell:({:2},{:2}) -> lhead:{:2}", trow, tcol, lindex);
 
-            let titem = self.pool[lindex];
+            titem = &self.pool[lindex];
 
-            let lprev = lindex;
+            lprev = lindex;
             lindex = titem.next;
 
             if !titem.is_free() {
@@ -298,9 +300,10 @@ impl Tight {
 
         println!("tcell:({:2},{:2}) -> ihead:{:2}", trow, tcol, ihead);
 
+        let mut titem: &TItem;
         while ihead != INVALID {
 
-            let titem = self.pool[ihead];
+            titem = &self.pool[ihead];
 
             if !titem.is_free() {
                 print!("{:5}: ", ihead);

@@ -1,5 +1,5 @@
 use bevy::{prelude::*, sprite::Anchor};
-use grid::INVALID;
+use grid::{*, dgrid::lcell::*};
 use super::super::*;
 use super::*;
 
@@ -57,9 +57,10 @@ pub fn create_lrects(
 ) {
     print!("create lrect...");
 
+    let mut lcell: &LCell;
     for lrow in 0..grid.0.loose.rows {
         for lcol in 0..grid.0.loose.cols {
-            let lcell = &grid.0.loose.cells[lrow][lcol];
+            lcell = &grid.0.loose.cells[lrow][lcol];
 
             if lcell.head != INVALID {
                 commands.spawn(LRectBundle::new(
@@ -95,8 +96,9 @@ pub fn update_lrects(
     grid: Res<RDGrid>,
 ) {
 
+    let mut lcell: &LCell;
     for (lcol, lrow, mut visibility, mut sprite, mut transform) in query.iter_mut() {
-        let lcell = grid.0.loose.cells[lrow.0][lcol.0];
+        lcell = &grid.0.loose.cells[lrow.0][lcol.0];
 
         if lcell.head == INVALID {
             *visibility = Visibility::Hidden;

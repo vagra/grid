@@ -187,13 +187,14 @@ impl UGrid {
 
         let mut vec: Vec<u16> = Vec::new();
         let mut index: u16;
+        let mut agent: &Agent;
         for row in min_row..=max_row {
             for col in min_col..=max_col {
 
                 index = self.cells[row][col].head;
 
                 while index != INVALID {
-                    let agent = self.pool[index];
+                    agent = &self.pool[index];
 
                     if agent.id != omit_id &&
                         agent.in_grid(self) &&
@@ -217,7 +218,7 @@ impl UGrid {
         let mut vec: Vec<usize> = Vec::new();
         let mut dirs: [bool; 8] = [false; 8];
         let mut index: u16;
-        let mut agent: Agent;
+        let mut agent: &Agent;
         let mut dx: i16;
         let mut dy: i16;
         for row in min_row..=max_row {
@@ -226,7 +227,7 @@ impl UGrid {
                 index = self.cells[row][col].head;
 
                 while index != INVALID {
-                    agent = self.pool[index];
+                    agent = &self.pool[index];
 
                     if agent.id != omit_id &&
                         agent.in_grid(self) {
@@ -258,17 +259,21 @@ impl UGrid {
 
         let mut new_pool: Pool<Agent> = Pool::default();
 
+        let mut new_index: u16;
+        let mut indices: Vec<u16>;
+        let mut ucell: &mut UCell;
+        let mut agent: &Agent;
         for row in 0..self.rows {
             for col in 0..self.cols {
 
-                let mut indices: Vec<u16> = Vec::default();
+                indices = Vec::default();
 
-                let ucell = &mut self.cells[row][col];
+                ucell = &mut self.cells[row][col];
 
                 while ucell.head != INVALID {
 
-                    let agent = self.pool[ucell.head];
-                    let new_index = new_pool.insert(agent);
+                    agent = &self.pool[ucell.head];
+                    new_index = new_pool.insert(*agent);
                     indices.push(new_index);
                     
                     ucell.head = agent.next;
@@ -369,10 +374,10 @@ impl UGrid {
             panic!("cell:({},{}) index:{}", row, col, index);
         }
 
-        let head = self.cells[row][col].head;
+        let prev = self.cells[row][col].head;
         self.cells[row][col].head = index;
         
-        self.pool[index].next = head;
+        self.pool[index].next = prev;
     }
 
     pub fn gen_rand_pos(&self) -> (i16, i16) {
@@ -416,13 +421,15 @@ impl UGrid {
 
         let mut index = self.cells[row][col].head;
 
+        let mut prev: u16;
+        let mut agent: &Agent;
         while index != INVALID {
 
             println!("cell:({:2},{:2}) -> head:{:2}", row, col, index);
 
-            let agent = self.pool[index];
+            agent = &self.pool[index];
 
-            let prev = index;
+            prev = index;
             index = agent.next;
 
             if !agent.is_free() {
@@ -488,9 +495,11 @@ impl UGrid {
 
     pub fn insert_rand_data(&mut self, count:u32) {
 
+        let mut x: i16;
+        let mut y: i16;
         for i in 0..count {
 
-            let (x, y) = self.gen_rand_pos();
+            (x, y) = self.gen_rand_pos();
 
             self.insert(i, x, y);
         }

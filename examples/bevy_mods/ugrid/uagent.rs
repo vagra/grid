@@ -62,14 +62,16 @@ pub fn create_uagents(
 ) {
     print!("create uagents...");
 
+    let mut index: u16;
+    let mut agent: &Agent;
     for urow in 0..grid.0.rows {
         for ucol in 0..grid.0.cols {
 
-            let mut index = grid.0.cells[urow][ucol].head;
+            index = grid.0.cells[urow][ucol].head;
         
             while index != INVALID {
 
-                let agent = grid.0.pool[index];
+                agent = &grid.0.pool[index];
 
                 if !agent.is_free() {
                     
@@ -93,14 +95,17 @@ pub fn many_create_uagents(
 ) {
     print!("create random moving uagents...");
 
+    let mut index: u16;
+    let mut agent: &Agent;
+    let mut camera: Camera2dBundle;
     for urow in 0..grid.0.rows {
         for ucol in 0..grid.0.cols {
 
-            let mut index = grid.0.cells[urow][ucol].head;
+            index = grid.0.cells[urow][ucol].head;
         
             while index != INVALID {
 
-                let agent = grid.0.pool[index];
+                agent = &grid.0.pool[index];
 
                 if !agent.is_free() {
                     
@@ -108,7 +113,7 @@ pub fn many_create_uagents(
 
                     if agent.id == MAIN_ID {
 
-                        let mut camera = Camera2dBundle::default();
+                        camera = Camera2dBundle::default();
                         camera.transform.translation.x = agent.x as f32;
                         camera.transform.translation.y = agent.y as f32;
 

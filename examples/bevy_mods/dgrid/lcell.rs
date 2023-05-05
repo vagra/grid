@@ -1,5 +1,5 @@
 use bevy::{prelude::*, sprite::Anchor};
-use grid::{GridComm, INVALID};
+use grid::{*, dgrid::lcell::*};
 use super::super::*;
 use super::*;
 
@@ -48,13 +48,17 @@ pub fn create_lcells(
 ) {
     print!("create lcell...");
 
+    let mut gx: u16;
+    let mut gy: u16;
+    let mut x: i16;
+    let mut y: i16;
     for lrow in 0..grid.0.loose.rows {
         for lcol in 0..grid.0.loose.cols {
 
-            let gx = lcol * grid.0.loose.cell_size;
-            let gy = lrow * grid.0.loose.cell_size;
+            gx = lcol * grid.0.loose.cell_size;
+            gy = lrow * grid.0.loose.cell_size;
 
-            let (x, y) = grid.0.grid2pos(gx as i16, gy as i16);
+            (x, y) = grid.0.grid2pos(gx as i16, gy as i16);
 
             commands.spawn(LCellBundle::new(lcol, lrow, x, y, grid.0.loose.cell_size));
         }
@@ -74,8 +78,9 @@ pub fn update_lcells(
     grid: Res<RDGrid>,
 ) {
 
+    let mut lcell: &LCell;
     for (lcol, lrow, mut visibility) in query.iter_mut() {
-        let lcell = grid.0.loose.cells[lrow.0][lcol.0];
+        lcell = &grid.0.loose.cells[lrow.0][lcol.0];
 
         if lcell.head == INVALID {
             *visibility = Visibility::Hidden;
