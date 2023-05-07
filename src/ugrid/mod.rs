@@ -24,8 +24,8 @@ pub struct UGrid{
     max_col: u16,
     max_row: u16,
 
-    half_width: i16,
-    half_height: i16,
+    pub half_width: i16,
+    pub half_height: i16,
     pub width: i16,
     pub height: i16,
 

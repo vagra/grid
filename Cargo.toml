@@ -20,3 +20,12 @@ opt-level = 1
 opt-level = 3
 
 [profile.release]
+
+
+[[bench]]
+name = "ugrid"
+harness = false
+
+[[bench]]
+name = "dgrid"
+harness = false
