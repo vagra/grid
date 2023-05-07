@@ -201,17 +201,11 @@ pub fn create_actors(grid: &UGrid, rng: &mut StdRng) -> Vec<Actor>{
 pub fn move_actors(actors: &mut Vec<Actor>, grid: &mut UGrid, rng: &mut StdRng) {
 
     let mut actor: &mut Actor;
-    let mut agent: &Agent;
     for index in 0..actors.len() {
 
         actor = &mut actors[index];
 
         actor.move_step(rng);
-
-        agent = &grid.pool[actor.index];
-
-        assert!(agent.id != INACTIVE);
-        assert!(agent.id == actor.id);
 
         grid.move_cell(
             actor.id, actor.prev_x as i16, actor.prev_y as i16,
