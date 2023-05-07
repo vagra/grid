@@ -1,4 +1,4 @@
-use rand::{Rng, SeedableRng, rngs::StdRng};
+use rand::{Rng, rngs::StdRng};
 use grid::{
     *,
     ugrid::{*, agent::*}
@@ -7,7 +7,7 @@ use super::*;
 
 
 #[derive(Default)]
-struct Actor {
+pub struct Actor {
     pub index: u16,
     pub id: u32,
     pub prev_x: f32,
@@ -144,56 +144,21 @@ impl Actor {
 }
 
 
-pub fn _main() {
+pub fn bench_ugrid(count:usize) {
 
     let rng = &mut init_seed();
-
-    try_ugrid_bench(90, rng);
-
-    println!("done!")
-}
-
-
-pub fn bench_ugrid(times:usize) {
-
-    let rng = &mut init_seed();
-
-    try_ugrid_bench(times, rng);
-}
-
-
-fn init_seed() -> StdRng{
-
-    let seed: [u8; 32] = [
-        3, 42, 93, 129, 1, 85, 72, 42, 84, 23, 95, 212, 253, 10, 4, 2,
-        34, 123, 98, 12, 234, 121, 23, 32, 87, 64, 234, 176, 13, 243, 76, 243
-    ];
-
-    StdRng::from_seed(seed)
-}
-
-
-fn try_ugrid_bench(count: usize, rng: &mut StdRng) {
-
     let grid = &mut create_grid(count, rng);
-
     let actors = &mut create_actors(&grid, rng);
-
-    // println!("start:");
-    // grid.print_cells();
 
     for _ in 0..FRAMES {
         
         move_actors(actors, grid, rng);
-
         turn_actors(actors, grid, rng);
     }
-
-    // println!("after {} frames:", FRAMES);
-    // grid.print_cells();
 }
 
-fn create_grid(count: usize, rng: &mut StdRng) -> UGrid {
+
+pub fn create_grid(count: usize, rng: &mut StdRng) -> UGrid {
 
     let mut grid = UGrid::new(5, 20, 60, 60);
 
@@ -209,7 +174,7 @@ fn create_grid(count: usize, rng: &mut StdRng) -> UGrid {
     grid
 }
 
-fn create_actors(grid: &UGrid, rng: &mut StdRng) -> Vec<Actor>{
+pub fn create_actors(grid: &UGrid, rng: &mut StdRng) -> Vec<Actor>{
 
     let mut actors: Vec<Actor> = Vec::new();
 
@@ -233,7 +198,7 @@ fn create_actors(grid: &UGrid, rng: &mut StdRng) -> Vec<Actor>{
 }
 
 
-fn move_actors(actors: &mut Vec<Actor>, grid: &mut UGrid, rng: &mut StdRng) {
+pub fn move_actors(actors: &mut Vec<Actor>, grid: &mut UGrid, rng: &mut StdRng) {
 
     let mut actor: &mut Actor;
     let mut agent: &Agent;
@@ -256,7 +221,7 @@ fn move_actors(actors: &mut Vec<Actor>, grid: &mut UGrid, rng: &mut StdRng) {
 
 
 
-fn turn_actors(actors: &mut Vec<Actor>, grid: &mut UGrid, rng: &mut StdRng) {
+pub fn turn_actors(actors: &mut Vec<Actor>, grid: &mut UGrid, rng: &mut StdRng) {
 
     let mut actor: &mut Actor;
     for index in 0..actors.len() {
