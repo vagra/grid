@@ -15,7 +15,9 @@ pub struct TCellBundle {
 
 impl TCellBundle {
 
-    pub fn new(tcol:u16, trow:u16, x:i16, y:i16, size:u16) -> Self {
+    pub fn new(grid:&DGrid, tcol:u16, trow:u16) -> Self {
+
+        let (x, y) = grid.tight.tcell2pos(tcol, trow);
 
         Self {
 
@@ -26,7 +28,7 @@ impl TCellBundle {
                 sprite: Sprite {
                     color: TCELL_COLOR.clone(),
                     custom_size: Some(
-                        Vec2::new(size as f32, size as f32)
+                        Vec2::new(grid.tight.cell_size as f32, grid.tight.cell_size as f32)
                     ),
                     anchor: Anchor::TopLeft,
                     ..default()
@@ -48,19 +50,10 @@ pub fn create_tcells(
 ) {
     print!("create tcell...");
 
-    let mut gx: u16;
-    let mut gy: u16;
-    let mut x: i16;
-    let mut y: i16;
     for trow in 0..grid.0.tight.rows {
         for tcol in 0..grid.0.tight.cols {
 
-            gx = tcol * grid.0.tight.cell_size;
-            gy = trow * grid.0.tight.cell_size;
-
-            (x, y) = grid.0.grid2pos(gx as i16, gy as i16);
-
-            commands.spawn(TCellBundle::new(tcol, trow, x, y, grid.0.tight.cell_size));
+            commands.spawn(TCellBundle::new(&grid.0, tcol, trow));
         }
     }
 

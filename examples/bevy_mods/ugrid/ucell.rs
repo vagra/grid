@@ -15,7 +15,9 @@ pub struct UCellBundle {
 
 impl UCellBundle {
 
-    pub fn new(ucol:u16, urow:u16, x:i16, y:i16, size:u16) -> Self {
+    pub fn new(grid:&UGrid, ucol:u16, urow:u16) -> Self {
+
+        let (x, y) = grid.ucell2pos(ucol, urow);
 
         Self {
 
@@ -26,7 +28,7 @@ impl UCellBundle {
                 sprite: Sprite {
                     color: UCELL_COLOR.clone(),
                     custom_size: Some(
-                        Vec2::new(size as f32, size as f32)
+                        Vec2::new(grid.cell_size as f32, grid.cell_size as f32)
                     ),
                     anchor: Anchor::TopLeft,
                     ..default()
@@ -48,19 +50,10 @@ pub fn create_ucells(
 ) {
     print!("create ucell...");
 
-    let mut gx: u16;
-    let mut gy: u16;
-    let mut x: i16;
-    let mut y: i16;
     for urow in 0..grid.0.rows {
         for ucol in 0..grid.0.cols {
 
-            gx = ucol * grid.0.cell_size;
-            gy = urow * grid.0.cell_size;
-
-            (x, y) = grid.0.grid2pos(gx as i16, gy as i16);
-
-            commands.spawn(UCellBundle::new(ucol, urow, x, y, grid.0.cell_size));
+            commands.spawn(UCellBundle::new(&grid.0, ucol, urow));
         }
     }
 

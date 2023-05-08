@@ -300,6 +300,14 @@ impl Loose {
     }
 
 
+    pub fn lcell2pos(&self, col: u16, row: u16) -> (i16, i16) {
+        let dx = (col * self.cell_size) as i16;
+        let dy = (row * self.cell_size) as i16;
+        
+        self.grid2pos(dx, dy)
+    }
+
+
     pub fn pos2lcell(&self, x:i16, y:i16) -> (u16, u16) {
 
         let (gx, gy) = self.pos2grid(x, y);

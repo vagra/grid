@@ -190,6 +190,12 @@ impl Tight {
         self.pool[index].next = prev;
     }
 
+    pub fn tcell2pos(&self, col: u16, row: u16) -> (i16, i16) {
+        let dx = (col * self.cell_size) as i16;
+        let dy = (row * self.cell_size) as i16;
+        
+        self.grid2pos(dx, dy)
+    }
 
     pub fn lcell2tcell(&self, lcol:u16, lrow:u16) -> (u16, u16) {
 

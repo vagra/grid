@@ -15,7 +15,9 @@ pub struct LCellBundle {
 
 impl LCellBundle {
 
-    pub fn new(lcol:u16, lrow:u16, x:i16, y:i16, size:u16) -> Self {
+    pub fn new(grid:&DGrid, lcol:u16, lrow:u16) -> Self {
+
+        let (x, y) = grid.loose.lcell2pos(lcol, lrow);
 
         Self {
 
@@ -26,7 +28,7 @@ impl LCellBundle {
                 sprite: Sprite {
                     color: LCELL_COLOR.clone(),
                     custom_size: Some(
-                        Vec2::new(size as f32, size as f32)
+                        Vec2::new(grid.loose.cell_size as f32, grid.loose.cell_size as f32)
                     ),
                     anchor: Anchor::TopLeft,
                     ..default()
@@ -48,19 +50,10 @@ pub fn create_lcells(
 ) {
     print!("create lcell...");
 
-    let mut gx: u16;
-    let mut gy: u16;
-    let mut x: i16;
-    let mut y: i16;
     for lrow in 0..grid.0.loose.rows {
         for lcol in 0..grid.0.loose.cols {
 
-            gx = lcol * grid.0.loose.cell_size;
-            gy = lrow * grid.0.loose.cell_size;
-
-            (x, y) = grid.0.grid2pos(gx as i16, gy as i16);
-
-            commands.spawn(LCellBundle::new(lcol, lrow, x, y, grid.0.loose.cell_size));
+            commands.spawn(LCellBundle::new(&grid.0, lcol, lrow));
         }
     }
 
