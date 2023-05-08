@@ -6,8 +6,8 @@ use super::*;
 
 #[derive(Bundle)]
 pub struct UCellBundle {
-    pub lcol: UCol,
-    pub lrow: URow,
+    pub ucol: UCol,
+    pub urow: URow,
 
     #[bundle]
     pub sprite: SpriteBundle,
@@ -15,12 +15,12 @@ pub struct UCellBundle {
 
 impl UCellBundle {
 
-    pub fn new(lcol:u16, lrow:u16, x:i16, y:i16, size:u16) -> Self {
+    pub fn new(ucol:u16, urow:u16, x:i16, y:i16, size:u16) -> Self {
 
         Self {
 
-            lcol: UCol(lcol),
-            lrow: URow(lrow),
+            ucol: UCol(ucol),
+            urow: URow(urow),
 
             sprite: SpriteBundle { 
                 sprite: Sprite {
@@ -52,15 +52,15 @@ pub fn create_ucells(
     let mut gy: u16;
     let mut x: i16;
     let mut y: i16;
-    for lrow in 0..grid.0.rows {
-        for lcol in 0..grid.0.cols {
+    for urow in 0..grid.0.rows {
+        for ucol in 0..grid.0.cols {
 
-            gx = lcol * grid.0.cell_size;
-            gy = lrow * grid.0.cell_size;
+            gx = ucol * grid.0.cell_size;
+            gy = urow * grid.0.cell_size;
 
             (x, y) = grid.0.grid2pos(gx as i16, gy as i16);
 
-            commands.spawn(UCellBundle::new(lcol, lrow, x, y, grid.0.cell_size));
+            commands.spawn(UCellBundle::new(ucol, urow, x, y, grid.0.cell_size));
         }
     }
 
@@ -79,8 +79,8 @@ pub fn update_ucells(
 ) {
 
     let mut ucell: &UCell;
-    for (lcol, lrow, mut visibility) in query.iter_mut() {
-        ucell = &grid.0.cells[lrow.0][lcol.0];
+    for (ucol, urow, mut visibility) in query.iter_mut() {
+        ucell = &grid.0.cells[urow.0][ucol.0];
 
         if ucell.head == INVALID {
             *visibility = Visibility::Hidden;
