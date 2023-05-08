@@ -5,7 +5,7 @@ use super::*;
 
 
 #[derive(Bundle)]
-pub struct LCellBundle {
+pub struct UCellBundle {
     pub lcol: UCol,
     pub lrow: URow,
 
@@ -13,7 +13,7 @@ pub struct LCellBundle {
     pub sprite: SpriteBundle,
 }
 
-impl LCellBundle {
+impl UCellBundle {
 
     pub fn new(lcol:u16, lrow:u16, x:i16, y:i16, size:u16) -> Self {
 
@@ -60,7 +60,7 @@ pub fn create_ucells(
 
             (x, y) = grid.0.grid2pos(gx as i16, gy as i16);
 
-            commands.spawn(LCellBundle::new(lcol, lrow, x, y, grid.0.cell_size));
+            commands.spawn(UCellBundle::new(lcol, lrow, x, y, grid.0.cell_size));
         }
     }
 
