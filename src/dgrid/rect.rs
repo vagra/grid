@@ -29,6 +29,14 @@ impl LRect {
         Self { l, t, r, b }
     }
 
+    pub fn w(&self) -> i16 {
+        self.r - self.l + 1
+    }
+
+    pub fn h(&self) -> i16 {
+        self.t - self.b + 1
+    }
+
     pub fn cross_box(&self, x:i16, y:i16, hw:i16, hh:i16) -> bool {
 
         self.l <= x + hw &&
@@ -87,6 +95,14 @@ impl TRect {
     pub fn new(l:u16, t:u16, r:u16, b:u16) -> Self {
 
         Self { l, t, r, b }
+    }
+
+    pub fn w(&self) -> u16 {
+        self.r - self.l + 1
+    }
+
+    pub fn h(&self) -> u16 {
+        self.t - self.b + 1
     }
 
     pub fn reset(&mut self) {
