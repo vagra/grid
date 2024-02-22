@@ -1,4 +1,4 @@
-use bevy::{prelude::*, reflect::TypeUuid};
+use bevy::{prelude::*, reflect::TypePath};
 use grid::dgrid::DGrid;
 use super::*;
 
@@ -50,8 +50,7 @@ pub struct DSize{
 }
 
 
-#[derive(Resource, Deref, DerefMut, TypeUuid)]
-#[uuid = "e05ab7bd-6801-4105-b98d-97dfb9da1d7f"]
+#[derive(Resource, Deref, DerefMut, TypePath)]
 pub struct RDGrid(pub DGrid);
 
 impl Default for RDGrid {

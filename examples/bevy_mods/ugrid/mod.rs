@@ -1,4 +1,4 @@
-use bevy::{prelude::*, reflect::TypeUuid};
+use bevy::{prelude::*, reflect::TypePath};
 use grid::ugrid::UGrid;
 use super::*;
 
@@ -31,8 +31,7 @@ pub struct UPos{
 }
 
 
-#[derive(Resource, Deref, DerefMut, TypeUuid)]
-#[uuid = "e6470b99-0731-4836-902a-cf3e61bee04b"]
+#[derive(Resource, Deref, DerefMut, TypePath)]
 pub struct RUGrid(pub UGrid);
 
 impl Default for RUGrid {

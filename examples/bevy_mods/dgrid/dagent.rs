@@ -11,7 +11,6 @@ pub struct DAgentBundle {
     pub size: DSize,
     pub mover: Mover,
 
-    #[bundle]
     pub sprite: SpriteBundle,
 }
 

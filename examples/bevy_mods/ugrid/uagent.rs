@@ -12,7 +12,6 @@ pub struct UAgentBundle {
     pub pos: UPos,
     pub mover: Mover,
 
-    #[bundle]
     pub sprite: SpriteBundle,
 }
 

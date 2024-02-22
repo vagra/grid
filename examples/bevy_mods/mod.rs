@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use bevy::{prelude::*, reflect::TypeUuid};
+use bevy::{prelude::*, reflect::TypePath};
 
 pub mod dgrid;
 pub mod ugrid;
@@ -57,8 +57,7 @@ pub enum GameState {
 }
 
 
-#[derive(Resource, TypeUuid)]
-#[uuid = "8ac2a2d9-92a4-4b40-b09e-1a810bd3b58d"]
+#[derive(Resource, TypePath)]
 pub struct Cmd{
     pub index: usize,
     pub dir: Option<usize>,

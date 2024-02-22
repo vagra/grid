@@ -15,11 +15,10 @@ const INFO_RIGHT: f32 = 8.0;
 pub struct FPS;
 
 
-#[derive(Bundle, Clone)]
+#[derive(Bundle)]
 pub struct Info {
     pub fps: FPS,
-
-    #[bundle]
+    
     pub text_bundle: TextBundle,
 }
 
@@ -45,11 +44,8 @@ impl Info {
             ])
             .with_style(Style {
                 position_type: PositionType::Absolute,
-                position: UiRect {
-                    top: Val::Px(INFO_TOP),
-                    right: Val::Px(INFO_RIGHT),
-                    ..default()
-                },
+                top: Val::Px(INFO_TOP),
+                right: Val::Px(INFO_RIGHT),
                 ..default()
             }),
         }
@@ -76,9 +72,9 @@ pub fn update_info(
         &mut Text,
         With<FPS>
     >,
-    diagnostics: Res<Diagnostics>,
+    diagnostics: Res<DiagnosticsStore>,
 ) {
-    if let Some(fps) = diagnostics.get(FrameTimeDiagnosticsPlugin::FPS) {
+    if let Some(fps) = diagnostics.get(&FrameTimeDiagnosticsPlugin::FPS) {
         if let Some(value) = fps.value() {
             let mut text = query.single_mut();
             text.sections[1].value =  format!("{value:.0}");

@@ -17,32 +17,22 @@ fn main() {
         .insert_resource(Msaa::Sample4)
         .insert_resource(ClearColor(BG_COLOR))
         .add_plugins(DefaultPlugins)
-        .add_state::<GameState>()
-        .add_startup_system(create_camera)
-        .add_system(update)
-        .add_system(
-            (create_dgrid).after(update)
-            .run_if(in_state(GameState::Starting))
+        .init_state::<GameState>()
+        .add_systems(Startup, create_camera)
+        .add_systems(Update, update)
+        .add_systems(Update,
+            (create_dgrid).run_if(in_state(GameState::Starting))
         )
-        .add_system(
-            (keyboard_input).after(update)
-            .run_if(in_state(GameState::Playing))
-        )
-        .add_system(
-            (move_dagent).after(keyboard_input)
-            .run_if(in_state(GameState::Playing))
-        )
-        .add_system(
-            (update_tcells).after(move_dagent)
-            .run_if(in_state(GameState::Playing))
-        )
-        .add_system(
-            (update_lcells).after(move_dagent)
-            .run_if(in_state(GameState::Playing))
-        )
-        .add_system(
-            (update_lrects).after(move_dagent)
-            .run_if(in_state(GameState::Playing))
+        .add_systems(Update,
+            (
+                keyboard_input,
+                move_dagent,
+                (
+                    update_tcells,
+                    update_lcells,
+                    update_lrects
+                )
+            ).chain().run_if(in_state(GameState::Playing))
         )
         .run();
 }

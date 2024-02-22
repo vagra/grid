@@ -9,7 +9,6 @@ pub struct UCellBundle {
     pub ucol: UCol,
     pub urow: URow,
 
-    #[bundle]
     pub sprite: SpriteBundle,
 }
 

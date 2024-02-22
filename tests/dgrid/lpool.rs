@@ -1,6 +1,6 @@
 use grid::{
     *, pool::*, 
-    dgrid::{agent::*},
+    dgrid::agent::*,
 };
 
 
@@ -137,7 +137,7 @@ fn index_mut_works() {
     lpool.insert(Agent::new(101, 123, 432, 10, 10));
     lpool.insert(Agent::new(102, -430, -234, 20, 20));
 
-    let mut element = &mut lpool[0];
+    let element = &mut lpool[0];
     assert_eq!(*element,
         Agent{id:101, x:123, y:432, hw:10, hh:10, next:INVALID, next_free:INVALID}
     );

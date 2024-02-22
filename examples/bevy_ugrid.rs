@@ -16,24 +16,18 @@ fn main() {
         .insert_resource(Msaa::Sample4)
         .insert_resource(ClearColor(BG_COLOR))
         .add_plugins(DefaultPlugins)
-        .add_state::<GameState>()
-        .add_startup_system(create_camera)
-        .add_system(update)
-        .add_system(
-            (create_ugrid).after(update)
-            .run_if(in_state(GameState::Starting))
+        .init_state::<GameState>()
+        .add_systems(Startup, create_camera)
+        .add_systems(Update, update)
+        .add_systems(Update,
+            (create_ugrid).run_if(in_state(GameState::Starting))
         )
-        .add_system(
-            (keyboard_input).after(update)
-            .run_if(in_state(GameState::Playing))
-        )
-        .add_system(
-            (move_uagent).after(keyboard_input)
-            .run_if(in_state(GameState::Playing))
-        )
-        .add_system(
-            (update_ucells).after(move_uagent)
-            .run_if(in_state(GameState::Playing))
+        .add_systems(Update,
+            (
+                keyboard_input,
+                move_uagent,
+                update_ucells
+            ).chain().run_if(in_state(GameState::Playing))
         )
         .run();
 }

@@ -137,7 +137,7 @@ fn index_mut_works() {
     tpool.insert(TItem::new(10, 10));
     tpool.insert(TItem::new(20, 20));
 
-    let mut element = &mut tpool[0];
+    let element = &mut tpool[0];
     assert_eq!(*element,
         TItem{lcol:10, lrow:10, next:INVALID, next_free:INVALID}
     );

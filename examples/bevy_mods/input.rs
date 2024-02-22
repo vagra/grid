@@ -4,11 +4,11 @@ use super::*;
 
 pub fn keyboard_input(
     mut cmd: ResMut<Cmd>,
-    input: Res<Input<KeyCode>>
+    input: Res<ButtonInput<KeyCode>>
 ) {
 
-    let z = input.pressed(KeyCode::Z);
-    let x = input.pressed(KeyCode::X);
+    let z = input.pressed(KeyCode::KeyZ);
+    let x = input.pressed(KeyCode::KeyX);
 
     if z {
         cmd.index = (cmd.index + 1) % 9;
@@ -20,12 +20,12 @@ pub fn keyboard_input(
     cmd.dir = key2dir(&input);
 }
 
-pub fn key2dir(input:&Input<KeyCode>) ->Option<usize> {
+pub fn key2dir(input:&ButtonInput<KeyCode>) ->Option<usize> {
 
-	let mut l = input.pressed(KeyCode::Left) as usize;
-    let mut r = input.pressed(KeyCode::Right) as usize;
-    let mut u = input.pressed(KeyCode::Up) as usize;
-    let mut d = input.pressed(KeyCode::Down) as usize;
+	let mut l = input.pressed(KeyCode::ArrowLeft) as usize;
+    let mut r = input.pressed(KeyCode::ArrowRight) as usize;
+    let mut u = input.pressed(KeyCode::ArrowUp) as usize;
+    let mut d = input.pressed(KeyCode::ArrowDown) as usize;
 
     if l > 0 && r > 0 {
         l = 0;

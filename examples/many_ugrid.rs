@@ -16,33 +16,21 @@ fn main() {
         .insert_resource(Msaa::Sample4)
         .insert_resource(ClearColor(BG_COLOR))
         .add_plugins(DefaultPlugins)
-        .add_plugin(FrameTimeDiagnosticsPlugin::default())
-        .add_state::<GameState>()
-        .add_startup_system(create_info)
-        .add_system(update)
-        .add_system(
-            (many_create_ugrid).after(update)
-            .run_if(in_state(GameState::Starting))
+        .add_plugins(FrameTimeDiagnosticsPlugin::default())
+        .init_state::<GameState>()
+        .add_systems(Startup, create_info)
+        .add_systems(Update, update)
+        .add_systems(Update,
+            (many_create_ugrid).run_if(in_state(GameState::Starting))
         )
-        .add_system(
-            (keyboard_input).after(update)
-            .run_if(in_state(GameState::Playing))
-        )
-        .add_system(
-            (many_move_uagents).after(keyboard_input)
-            .run_if(in_state(GameState::Playing))
-        )
-        .add_system(
-            (move_camera).after(keyboard_input)
-            .run_if(in_state(GameState::Playing))
-        )
-        .add_system(
-            (update_ucells).after(many_move_uagents)
-            .run_if(in_state(GameState::Playing))
-        )
-        .add_system(
-            (update_info).after(update)
-            .run_if(in_state(GameState::Playing))
+        .add_systems(Update,
+            (
+                keyboard_input, 
+                many_move_uagents,
+                update_ucells,
+                move_camera,
+                update_info
+            ).chain().run_if(in_state(GameState::Playing))
         )
         .run();
 }

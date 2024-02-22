@@ -9,7 +9,6 @@ pub struct TCellBundle {
     pub tcol: TCol,
     pub trow: TRow,
 
-    #[bundle]
     pub sprite: SpriteBundle,
 }
 
