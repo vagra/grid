@@ -6,7 +6,7 @@ use super::*;
 
 #[derive(Component, Clone)]
 pub struct Mover {
-    pub dir: usize,
+    pub direction: usize,
     pub speed: f32,
     pub duration: f32,
     pub timer: Timer,
@@ -18,7 +18,7 @@ impl Default for Mover {
     fn default() -> Self {
         
         Self {
-            dir: 0, 
+            direction: 0, 
             speed: 0.0, 
             duration: 0.0, 
             timer: Timer::default(),
@@ -35,7 +35,7 @@ impl Mover {
         let seconds = rand_duration();
 
         Self {
-            dir: rand_dir(),
+            direction: rand_direction(),
 
             speed: rand_speed(),
 
@@ -48,7 +48,7 @@ impl Mover {
     }
 
     pub fn random(&mut self) {
-        self.dir = rand_dir();
+        self.direction = rand_direction();
         self.speed = rand_speed();
         self.duration = rand_duration();
         self.timer = Timer::from_seconds(self.duration, TimerMode::Once);
@@ -57,23 +57,23 @@ impl Mover {
     pub fn back(&mut self, back: u8) {
     
         let range: i32 = rand::thread_rng().gen_range(-1..2);
-        self.dir = (back as i32 + range + DIRECTIONS as i32) as usize % DIRECTIONS;
+        self.direction = (back as i32 + range + DIRECTIONS as i32) as usize % DIRECTIONS;
     }
 
     pub fn bump(&mut self) {
     
         let range: i32 = rand::thread_rng().gen_range(-2..3);
-        self.dir = (self.dir as i32 + range + DIRECTIONS as i32) as usize % DIRECTIONS;
+        self.direction = (self.direction as i32 + range + DIRECTIONS as i32) as usize % DIRECTIONS;
     }
 
     pub fn dodge(&mut self, dirs:&Vec<usize>) {
 
-        if dirs.contains(&self.dir) {
+        if dirs.contains(&self.direction) {
             return;
         }
 
         let index = rand::thread_rng().gen_range(0..dirs.len());
-        self.dir = dirs[index];
+        self.direction = dirs[index];
     }
 
     pub fn stop(&mut self) {
@@ -83,7 +83,7 @@ impl Mover {
 
 }
 
-pub fn rand_dir() -> usize {
+pub fn rand_direction() -> usize {
 
     rand::thread_rng().gen_range(0..DIRECTIONS)
 }

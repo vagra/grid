@@ -19,9 +19,8 @@ fn main() {
         .add_plugins(FrameTimeDiagnosticsPlugin::default())
         .init_state::<GameState>()
         .add_systems(Startup, create_info)
-        .add_systems(Update, update)
         .add_systems(Update,
-            (many_create_dgrid).run_if(in_state(GameState::Starting))
+            (many_create_dgrid).run_if(in_state(GameState::Loading))
         )
         .add_systems(Update,
             (
@@ -34,13 +33,7 @@ fn main() {
                 ),
                 move_camera,
                 update_info
-            ).chain().run_if(in_state(GameState::Playing))
+            ).run_if(in_state(GameState::Playing))
         )
         .run();
-}
-
-
-
-fn update() {
-
 }

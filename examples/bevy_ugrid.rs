@@ -18,16 +18,15 @@ fn main() {
         .add_plugins(DefaultPlugins)
         .init_state::<GameState>()
         .add_systems(Startup, create_camera)
-        .add_systems(Update, update)
         .add_systems(Update,
-            (create_ugrid).run_if(in_state(GameState::Starting))
+            (create_ugrid).run_if(in_state(GameState::Loading))
         )
         .add_systems(Update,
             (
                 keyboard_input,
                 move_uagent,
                 update_ucells
-            ).chain().run_if(in_state(GameState::Playing))
+            ).run_if(in_state(GameState::Playing))
         )
         .run();
 }
@@ -36,10 +35,3 @@ fn create_camera(mut commands: Commands) {
 
     commands.spawn(Camera2dBundle::default());
 }
-
-
-fn update() {
-
-}
-
-

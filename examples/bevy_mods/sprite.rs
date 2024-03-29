@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use super::*;
 
 pub fn move_sprite(
-    dir: usize,
+    direction: usize,
     speed: f32,
     transform: &mut Transform,
 ) -> (i16, i16, i16, i16) {
@@ -10,7 +10,7 @@ pub fn move_sprite(
     let prev_x = transform.translation.x as i16;
     let prev_y = transform.translation.y as i16;
 
-    let offset = VECTORES[dir];
+    let offset = VECTORES[direction];
     transform.translation.x += speed * offset.x;
     transform.translation.y += speed * offset.y;
 

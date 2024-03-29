@@ -217,7 +217,7 @@ pub fn many_move_dagents(
                 continue;
             }
 
-            (prev.x, prev.y, curr.x, curr.y) = move_sprite(mover.dir, mover.speed, &mut transform);
+            (prev.x, prev.y, curr.x, curr.y) = move_sprite(mover.direction, mover.speed, &mut transform);
 
             grid.move_cell(did.0, prev.x, prev.y, curr.x, curr.y);
 

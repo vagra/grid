@@ -208,7 +208,7 @@ pub fn many_move_uagents(
                 continue;
             }
 
-            (prev.x, prev.y, curr.x, curr.y) = move_sprite(mover.dir, mover.speed, &mut transform);
+            (prev.x, prev.y, curr.x, curr.y) = move_sprite(mover.direction, mover.speed, &mut transform);
 
             grid.move_cell(uid.0, prev.x, prev.y, curr.x, curr.y);
 

@@ -47,12 +47,12 @@ const MAX_HALF_SIZE:i16 = 10;
 
 pub const MAIN_ID: u32 = 0;
 
-const AGENTS: u32 = 12000;
+const AGENTS: u32 = 15000;
 
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, Default, States)]
 pub enum GameState {
     #[default]
-    Starting,
+    Loading,
     Playing,
 }
 
